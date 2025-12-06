@@ -1,0 +1,62 @@
+<nav class="navbar">
+  <div class="navbar-left">
+    <button class="hamburger-btn" (click)="visible = true">
+      <i class="pi pi-bars"></i>
+    </button>
+
+    <div class="brand-logo">
+      <div class="logo-img">
+        <i class="pi pi-bolt"></i>
+      </div>
+      <span class="brand-name">BUFFET</span>
+    </div>
+  </div>
+
+  <div class="navbar-right">
+    <a href="#" class="nav-link">Home</a>
+    <div class="profile-dropdown">
+      <span class="profile-text">profile <i class="pi pi-caret-down"></i></span>
+    </div>
+  </div>
+</nav>
+
+<p-drawer [(visible)]="visible">
+  <ng-template #headless>
+    <div class="sidebar-container">
+      <div class="sidebar-header">
+        <div class="brand-group">
+          <div class="logo-circle"><i class="pi pi-bolt"></i></div>
+          <span class="brand-text">BUFFET</span>
+        </div>
+      </div>
+
+      <div class="user-profile-section">
+        <div class="profile-row">
+          <div class="user-info">
+            <div class="avatar-circle"><i class="pi pi-user"></i></div>
+            <span class="username">Owner_001</span>
+          </div>
+          <button class="profile-badge-btn">profile</button>
+        </div>
+      </div>
+
+      <div class="menu-list">
+        <ul>
+          <li *ngFor="let item of menuItems">
+            <a pRipple [class.active]="item.active" class="menu-item">
+              <i [class]="item.icon" class="menu-icon"></i>
+              <span class="menu-label">{{ item.label }}</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="sidebar-footer">
+        <a pRipple class="menu-item logout">
+          <i class="pi pi-sign-out menu-icon"></i>
+          <span class="menu-label">ออกจากระบบ</span>
+        </a>
+      </div>
+    </div>
+  </ng-template>
+</p-drawer>

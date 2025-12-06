@@ -1,0 +1,14 @@
+.main-content {
+  background-color: #121212;
+  min-height: calc(100vh - 60px); // ลบความสูง Navbar ออก (ถ้า Navbar สูง 60px)
+  padding: 20px;
+  color: white;
+
+  .content-placeholder {
+    border: 1px dashed #333;
+    padding: 40px;
+    text-align: center;
+    border-radius: 8px;
+    color: #555;
+  }
+}

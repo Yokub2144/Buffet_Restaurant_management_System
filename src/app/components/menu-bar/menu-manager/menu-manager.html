@@ -1,0 +1,69 @@
+<nav class="navbar">
+  <div class="navbar-left">
+    <button class="hamburger-btn" (click)="visible = true">
+      <mat-icon>menu</mat-icon>
+    </button>
+
+    <div class="brand-logo">
+      <div class="logo-img">
+        <mat-icon>bolt</mat-icon>
+      </div>
+      <span class="brand-name">BUFFET</span>
+    </div>
+  </div>
+
+  <div class="navbar-right">
+    <a href="#" class="nav-link">Home</a>
+    <div class="profile-dropdown">
+      <span class="profile-text">
+        profile
+        <mat-icon>arrow_drop_down</mat-icon>
+      </span>
+    </div>
+  </div>
+</nav>
+
+<p-drawer [(visible)]="visible">
+  <ng-template #headless>
+    <div class="sidebar-container">
+      <div class="sidebar-header">
+        <div class="brand-group">
+          <div class="logo-circle">
+            <mat-icon>bolt</mat-icon>
+          </div>
+          <span class="brand-text">BUFFET</span>
+        </div>
+      </div>
+
+      <div class="user-profile-section">
+        <div class="profile-row">
+          <div class="user-info">
+            <div class="avatar-circle">
+              <mat-icon>person</mat-icon>
+            </div>
+            <span class="username">Owner_001</span>
+          </div>
+          <button class="profile-badge-btn">profile</button>
+        </div>
+      </div>
+
+      <div class="menu-list">
+        <ul>
+          <li *ngFor="let item of menuItems">
+            <a pRipple [class.active]="item.active" class="menu-item">
+              <mat-icon class="menu-icon">{{ item.icon }}</mat-icon>
+              <span class="menu-label">{{ item.label }}</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="sidebar-footer">
+        <a pRipple class="menu-item logout">
+          <mat-icon class="menu-icon">logout</mat-icon>
+          <span class="menu-label">ออกจากระบบ</span>
+        </a>
+      </div>
+    </div>
+  </ng-template>
+</p-drawer>

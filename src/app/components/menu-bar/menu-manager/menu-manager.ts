@@ -1,0 +1,52 @@
+import { Component, ViewChild } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { DrawerModule } from 'primeng/drawer';
+import { ButtonModule } from 'primeng/button';
+import { Ripple } from 'primeng/ripple';
+import { AvatarModule } from 'primeng/avatar';
+import { StyleClass } from 'primeng/styleclass';
+import { Drawer } from 'primeng/drawer';
+import { MatIconModule } from '@angular/material/icon';
+@Component({
+  selector: 'app-menu-manager',
+  imports: [
+    CommonModule,
+    DrawerModule,
+    ButtonModule,
+    Ripple,
+    AvatarModule,
+    StyleClass,
+    MatIconModule,
+  ],
+  templateUrl: './menu-manager.html',
+  styleUrl: './menu-manager.scss',
+})
+export class MenuManager {
+  isOpen = true; // สถานะเปิด/ปิด เมนู (สำหรับ Mobile)
+
+  menuItems = [
+    { label: 'หน้าหลัก/dashboard', icon: 'dashboard', active: true },
+    { label: 'จัดการข้อมูลพนักงาน', icon: 'groups', active: false },
+    { label: 'จัดการข้อมูลโต๊ะ', icon: 'table_restaurant', active: false }, // หรือ grid_view
+    { label: 'รายการบิล', icon: 'receipt_long', active: false },
+    { label: 'การตั้งค่าร้าน', icon: 'settings', active: false },
+    { label: 'การตั้งค่าราคาอาหาร', icon: 'restaurant_menu', active: false },
+  ];
+
+  toggleSidebar() {
+    this.isOpen = !this.isOpen;
+  }
+
+  closeSidebar() {
+    // ปิดเมนูเมื่อคลิก (สำหรับ Mobile UX)
+    if (window.innerWidth <= 768) {
+      this.isOpen = false;
+    }
+  }
+  @ViewChild('drawerRef') drawerRef!: Drawer;
+
+  closeCallback(e: Event): void {
+    this.drawerRef.close(e);
+  }
+  visible: boolean = false;
+}

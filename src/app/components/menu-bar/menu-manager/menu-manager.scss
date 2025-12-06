@@ -1,0 +1,224 @@
+// Variables
+$bg-black: #000000;
+$bg-sidebar: #1a1a1a;
+$text-white: #ffffff;
+$text-grey: #a1a1aa;
+$accent-orange: #d35400;
+
+// Helper Mixin สำหรับจัด icon ให้อยู่กึ่งกลาง
+@mixin icon-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// --- Navbar Styles ---
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: $bg-black;
+  color: $text-white;
+  height: 60px;
+  padding: 0 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+
+  .navbar-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+
+    .hamburger-btn {
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+      @include icon-center; // จัด mat-icon กึ่งกลาง
+
+      mat-icon {
+        font-size: 28px;
+        width: 28px;
+        height: 28px;
+      } // ปรับขนาด
+      &:hover {
+        color: $accent-orange;
+      }
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      .logo-img {
+        width: 32px;
+        height: 32px;
+        background: white;
+        border-radius: 50%;
+        @include icon-center;
+        color: red;
+
+        mat-icon {
+          font-size: 20px;
+          width: 20px;
+          height: 20px;
+        } // ปรับขนาดสายฟ้า
+      }
+      .brand-name {
+        font-weight: 500;
+        font-size: 1.2rem;
+      }
+    }
+  }
+
+  .navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    font-size: 0.9rem;
+    .nav-link {
+      color: white;
+      text-decoration: none;
+    }
+
+    .profile-dropdown {
+      cursor: pointer;
+      .profile-text {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        // ปรับลูกศรลงให้เล็กหน่อย
+        mat-icon {
+          font-size: 18px;
+          width: 18px;
+          height: 18px;
+        }
+      }
+    }
+  }
+}
+
+// --- Sidebar Styles ---
+.sidebar-container {
+  background-color: $bg-sidebar;
+  height: 100%;
+  width: 280px;
+  display: flex;
+  flex-direction: column;
+  color: $text-grey;
+  font-family: 'Kanit', sans-serif;
+
+  .sidebar-header {
+    padding: 25px 20px;
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      .logo-circle {
+        width: 40px;
+        height: 40px;
+        background: white;
+        border-radius: 50%;
+        @include icon-center;
+        mat-icon {
+          color: $accent-orange;
+        }
+      }
+      .brand-text {
+        color: white;
+        font-size: 1.4rem;
+        font-weight: 600;
+      }
+    }
+  }
+
+  .user-profile-section {
+    padding: 0 20px 20px;
+    border-bottom: 1px solid #333;
+    .profile-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      .user-info {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        .avatar-circle {
+          width: 35px;
+          height: 35px;
+          border: 1px solid #555;
+          border-radius: 50%;
+          @include icon-center;
+          mat-icon {
+            font-size: 20px;
+          }
+        }
+      }
+      .profile-badge-btn {
+        background: transparent;
+        border: 1px solid $accent-orange;
+        color: $accent-orange;
+        padding: 2px 8px;
+        border-radius: 4px;
+        cursor: pointer;
+        &:hover {
+          background: $accent-orange;
+          color: white;
+        }
+      }
+    }
+  }
+
+  .menu-list {
+    flex: 1;
+    overflow-y: auto;
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      li .menu-item {
+        display: flex;
+        align-items: center;
+        padding: 12px 20px;
+        color: $text-grey;
+        cursor: pointer;
+        text-decoration: none; // ลบขีดเส้นใต้
+
+        // จัดการไอคอนเมนู
+        .menu-icon {
+          margin-right: 15px;
+          font-size: 22px;
+          width: 22px;
+          height: 22px; // ปรับขนาดให้พอดี
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.1);
+          color: white;
+        }
+        &.active {
+          background: #2d2d2d;
+          color: white;
+        }
+      }
+    }
+  }
+
+  .sidebar-footer {
+    padding: 20px;
+    border-top: 1px solid #333;
+
+    .logout {
+      display: flex;
+      align-items: center; // จัด footer ให้ตรง
+      .menu-icon {
+        margin-right: 15px;
+      } // ระยะห่าง
+    }
+    .logout:hover {
+      color: #ef4444;
+    }
+  }
+}
