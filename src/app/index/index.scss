@@ -1,0 +1,10 @@
+.main-container.full-screen-bg {
+  min-height: 100vh; 
+  width: 100%;
+
+   background-image: url('/assets/Images/bg.png');
+
+  background-position: center center; 
+  background-repeat: no-repeat;      
+  background-size: cover;            
+}

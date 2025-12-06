@@ -1,0 +1,117 @@
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400&display=swap');
+
+:host {
+  font-family: 'Kanit', sans-serif;
+}
+
+.custom-navbar {
+  background-color: #000;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 64px;
+  padding: 0 16px;
+  position: fixed;
+  top: 0;           
+  left: 0;         
+  width: 100%;
+
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2); 
+}
+
+
+.left-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  /* ปุ่ม Menu */
+  .menu-btn {
+    color: #fff;
+  
+    margin-right: 0;
+  }
+
+  /* โลโก้และชื่อ */
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.1rem;
+    white-space: nowrap; 
+    
+    img {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #fff;
+      object-fit: cover;
+    }
+  }
+}
+
+/* ตัวคั่นกลาง */
+.spacer {
+  flex: 1 1 auto;
+}
+
+.right-section {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+.nav-link {
+    font-family: 'Kanit', sans-serif;
+    color: #fff;
+    
+    &.active {
+      color: #ffca28;
+    }
+  }
+}
+.nav-link {
+  color: white;
+  text-decoration: none;
+  position: relative; 
+  transition: color 0.3s ease;
+
+ 
+  &::after {
+    content: '';
+    position: absolute;
+    width: 0%; 
+    height: 2px;
+    bottom: 5px; 
+    left: 0;
+    background-color: #ffca28; 
+    transition: width 0.3s ease;
+  }
+
+  /* เมื่อเอาเมาส์ชี้ */
+  &:hover {
+    color: #ffca28; /* เปลี่ยนสีตัวหนังสือ */
+    
+    &::after {
+      width: 100%; 
+    }
+  }
+
+  /* สถานะ Active (หน้าปัจจุบัน) */
+  &.active {
+    color: #ffca28;
+    /* ให้เส้นขีดค้างไว้เลยถ้าเป็นหน้า active */
+    &::after {
+      width: 100%;
+    }
+  }
+}
+
+/* --- (Responsive) --- */
+@media (max-width: 599px) {
+  .right-section {
+    display: none; 
+  }
+  
+ 
+}
