@@ -1,86 +1,98 @@
-<app-index-navbar></app-index-navbar>
+<app-index-navbar>
+  <div class="page-container">
+    <section class="hero-banner-wrapper">
+      <p-carousel
+        [value]="banners"
+        [numVisible]="1"
+        [numScroll]="1"
+        [circular]="true"
+        [autoplayInterval]="5000"
+        [showIndicators]="true"
+        indicatorStyleClass="custom-indicator"
+      >
+        <ng-template let-banner pTemplate="item">
+          <div class="banner-item">
+            <img [src]="banner.image" alt="Promotion Banner" class="banner-img" />
+            <div class="banner-overlay"></div>
+          </div>
+        </ng-template>
+      </p-carousel>
+    </section>
 
-<div class="hero-banner-wrapper">
-  <p-carousel
-    [value]="banners"
-    [numVisible]="1"
-    [numScroll]="1"
-    [circular]="true"
-    [autoplayInterval]="4000"
-    [showIndicators]="false"
-  >
-    <ng-template let-banner pTemplate="item">
-      <div class="banner-item">
-        <img [src]="banner.image" alt="Promotion" class="banner-img" />
-      </div>
-    </ng-template>
-  </p-carousel>
-</div>
-
-<div class="main-container full-screen-bg">
-  <main class="main-content">
-    <div class="info-section">
-      <div class="promo-poster">
-        <img src="assets/Images/shop-info.png" alt="โปรโมชั่นหมูกระทะ" />
-      </div>
-
-      <div class="shop-info">
-        <h2 class="title">ข้อมูลร้านบุฟเฟต์หมูกระทะ</h2>
-
-        <div class="price-container">
-          <div class="price-box">
-            <span class="label">ราคาผู้ใหญ่ / คน</span>
-            <span class="value">189 บาท</span>
+    <div class="main-content-bg">
+      <div class="content-wrapper">
+        <section class="info-card">
+          <div class="poster-col">
+            <div class="poster-frame">
+              <img src="assets/Images/shop-info.png" alt="Shop Info" />
+            </div>
           </div>
 
-          <div class="price-box">
-            <span class="label">ราคาเด็ก</span>
-            <span class="value">129 บาท</span>
+          <div class="details-col">
+            <h1 class="shop-title">ข้อมูลร้านบุฟเฟ่ต์หมูกระทะ</h1>
+
+            <div class="price-grid">
+              <div class="price-box adult">
+                <div class="price-label">ราคาผู้ใหญ่ /คน</div>
+                <div class="price-amount">189 บาท</div>
+              </div>
+              <div class="price-box child">
+                <div class="price-label">ราคาเด็ก</div>
+                <div class="price-amount">129 บาท</div>
+              </div>
+            </div>
+
+            <button pButton pRipple label="ดูโปรโมชั่น" class="p-button-danger promo-btn"></button>
           </div>
-        </div>
+        </section>
 
-        <button class="discount-btn">ดูส่วนลด</button>
+        <section class="table-card">
+          <div class="table-header">
+            <h2>ส่วนลดที่มีอยู่</h2>
+          </div>
+
+          <div class="table-responsive">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th style="width: 50%">ชื่อส่วนลด</th>
+                  <th style="width: 25%; text-align: center">ส่วนลด</th>
+                  <th style="width: 25%; text-align: center">ดูรายละเอียด</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <div class="promo-name">โปรวันเกิด (สำหรับคนที่เกิด เดือนสิงหาคม)</div>
+                  </td>
+                  <td class="text-center highlight-text">10%</td>
+                  <td class="text-center">
+                    <button class="btn-outline">Show</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="promo-name">โปรเช็คอินร้าน (ใน facebook)</div>
+                  </td>
+                  <td class="text-center highlight-text">30%</td>
+                  <td class="text-center">
+                    <button class="btn-outline">Show</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="promo-name">โปรรีวิวร้านใน tiktok ของวิงยอะที่สุด</div>
+                  </td>
+                  <td class="text-center highlight-text">40%</td>
+                  <td class="text-center">
+                    <button class="btn-outline">Show</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
       </div>
-    </div>
-  </main>
-  <div class="discount-section">
-    <div class="discount-header">
-      <h2>ส่วนลดที่มีอยู่</h2>
-    </div>
-
-    <div class="discount-content">
-      <table class="discount-table">
-        <thead>
-          <tr>
-            <th class="text-left">ชื่อส่วนลด</th>
-            <th class="text-center">ส่วนลด</th>
-            <th class="text-center">ดูรายละเอียด</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>โปรวันเกิด (สำหรับคนที่เกิด เดือนสิงหาคม)</td>
-            <td class="discount-value">10%</td>
-            <td class="text-center">
-              <button class="show-btn">Show</button>
-            </td>
-          </tr>
-          <tr>
-            <td>โปรเช็คอินที่ร้าน (ใน facebook)</td>
-            <td class="discount-value">30%</td>
-            <td class="text-center">
-              <button class="show-btn">Show</button>
-            </td>
-          </tr>
-          <tr>
-            <td>โปรรีวิวร้านใน tiktok ยอดวิวเยอะที่สุด</td>
-            <td class="discount-value">40%</td>
-            <td class="text-center">
-              <button class="show-btn">Show</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
     </div>
   </div>
-</div>
+</app-index-navbar>
