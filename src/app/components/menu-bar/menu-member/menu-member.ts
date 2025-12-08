@@ -4,11 +4,10 @@ import { DrawerModule } from 'primeng/drawer';
 import { ButtonModule } from 'primeng/button';
 import { Ripple } from 'primeng/ripple';
 import { AvatarModule } from 'primeng/avatar';
-import { StyleClass } from 'primeng/styleclass';
 import { Drawer } from 'primeng/drawer';
 @Component({
   selector: 'app-menu-member',
-  imports: [CommonModule, DrawerModule, ButtonModule, Ripple, AvatarModule, StyleClass],
+  imports: [CommonModule, DrawerModule, ButtonModule, Ripple, AvatarModule],
   templateUrl: './menu-member.html',
   styleUrl: './menu-member.scss',
 })

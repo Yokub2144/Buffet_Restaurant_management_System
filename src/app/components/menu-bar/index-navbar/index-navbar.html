@@ -1,20 +1,60 @@
-<mat-toolbar class="custom-navbar">
-  <div class="left-section">
-    <button mat-icon-button class="menu-btn">
+<nav class="navbar">
+  <div class="navbar-left">
+    <button class="hamburger-btn" (click)="visible = true">
       <mat-icon>menu</mat-icon>
     </button>
 
-    <div class="logo-brand brand">
-      <img src="assets/Images/Logo.png" alt="logo" />
-      <span>BUFFET</span>
-    </div>
+    <a href="" class="brand-logo">
+      <div class="logo-wrapper">
+        <img src="assets/Images/Logo.png" alt="logo" class="logo-img" />
+      </div>
+      <span class="brand-name">BUFFET</span>
+    </a>
   </div>
-  <span class="spacer"></span>
 
-  <div class="right-section">
-    <a mat-button class="nav-link active">Home</a>
-    <a mat-button class="nav-link">สั่งอาหารล่วงหน้า</a>
-    <a mat-button class="nav-link">จองโต๊ะ</a>
-    <a mat-button class="nav-link">login</a>
+  <div class="navbar-right">
+    <a
+      routerLink=""
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      class="nav-link"
+    >
+      Home
+    </a>
+
+    <a routerLink="/login" routerLinkActive="active" class="nav-link"> Login </a>
   </div>
-</mat-toolbar>
+</nav>
+
+<p-drawer [(visible)]="visible">
+  <ng-template #headless>
+    <div class="sidebar-container">
+      <div class="sidebar-header">
+        <div class="brand-group">
+          <img src="assets/Images/Logo.png" alt="logo" class="logo-img" />
+          <span class="brand-text">BUFFET</span>
+        </div>
+      </div>
+
+      <div class="user-profile-section">
+        <div class="profile-row">
+          <div class="user-info">
+            <span class="username">กรุณาเข้าสู่ระบบ</span>
+          </div>
+          <button class="profile-badge-btn">Login</button>
+        </div>
+      </div>
+
+      <div class="menu-list">
+        <ul>
+          <li *ngFor="let item of menuItems">
+            <a pRipple [class.active]="item.active" class="menu-item">
+              <mat-icon class="menu-icon">{{ item.icon }}</mat-icon>
+              <span class="menu-label">{{ item.label }}</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </ng-template>
+</p-drawer>

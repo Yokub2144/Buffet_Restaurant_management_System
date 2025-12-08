@@ -1,3 +1,86 @@
 <app-index-navbar></app-index-navbar>
 
-<div class="main-container full-screen-bg"></div>
+<div class="hero-banner-wrapper">
+  <p-carousel
+    [value]="banners"
+    [numVisible]="1"
+    [numScroll]="1"
+    [circular]="true"
+    [autoplayInterval]="4000"
+    [showIndicators]="false"
+  >
+    <ng-template let-banner pTemplate="item">
+      <div class="banner-item">
+        <img [src]="banner.image" alt="Promotion" class="banner-img" />
+      </div>
+    </ng-template>
+  </p-carousel>
+</div>
+
+<div class="main-container full-screen-bg">
+  <main class="main-content">
+    <div class="info-section">
+      <div class="promo-poster">
+        <img src="assets/Images/shop-info.png" alt="โปรโมชั่นหมูกระทะ" />
+      </div>
+
+      <div class="shop-info">
+        <h2 class="title">ข้อมูลร้านบุฟเฟต์หมูกระทะ</h2>
+
+        <div class="price-container">
+          <div class="price-box">
+            <span class="label">ราคาผู้ใหญ่ / คน</span>
+            <span class="value">189 บาท</span>
+          </div>
+
+          <div class="price-box">
+            <span class="label">ราคาเด็ก</span>
+            <span class="value">129 บาท</span>
+          </div>
+        </div>
+
+        <button class="discount-btn">ดูส่วนลด</button>
+      </div>
+    </div>
+  </main>
+  <div class="discount-section">
+    <div class="discount-header">
+      <h2>ส่วนลดที่มีอยู่</h2>
+    </div>
+
+    <div class="discount-content">
+      <table class="discount-table">
+        <thead>
+          <tr>
+            <th class="text-left">ชื่อส่วนลด</th>
+            <th class="text-center">ส่วนลด</th>
+            <th class="text-center">ดูรายละเอียด</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>โปรวันเกิด (สำหรับคนที่เกิด เดือนสิงหาคม)</td>
+            <td class="discount-value">10%</td>
+            <td class="text-center">
+              <button class="show-btn">Show</button>
+            </td>
+          </tr>
+          <tr>
+            <td>โปรเช็คอินที่ร้าน (ใน facebook)</td>
+            <td class="discount-value">30%</td>
+            <td class="text-center">
+              <button class="show-btn">Show</button>
+            </td>
+          </tr>
+          <tr>
+            <td>โปรรีวิวร้านใน tiktok ยอดวิวเยอะที่สุด</td>
+            <td class="discount-value">40%</td>
+            <td class="text-center">
+              <button class="show-btn">Show</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
