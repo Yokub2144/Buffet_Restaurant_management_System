@@ -13,9 +13,33 @@ import { RippleModule } from 'primeng/ripple';
   styleUrl: './index.scss',
 })
 export class Index {
+  currentBannerIndex: number = 0;
+  slideInterval: number = 5000;
+  slideTimer: any;
+
   banners = [
     { image: 'assets/Images/Banner.png' },
     { image: 'assets/Images/Banner2.png' },
     { image: 'assets/Images/Banner3.png' },
   ];
+
+  onClicksmailPictures(index: number) {
+    if (this.slideTimer) {
+      clearInterval(this.slideTimer);
+    }
+    this.currentBannerIndex = index;
+    this.slideInterval = 0;
+  }
+
+  onBannerChange(event: any) {
+    this.currentBannerIndex = event.page;
+  }
+
+  scrollToSection(element: HTMLElement): void {
+    element.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+      inline: 'nearest',
+    });
+  }
 }

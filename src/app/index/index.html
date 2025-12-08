@@ -6,9 +6,10 @@
         [numVisible]="1"
         [numScroll]="1"
         [circular]="true"
-        [autoplayInterval]="5000"
-        [showIndicators]="true"
-        indicatorStyleClass="custom-indicator"
+        [autoplayInterval]="slideInterval"
+        [showIndicators]="false"
+        [page]="currentBannerIndex"
+        (onPage)="onBannerChange($event)"
       >
         <ng-template let-banner pTemplate="item">
           <div class="banner-item">
@@ -17,6 +18,16 @@
           </div>
         </ng-template>
       </p-carousel>
+      <div class="banner-thumbnails">
+        <div
+          class="banner-thumb-box"
+          *ngFor="let banner of banners; let i = index"
+          [class.active]="i === currentBannerIndex"
+          (click)="onClicksmailPictures(i)"
+        >
+          <img [src]="banner.image" alt="Thumbnail" />
+        </div>
+      </div>
     </section>
 
     <div class="main-content-bg">
@@ -42,11 +53,17 @@
               </div>
             </div>
 
-            <button pButton pRipple label="ดูโปรโมชั่น" class="p-button-danger promo-btn"></button>
+            <button
+              pButton
+              pRipple
+              label="ดูโปรโมชั่น"
+              class="p-button-danger promo-btn"
+              (click)="scrollToSection(promoSection)"
+            ></button>
           </div>
         </section>
 
-        <section class="table-card">
+        <section class="table-card" #promoSection>
           <div class="table-header">
             <h2>ส่วนลดที่มีอยู่</h2>
           </div>
