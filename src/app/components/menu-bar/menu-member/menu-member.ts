@@ -6,14 +6,15 @@ import { Ripple } from 'primeng/ripple';
 import { AvatarModule } from 'primeng/avatar';
 import { Drawer } from 'primeng/drawer';
 import { MatIconModule } from '@angular/material/icon';
+
 @Component({
   selector: 'app-menu-member',
-  imports: [CommonModule, DrawerModule, ButtonModule, Ripple, AvatarModule],
+  imports: [CommonModule, DrawerModule, ButtonModule, Ripple, AvatarModule, MatIconModule],
   templateUrl: './menu-member.html',
   styleUrl: './menu-member.scss',
 })
 export class MenuMember {
-  visible: boolean = false; // ตัวแปรคุมการเปิด/ปิด Drawer
+  visible: boolean = false;
 
   menuItems = [
     { label: 'หน้าหลัก/dashboard', icon: 'dashboard', active: true },
