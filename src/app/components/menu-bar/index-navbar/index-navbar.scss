@@ -1,117 +1,284 @@
-@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400&display=swap');
+// --- Variables ---
+$bg-black: #000000;
+$bg-sidebar: #1a1a1a;
+$text-white: #ffffff;
+$text-grey: #a1a1aa;
+$accent-orange: #d35400;
 
-:host {
-  font-family: 'Kanit', sans-serif;
+// --- Helper Mixin ---
+@mixin icon-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.custom-navbar {
-  background-color: #000;
-  color: #fff;
+// --- Navbar Styles (Responsive) ---
+.navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 64px;
-  padding: 0 16px;
-  position: fixed;
-  top: 0;           
-  left: 0;         
-  width: 100%;
-
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2); 
-}
-
-
-.left-section {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-
-  /* ปุ่ม Menu */
-  .menu-btn {
-    color: #fff;
+  background-color: $bg-black;
+  color: $text-white;
+  height: 64px; 
+  padding: 0 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); 
   
-    margin-right: 0;
-  }
+  //  Navbar ติดด้านบนตลอดเวลา ***
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  width: 100%;
+  box-sizing: border-box; 
 
-  /* โลโก้และชื่อ */
-  .brand {
+ 
+  .navbar-left {
     display: flex;
     align-items: center;
-    gap: 10px;
-    font-size: 1.1rem;
-    white-space: nowrap; 
-    
-    img {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background: #fff;
-      object-fit: cover;
+    gap: 15px;
+
+    .hamburger-btn {
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+      @include icon-center; // จัด mat-icon กึ่งกลาง
+
+      mat-icon {
+        font-size: 28px;
+        width: 28px;
+        height: 28px;
+      } // ปรับขนาด
+      &:hover {
+        color: $accent-orange;
+      }
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+
+      .logo-wrapper {
+        width: 35px;
+        height: 35px;
+        background: white;
+        border-radius: 50%;
+        padding: 2px;
+        @include icon-center;
+
+        .logo-img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          border-radius: 50%;
+        }
+      }
+
+      .brand-name {
+        color: $text-white;
+        font-family: 'Kanit', sans-serif;
+        font-size: 1.2rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+    }
+  }
+
+  // --- ส่วนขวา (Link + Login) ---
+  .navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+
+    .nav-link {
+      color: $text-white;
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition: color 0.3s;
+      position: relative;
+      cursor: pointer;
+
+      &:hover {
+        color: #ffca28;
+      }
+
+      &.active {
+        color: #ffca28; 
+      }
     }
   }
 }
 
-/* ตัวคั่นกลาง */
-.spacer {
-  flex: 1 1 auto;
+// *** Media Query: สำหรับมือถือ (หน้าจอเล็กกว่า 768px) ***
+@media screen and (max-width: 768px) {
+  .navbar {
+    padding: 0 15px; // ลด Padding
+
+    .navbar-left {
+      gap: 10px;
+      
+      .brand-logo .brand-name {
+        font-size: 1rem; 
+      }
+    }
+
+    .navbar-right {
+      gap: 15px;
+      
+    
+    }
+  }
 }
 
-.right-section {
+// --- Sidebar Styles (Drawer) ---
+.sidebar-container {
+  background-color: $bg-sidebar;
+  height: 100%; 
+  width: 280px;
   display: flex;
-  align-items: center;
-  gap: 5px;
+  flex-direction: column;
+  color: $text-grey;
+  font-family: 'Kanit', sans-serif;
 
-.nav-link {
-    font-family: 'Kanit', sans-serif;
-    color: #fff;
+  // Header
+  .sidebar-header {
+    padding: 25px 20px;
     
-    &.active {
-      color: #ffca28;
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      
+      .logo-img {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+        border-radius: 50%;
+        background: white; // รองพื้นขาวเผื่อรูปโปร่งแสง
+        padding: 2px;
+      }
+      
+      .brand-text {
+        color: white;
+        font-size: 1.4rem;
+        font-weight: 600;
+        letter-spacing: 1px;
+      }
+    }
+  }
+
+  // Profile Section
+  .user-profile-section {
+    padding: 0 20px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+    .profile-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .user-info {
+        display: flex;
+        flex-direction: column; 
+        
+        .username {
+           color: #fff;
+           font-size: 0.95rem;
+        }
+      }
+
+      .profile-badge-btn {
+        background: transparent;
+        border: 1px solid $accent-orange;
+        color: $accent-orange;
+        padding: 4px 12px;
+        border-radius: 20px; 
+        cursor: pointer;
+        font-size: 0.8rem;
+        transition: 0.3s;
+        
+        &:hover {
+          background: $accent-orange;
+          color: white;
+        }
+      }
+    }
+  }
+
+  // Menu List
+  .menu-list {
+    flex: 1;
+    overflow-y: auto; 
+    padding-top: 10px;
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      li .menu-item {
+        display: flex;
+        align-items: center;
+        padding: 14px 24px;
+        color: $text-grey;
+        cursor: pointer;
+        text-decoration: none;
+        transition: 0.2s;
+        border-left: 3px solid transparent;
+
+        .menu-icon {
+          margin-right: 16px;
+          font-size: 22px;
+          width: 22px;
+          height: 22px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .menu-label {
+            font-size: 1rem;
+        }
+
+       &:hover {
+          background: rgba(255, 255, 255, 0.1);
+          color: white;
+        }
+        &.active {
+          background: #2d2d2d;
+          color: white;
+        }
+      }
+    }
+  }
+
+  // Footer
+  .sidebar-footer {
+    padding: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    
+    .logout {
+      display: flex;
+      align-items: center;
+      color: $text-grey;
+      cursor: pointer;
+      transition: 0.3s;
+      
+      .menu-icon { margin-right: 16px; }
+
+      &:hover {
+        color: #ef4444; 
+      }
     }
   }
 }
-.nav-link {
-  color: white;
-  text-decoration: none;
-  position: relative; 
-  transition: color 0.3s ease;
 
- 
-  &::after {
-    content: '';
-    position: absolute;
-    width: 0%; 
-    height: 2px;
-    bottom: 5px; 
-    left: 0;
-    background-color: #ffca28; 
-    transition: width 0.3s ease;
-  }
-
-  /* เมื่อเอาเมาส์ชี้ */
-  &:hover {
-    color: #ffca28; /* เปลี่ยนสีตัวหนังสือ */
-    
-    &::after {
-      width: 100%; 
+// *** Media Query สำหรับ Sidebar บนจอมือถือเล็กมากๆ ***
+@media screen and (max-width: 400px) {
+    .sidebar-container {
+        width: 100%; 
     }
-  }
-
-  /* สถานะ Active (หน้าปัจจุบัน) */
-  &.active {
-    color: #ffca28;
-    /* ให้เส้นขีดค้างไว้เลยถ้าเป็นหน้า active */
-    &::after {
-      width: 100%;
-    }
-  }
-}
-
-/* --- (Responsive) --- */
-@media (max-width: 599px) {
-  .right-section {
-    display: none; 
-  }
-  
- 
 }

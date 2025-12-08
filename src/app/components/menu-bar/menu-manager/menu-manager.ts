@@ -4,20 +4,11 @@ import { DrawerModule } from 'primeng/drawer';
 import { ButtonModule } from 'primeng/button';
 import { Ripple } from 'primeng/ripple';
 import { AvatarModule } from 'primeng/avatar';
-import { StyleClass } from 'primeng/styleclass';
 import { Drawer } from 'primeng/drawer';
 import { MatIconModule } from '@angular/material/icon';
 @Component({
   selector: 'app-menu-manager',
-  imports: [
-    CommonModule,
-    DrawerModule,
-    ButtonModule,
-    Ripple,
-    AvatarModule,
-    StyleClass,
-    MatIconModule,
-  ],
+  imports: [CommonModule, DrawerModule, ButtonModule, Ripple, AvatarModule, MatIconModule],
   templateUrl: './menu-manager.html',
   styleUrl: './menu-manager.scss',
 })
