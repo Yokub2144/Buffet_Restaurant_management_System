@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IndexNavbar } from './index-navbar/index-navbar';
+import { IndexNavbar } from '../components/menu-bar/index-navbar/index-navbar';
 @Component({
   selector: 'app-index',
   imports: [IndexNavbar],

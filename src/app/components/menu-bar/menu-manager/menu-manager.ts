@@ -22,7 +22,7 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrl: './menu-manager.scss',
 })
 export class MenuManager {
-  isOpen = true; // สถานะเปิด/ปิด เมนู (สำหรับ Mobile)
+  isExpanded: boolean = false; // สถานะเปิด/ปิด เมนู (สำหรับ Mobile)
 
   menuItems = [
     { label: 'หน้าหลัก/dashboard', icon: 'dashboard', active: true },
@@ -34,13 +34,13 @@ export class MenuManager {
   ];
 
   toggleSidebar() {
-    this.isOpen = !this.isOpen;
+    this.isExpanded = !this.isExpanded;
   }
 
   closeSidebar() {
     // ปิดเมนูเมื่อคลิก (สำหรับ Mobile UX)
     if (window.innerWidth <= 768) {
-      this.isOpen = false;
+      this.isExpanded = false;
     }
   }
   @ViewChild('drawerRef') drawerRef!: Drawer;

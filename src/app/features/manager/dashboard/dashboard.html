@@ -1,6 +1,89 @@
-<app-menu-manager></app-menu-manager>
-<main class="main-content">
-  <div class="content-placeholder">
-    <h2>Dashboard Content</h2>
-  </div>
-</main>
+<app-menu-manager>
+  <main class="main-content">
+    <div class="content-placeholder">
+      <div class="dashboard-container">
+        <div class="mb-4">
+          <h1 class="text-3xl font-bold text-white mb-1">แดชบอร์ดยอดขายและลูกค้า</h1>
+          <p class="text-gray-400">ข้อมูล ณ วันที่ {{ currentDate }}</p>
+        </div>
+
+        <div class="grid-cards mb-5">
+          <div class="kpi-card card-blue">
+            <div class="flex justify-content-between align-items-center h-full">
+              <div>
+                <div class="text-3xl font-bold mb-2">฿50,000</div>
+                <div class="text-sm opacity-80">ยอดขายวันนี้</div>
+              </div>
+              <mat-icon class="kpi-icon">show_chart</mat-icon>
+            </div>
+          </div>
+
+          <div class="kpi-card card-purple">
+            <div class="flex justify-content-between align-items-center h-full">
+              <div>
+                <div class="text-3xl font-bold mb-2">294</div>
+                <div class="text-sm opacity-80">ลูกค้าทั้งหมด</div>
+              </div>
+              <mat-icon class="kpi-icon">groups</mat-icon>
+            </div>
+          </div>
+
+          <div class="kpi-card card-teal">
+            <div class="flex justify-content-between align-items-center h-full">
+              <div>
+                <div class="text-3xl font-bold mb-2">12:00-13:00</div>
+                <div class="text-sm opacity-80">ช่วงเวลาที่คึกคักที่สุด</div>
+              </div>
+              <mat-icon class="kpi-icon">schedule</mat-icon>
+            </div>
+          </div>
+
+          <div class="kpi-card card-green">
+            <div class="flex justify-content-between align-items-center h-full">
+              <div>
+                <div class="text-3xl font-bold mb-2">43</div>
+                <div class="text-sm opacity-80">ลูกค้าในช่วงนี้</div>
+              </div>
+              <mat-icon class="kpi-icon">event_note</mat-icon>
+            </div>
+          </div>
+        </div>
+
+        <div class="chart-section p-4 border-round-xl">
+          <div class="flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+            <h2 class="text-xl font-bold text-white m-0">ยอดขาย</h2>
+
+            <div class="flex gap-2">
+              <button
+                pButton
+                label="รายวัน"
+                class="p-button-outlined p-button-success p-button-sm custom-btn"
+              ></button>
+              <button
+                pButton
+                label="รายเดือน"
+                class="p-button-outlined p-button-warning p-button-sm custom-btn"
+              ></button>
+              <button
+                pButton
+                label="รายปี"
+                class="p-button-outlined p-button-danger p-button-sm custom-btn"
+              ></button>
+            </div>
+          </div>
+
+          <div class="flex justify-content-center mb-2">
+            <div class="flex align-items-center gap-2">
+              <span class="block w-2rem h-1rem bg-green-500"></span>
+              <span class="text-gray-400 text-sm">ยอดขายรายวัน</span>
+            </div>
+          </div>
+
+          <div class="chart-container">
+            <p-chart type="bar" [data]="data" [options]="options" height="350px"></p-chart>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</app-menu-manager>

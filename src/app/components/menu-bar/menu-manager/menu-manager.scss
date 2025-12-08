@@ -4,118 +4,66 @@ $bg-sidebar: #1a1a1a;
 $text-white: #ffffff;
 $text-grey: #a1a1aa;
 $accent-orange: #d35400;
+$sidebar-width-expanded: 280px;
+$sidebar-width-collapsed: 70px; // ความกว้างตอนปิด (โชว์แค่ไอคอน)
 
-// Helper Mixin สำหรับจัด icon ให้อยู่กึ่งกลาง
 @mixin icon-center {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-// --- Navbar Styles ---
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: $bg-black;
-  color: $text-white;
-  height: 60px;
-  padding: 0 20px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-
-  .navbar-left {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-
-    .hamburger-btn {
-      background: none;
-      border: none;
-      color: white;
-      cursor: pointer;
-      @include icon-center; // จัด mat-icon กึ่งกลาง
-
-      mat-icon {
-        font-size: 28px;
-        width: 28px;
-        height: 28px;
-      } // ปรับขนาด
-      &:hover {
-        color: $accent-orange;
-      }
-    }
-
-    .brand-logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      .logo-img {
-        width: 32px;
-        height: 32px;
-        background: white;
-        border-radius: 50%;
-        @include icon-center;
-        color: red;
-
-        mat-icon {
-          font-size: 20px;
-          width: 20px;
-          height: 20px;
-        } // ปรับขนาดสายฟ้า
-      }
-      .brand-name {
-        font-weight: 500;
-        font-size: 1.2rem;
-      }
-    }
-  }
-
-  .navbar-right {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    font-size: 0.9rem;
-    .nav-link {
-      color: white;
-      text-decoration: none;
-    }
-
-    .profile-dropdown {
-      cursor: pointer;
-      .profile-text {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        // ปรับลูกศรลงให้เล็กหน่อย
-        mat-icon {
-          font-size: 18px;
-          width: 18px;
-          height: 18px;
-        }
-      }
-    }
-  }
+:host {
+  display: block;
+  height: 100vh;
+  overflow: hidden;
 }
 
-// --- Sidebar Styles ---
+.layout-wrapper {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+}
+
+// --- SIDEBAR STYLES ---
 .sidebar-container {
   background-color: $bg-sidebar;
   height: 100%;
-  width: 280px;
-  display: flex;
-  flex-direction: column;
   color: $text-grey;
   font-family: 'Kanit', sans-serif;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0; // ห้ามหด
 
+  // Transition Effect
+  width: $sidebar-width-collapsed; // เริ่มต้นที่ขนาดเล็ก (Mini)
+  transition: width 0.3s;
+  overflow: hidden; // ซ่อนส่วนเกินตอนหด
+  border-right: 1px solid #333;
+
+  // สถานะ Expanded (ตอนเปิดเต็ม)
+  &.expanded {
+    width: $sidebar-width-expanded;
+    transition: width 0.8s;
+  }
+
+  // --- Header ---
   .sidebar-header {
-    padding: 25px 20px;
+    padding: 20px 15px; // ลด padding นิดหน่อยให้พอดีตอนเล็ก
+    display: flex;
+    align-items: center;
+    justify-content: space-between; // ให้ Logo กับปุ่ม X อยู่คนละฝั่ง
+    height: 70px;
+
     .brand-group {
       display: flex;
       align-items: center;
       gap: 12px;
+      // Logo Circle
       .logo-circle {
         width: 40px;
         height: 40px;
+        min-width: 40px; // fix ขนาด
         background: white;
         border-radius: 50%;
         @include icon-center;
@@ -127,17 +75,38 @@ $accent-orange: #d35400;
         color: white;
         font-size: 1.4rem;
         font-weight: 600;
+        white-space: nowrap;
+      }
+    }
+
+    // Close Button (X)
+    .close-btn {
+      background: none;
+      border: none;
+      color: $text-grey;
+      cursor: pointer;
+      @include icon-center;
+      &:hover {
+        color: white;
       }
     }
   }
 
+  // --- Profile ---
   .user-profile-section {
-    padding: 0 20px 20px;
+    padding: 0 15px 20px;
     border-bottom: 1px solid #333;
+
     .profile-row {
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
+      height: 40px;
+
+      &.justify-center {
+        justify-content: center;
+      } // จัดกลางตอนปิด
+
       .user-info {
         display: flex;
         gap: 10px;
@@ -145,6 +114,7 @@ $accent-orange: #d35400;
         .avatar-circle {
           width: 35px;
           height: 35px;
+          min-width: 35px;
           border: 1px solid #555;
           border-radius: 50%;
           @include icon-center;
@@ -152,7 +122,11 @@ $accent-orange: #d35400;
             font-size: 20px;
           }
         }
+        .username {
+          white-space: nowrap;
+        } // ห้ามตัดคำ
       }
+
       .profile-badge-btn {
         background: transparent;
         border: 1px solid $accent-orange;
@@ -160,6 +134,7 @@ $accent-orange: #d35400;
         padding: 2px 8px;
         border-radius: 4px;
         cursor: pointer;
+        white-space: nowrap;
         &:hover {
           background: $accent-orange;
           color: white;
@@ -168,9 +143,11 @@ $accent-orange: #d35400;
     }
   }
 
+  // --- Menu ---
   .menu-list {
     flex: 1;
     overflow-y: auto;
+    overflow-x: hidden;
     ul {
       list-style: none;
       padding: 0;
@@ -178,20 +155,18 @@ $accent-orange: #d35400;
       li .menu-item {
         display: flex;
         align-items: center;
-        padding: 12px 20px;
+        padding: 12px 0; // เอา padding ซ้ายขวาออก แล้วใช้ justify-content คุม
+        padding-left: 22px; // จัดระยะไอคอนให้ตรงกลางแถบ Mini (70px / 2 approx)
         color: $text-grey;
         cursor: pointer;
-        text-decoration: none; // ลบขีดเส้นใต้
+        text-decoration: none;
+        height: 50px;
+        white-space: nowrap; // ห้ามตัดคำ
 
-        // จัดการไอคอนเมนู
         .menu-icon {
           margin-right: 15px;
-          font-size: 22px;
-          width: 22px;
-          height: 22px; // ปรับขนาดให้พอดี
-          display: flex;
-          align-items: center;
-          justify-content: center;
+          @include icon-center;
+          font-size: 24px;
         }
 
         &:hover {
@@ -201,24 +176,94 @@ $accent-orange: #d35400;
         &.active {
           background: #2d2d2d;
           color: white;
-        }
+          border-left: 3px solid $accent-orange;
+          padding-left: 19px;
+        } // ชดเชย border
       }
     }
   }
 
+  // --- Footer ---
   .sidebar-footer {
-    padding: 20px;
+    padding: 20px 0;
+    padding-left: 22px;
     border-top: 1px solid #333;
-
     .logout {
       display: flex;
-      align-items: center; // จัด footer ให้ตรง
+      align-items: center;
+      color: $text-grey;
+      text-decoration: none;
+      cursor: pointer;
       .menu-icon {
         margin-right: 15px;
-      } // ระยะห่าง
+      }
+      &:hover {
+        color: #ef4444;
+      }
     }
-    .logout:hover {
-      color: #ef4444;
+  }
+}
+
+// --- MAIN WRAPPER (ขวา) ---
+.main-wrapper {
+  flex: 1; // กินพื้นที่ที่เหลือ
+  display: flex;
+  flex-direction: column;
+  min-width: 0; // ป้องกัน flex child ล้นจอ
+
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: $bg-black;
+    color: $text-white;
+    height: 60px;
+    padding: 0 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+
+    .navbar-left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      .hamburger-btn {
+        background: none;
+        border: none;
+        color: white;
+        cursor: pointer;
+        @include icon-center;
+        &:hover {
+          color: $accent-orange;
+        }
+      }
     }
+    .navbar-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      @media (min-width: $sidebar-width-collapsed) {
+        display: none;
+      }
+      .nav-link {
+        color: white;
+        text-decoration: none;
+      }
+      .profile-dropdown {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+      }
+    }
+  }
+}
+@media (max-width: 480px) {
+  .sidebar-container {
+    width: 0; // ปิดสนิทในมือถือ
+    &.expanded {
+      width: 280px; // เปิดมาทับเลย
+    }
+  }
+
+  .main-wrapper {
+    margin-left: 0; // ไม่ต้องเว้นที่ในมือถือ
   }
 }
