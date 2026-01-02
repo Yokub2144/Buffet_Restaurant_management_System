@@ -1,0 +1,115 @@
+<p-toast [breakpoints]="{ '120px': { width: '50%' } }" />
+<div class="register-container">
+  <div class="register-card">
+    <h1>Register/สมัครสมาชิก (สำหรับ พนักงาน)</h1>
+
+    <form>
+      <div class="form-group">
+        <div class="input-wrapper">
+          <input type="text" name="fullname" placeholder="ชื่อ-นามสกุล" [(ngModel)]="fullname" />
+          <mat-icon>person</mat-icon>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="input-wrapper">
+          <input type="email" name="email" placeholder="อีเมล" [(ngModel)]="email" />
+          <mat-icon>mail</mat-icon>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="input-wrapper">
+          <input type="tel" name="phone" placeholder="เบอร์โทรศัพท์" [(ngModel)]="phone" />
+          <mat-icon>phone</mat-icon>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="input-wrapper">
+          <input type="password" name="password" placeholder="รหัสผ่าน" [(ngModel)]="password" />
+          <mat-icon>lock</mat-icon>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="input-wrapper">
+          <input
+            type="text"
+            name="idCard"
+            placeholder="รหัสบัตรประชาชน"
+            [(ngModel)]="idCard"
+            maxlength="13"
+            minlength="13"
+            pattern="^[0-9]*$"
+          />
+          <mat-icon>badge</mat-icon>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>เลือกรูปพนักงาน</label>
+        <div class="file-upload">
+          <input
+            type="file"
+            #fileInput
+            (change)="onFileSelected($event)"
+            accept="image/*"
+            style="display: none"
+          />
+          <button type="button" class="btn-select" (click)="fileInput.click()">เลือกไฟล์</button>
+          <span class="file-name">
+            {{ selectedFile ? selectedFileName : 'ไม่ได้เลือกไฟล์ใด' }}
+          </span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="input-wrapper">
+          <select name="gender" [(ngModel)]="gender">
+            <option value="" disabled selected>เลือกเพศ</option>
+            <option value="ชาย">ชาย</option>
+            <option value="หญิง">หญิง</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>ที่อยู่</label>
+        <div class="input-wrapper">
+          <textarea name="address" rows="3" [(ngModel)]="address"></textarea>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="input-wrapper">
+          <select name="department" [(ngModel)]="department">
+            <option value="" disabled selected>เลือกแผนก</option>
+            <option value="พนักงานเสิร์ฟ">พนักงานเสิร์ฟ</option>
+            <option value="พนักงานครัว">พนักงานครัว</option>
+            <option value="พนักงานแคชเชียร์">พนักงานแคชเชียร์</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="input-wrapper">
+          <select name="employeeType" [(ngModel)]="employeeType">
+            <option value="" disabled selected>เลือกประเภทพนักงาน</option>
+            <option value="ประจำ">ประจำ</option>
+            <option value="พาร์ทไทม์">พาร์ทไทม์</option>
+          </select>
+        </div>
+      </div>
+
+      <button type="button" class="btn-submit" (click)="onSubmit()">
+        Register/สมัครสมาชิก (สำหรับ พนักงาน)
+      </button>
+
+      <div class="footer-links">
+        <a (click)="goBack()" class="back">ย้อนกลับ</a>
+        <a (click)="goLogin()" class="login">ฉันมีสมาชิกแล้ว</a>
+      </div>
+    </form>
+  </div>
+</div>

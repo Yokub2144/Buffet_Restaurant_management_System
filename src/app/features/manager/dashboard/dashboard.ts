@@ -13,7 +13,34 @@ import { MatIconModule } from '@angular/material/icon';
 export class Dashboard implements OnInit {
   data: any;
   options: any;
-  currentDate: string = '29 กันยายน 2568';
+  timeNow: string = '';
+  private timer: any;
+
+  ngOnInit() {
+    this.updateTime();
+    this.initChart();
+    this.timer = setInterval(() => {
+      this.updateTime();
+    }, 1000);
+  }
+
+  currentDate: string = new Date().toLocaleDateString('th-TH', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+  updateTime() {
+    this.timeNow = new Date().toLocaleTimeString('th-TH', {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+    });
+  }
+  ngOnDestroy() {
+    if (this.timer) {
+      clearInterval(this.timer);
+    }
+  }
 
   // ข้อมูลจำลองสำหรับ Cards ด้านบน
   kpiData = [
@@ -46,10 +73,6 @@ export class Dashboard implements OnInit {
       textColor: 'text-green-500',
     },
   ];
-
-  ngOnInit() {
-    this.initChart();
-  }
 
   initChart() {
     const documentStyle = getComputedStyle(document.documentElement);

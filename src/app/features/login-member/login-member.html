@@ -1,0 +1,44 @@
+<p-toast [breakpoints]="{ '120px': { width: '50%' } }" />
+
+<div class="login-container">
+  <div class="login-card">
+    <h1>เข้าสู่ระบบเพื่อเริ่มต้นใช้งาน</h1>
+
+    <form>
+      <div class="form-group">
+        <div class="input-wrapper">
+          <input type="tel" name="phone" placeholder="เบอร์โทรศัพท์" [(ngModel)]="phone" />
+          <mat-icon>phone</mat-icon>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="input-wrapper">
+          <input type="password" name="password" placeholder="รหัสผ่าน" [(ngModel)]="password" />
+          <mat-icon>lock</mat-icon>
+        </div>
+      </div>
+
+      <div class="remember-me">
+        <input type="checkbox" id="remember" name="remember" />
+        <label for="remember">จดจำการเข้าสู่ระบบ</label>
+      </div>
+
+      <button type="button" class="btn-login" (click)="onLogin()">Login/เข้าสู่ระบบ</button>
+
+      <div class="divider">-OR-</div>
+
+      <button type="button" class="btn-register-customer" (click)="onRegisterMember()">
+        Register/สมัครสมาชิก (สำหรับ ลูกค้า)
+      </button>
+
+      <button type="button" class="btn-register-staff" (click)="onRegisterEmployee()">
+        Register/สมัครสมาชิก (สำหรับ พนักงาน)
+      </button>
+
+      <div class="footer-links">
+        <a (click)="forgotPassword()" class="forgot-pass">ลืมรหัสผ่าน</a>
+      </div>
+    </form>
+  </div>
+</div>

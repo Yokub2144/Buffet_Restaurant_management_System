@@ -43,7 +43,12 @@
     </div>
 
     <div class="sidebar-footer">
-      <a pRipple class="menu-item logout" [title]="!isExpanded ? 'ออกจากระบบ' : ''">
+      <a
+        pRipple
+        class="menu-item logout"
+        (click)="logout()"
+        [title]="!isExpanded ? 'ออกจากระบบ' : ''"
+      >
         <mat-icon class="menu-icon">logout</mat-icon>
         <span class="menu-label" *ngIf="isExpanded">ออกจากระบบ</span>
       </a>

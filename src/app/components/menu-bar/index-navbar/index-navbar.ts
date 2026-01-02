@@ -19,7 +19,7 @@ export class IndexNavbar {
   // เมนูสำหรับ Sidebar
   menuItems = [
     { label: 'หน้าหลัก', icon: 'home', route: '/', active: true },
-    { label: 'เข้าสู่ระบบ', icon: 'login', route: '/login', active: false },
+    { label: 'เข้าสู่ระบบ', icon: 'login', route: '/Loginmember', active: false },
   ];
 
   toggleSidebar() {

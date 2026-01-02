@@ -6,6 +6,7 @@ import { Ripple } from 'primeng/ripple';
 import { AvatarModule } from 'primeng/avatar';
 import { Drawer } from 'primeng/drawer';
 import { MatIconModule } from '@angular/material/icon';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-menu-manager',
   imports: [CommonModule, DrawerModule, ButtonModule, Ripple, AvatarModule, MatIconModule],
@@ -13,6 +14,7 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrl: './menu-manager.scss',
 })
 export class MenuManager {
+  constructor(private router: Router) {}
   isExpanded: boolean = false; // สถานะเปิด/ปิด เมนู (สำหรับ Mobile)
 
   menuItems = [
@@ -40,4 +42,10 @@ export class MenuManager {
     this.drawerRef.close(e);
   }
   visible: boolean = false;
+  logout() {
+    console.log('Logging out...');
+    localStorage.removeItem('token');
+    sessionStorage.removeItem('token');
+    this.router.navigate(['/Loginemployee']);
+  }
 }
