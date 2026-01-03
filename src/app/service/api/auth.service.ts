@@ -29,4 +29,10 @@ export class AuthService {
     const response = this.http.post<any>(url, options);
     return response;
   }
+
+  public loginMember(options?: any) {
+    const url = this.constants.API_ENDPOINT + '/Auth/login-member';
+    const response = this.http.post<any>(url, options);
+    return response;
+  }
 }

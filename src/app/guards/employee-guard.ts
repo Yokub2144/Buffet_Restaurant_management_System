@@ -4,13 +4,10 @@ import { CanActivateFn, Router } from '@angular/router';
 
 export const employeeGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
-  let token = localStorage.getItem('token');
+  let token = localStorage.getItem('token') || sessionStorage.getItem('token');
   if (!token) {
-    token = sessionStorage.getItem('token');
-    if (!token) {
-      router.navigate(['/login-employee']);
-      return false;
-    }
+    router.navigate(['/login-employee']);
+    return false;
   }
 
   try {
