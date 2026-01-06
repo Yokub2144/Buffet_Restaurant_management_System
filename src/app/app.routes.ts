@@ -9,6 +9,7 @@ import { LoginMember } from './features/login-member/login-member';
 import { LoginEmployee } from './features/login-employee/login-employee';
 import { memberGuard } from './guards/member-guard';
 import { employeeGuard } from './guards/employee-guard';
+import { CustomerOrder } from './customer-order/customer-order';
 export const routes: Routes = [
   { path: '', component: Index },
   { path: 'Registeremployee', component: RegisterEmployee },
@@ -22,5 +23,6 @@ export const routes: Routes = [
     data: { roles: ['เจ้าของร้าน'] },
   },
   { path: 'Booking', component: Booking, canActivate: [memberGuard] },
+  { path: 'Customer', component: CustomerOrder },
   { path: '**', redirectTo: '' },
 ];
