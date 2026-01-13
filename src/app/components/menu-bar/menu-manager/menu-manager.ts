@@ -27,12 +27,17 @@ export class MenuManager {
   isExpanded: boolean = false; // สถานะเปิด/ปิด เมนู (สำหรับ Mobile)
 
   menuItems = [
-    { label: 'หน้าหลัก/dashboard', icon: 'dashboard', active: true },
-    { label: 'จัดการข้อมูลพนักงาน', icon: 'groups', active: false },
-    { label: 'จัดการข้อมูลโต๊ะ', icon: 'table_restaurant', active: false }, // หรือ grid_view
-    { label: 'รายการบิล', icon: 'receipt_long', active: false },
-    { label: 'การตั้งค่าร้าน', icon: 'settings', active: false },
-    { label: 'การตั้งค่าราคาอาหาร', icon: 'restaurant_menu', active: false },
+    { label: 'หน้าหลัก/dashboard', icon: 'dashboard', route: '/Dashboard', active: true },
+    { label: 'จัดการข้อมูลพนักงาน', icon: 'groups', route: '/ManageEmployee', active: false },
+    { label: 'จัดการข้อมูลโต๊ะ', icon: 'table_restaurant', route: '/ManageTable', active: false }, // หรือ grid_view
+    { label: 'รายการบิล', icon: 'receipt_long', route: '/BillingList', active: false },
+    { label: 'การตั้งค่าร้าน', icon: 'settings', route: '/SettingsRestaurant', active: false },
+    {
+      label: 'การตั้งค่าราคาอาหาร',
+      icon: 'restaurant_menu',
+      route: '/FoodPriceSettings',
+      active: false,
+    },
   ];
 
   toggleSidebar() {

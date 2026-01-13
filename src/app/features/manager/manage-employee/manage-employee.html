@@ -1,1 +1,114 @@
-<p>manage-employee works!</p>
+<app-menu-manager>
+  <main class="main-content">
+    <div
+      class="header-section flex justify-content-between align-items-center mb-3 flex-wrap gap-2"
+    >
+      <h1 class="page-title m-0">จัดการข้อมูลพนักงาน</h1>
+      <button pButton class="custom-add-btn">
+        <i class="pi pi-user-plus mr-2"></i>
+        <span class="btn-text ml-2">คำขอเป็นพนักงาน</span>
+      </button>
+    </div>
+
+    <div class="top-dashboard-grid mb-4">
+      <div class="stats-container">
+        <div class="stat-card blue-card">
+          <div class="stat-content">
+            <div class="stat-value">{{ totalWage | number }}</div>
+            <div class="stat-label">ค่าจ้างรวม/วัน</div>
+          </div>
+          <mat-icon class="stat-icon-bg">payments</mat-icon>
+        </div>
+
+        <div class="stat-card green-card">
+          <div class="stat-content">
+            <div class="stat-value">{{ totalEmployees }}</div>
+            <div class="stat-label">กำลังทำงาน</div>
+          </div>
+          <mat-icon class="stat-icon-bg">person</mat-icon>
+        </div>
+
+        <div class="stat-card red-card">
+          <div class="stat-content">
+            <div class="stat-value">{{ resignedEmployees }}</div>
+            <div class="stat-label">ลาออก</div>
+          </div>
+          <mat-icon class="stat-icon-bg">front_hand</mat-icon>
+        </div>
+      </div>
+
+      <div class="filter-box">
+        <div class="search-row mb-2">
+          <input pInputText type="text" placeholder="ค้นหาพนักงาน..." class="w-full search-input" />
+          <i class="pi pi-search search-icon"></i>
+        </div>
+        <div class="dropdowns-row flex gap-2">
+          <p-select
+            [options]="statusOptions"
+            placeholder="ทุกสถานะ"
+            class="flex-1 custom-select"
+          ></p-select>
+          <p-select
+            [options]="departmentOptions"
+            placeholder="ทุกแผนก"
+            class="flex-1 custom-select"
+          ></p-select>
+          <p-select
+            [options]="typeOptions"
+            placeholder="ประเภท"
+            class="flex-1 custom-select"
+          ></p-select>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-container" style="overflow-x: auto">
+      <p-table
+        [value]="employees"
+        [rows]="10"
+        [paginator]="true"
+        styleClass="custom-table"
+        [rowHover]="true"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 5%; min-width: 50px">อันดับ</th>
+            <th style="width: 15%; min-width: 100px">รหัสพนักงาน</th>
+            <th style="width: 20%; min-width: 150px">ชื่อพนักงาน</th>
+            <th style="width: 10%; min-width: 100px">ประเภท</th>
+            <th style="width: 10%; min-width: 100px">แผนก</th>
+            <th style="width: 10%; min-width: 100px" class="text-center">สถานะ</th>
+            <th style="width: 10%; min-width: 100px" class="text-right">ค่าจ้าง<br />รายวัน</th>
+            <th style="width: 20%; min-width: 160px" class="text-center">จัดการ</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-emp let-i="rowIndex">
+          <tr>
+            <td>{{ i + 1 }}</td>
+            <td class="font-bold">{{ emp.emp_id }}</td>
+            <td>{{ emp.fullname }}</td>
+            <td>{{ emp.employee_Type }}</td>
+            <td>{{ emp.department }}</td>
+            <td class="text-center">
+              <span
+                class="status-pill"
+                [ngClass]="
+                  emp.employee_Status === 'ทำงานปัจจุบัน' ? 'status-active' : 'status-inactive'
+                "
+              >
+                {{ emp.employee_Status === 'ทำงานปัจจุบัน' ? 'กำลังทำงาน' : 'ลาออก' }}
+              </span>
+            </td>
+            <td class="text-right">{{ emp.wage | number }}฿</td>
+            <td class="text-center">
+              <div class="flex gap-2 justify-content-center">
+                <button class="action-btn btn-info">ข้อมูล</button>
+                <button class="action-btn btn-edit">แก้ไข</button>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </main>
+</app-menu-manager>
