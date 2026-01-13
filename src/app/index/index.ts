@@ -4,11 +4,12 @@ import { IndexNavbar } from '../components/menu-bar/index-navbar/index-navbar';
 import { CarouselModule } from 'primeng/carousel';
 import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
+import { MenuMember } from '../components/menu-bar/menu-member/menu-member';
 
 @Component({
   selector: 'app-index',
   standalone: true,
-  imports: [CommonModule, IndexNavbar, CarouselModule, ButtonModule, RippleModule],
+  imports: [CommonModule, IndexNavbar, CarouselModule, ButtonModule, RippleModule, MenuMember],
   templateUrl: './index.html',
   styleUrl: './index.scss',
 })
@@ -16,7 +17,11 @@ export class Index {
   currentBannerIndex: number = 0;
   slideInterval: number = 5000;
   slideTimer: any;
-
+  isLoggedIn: boolean = false;
+  ngOnInit() {
+    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+    this.isLoggedIn = !!token;
+  }
   banners = [
     { image: 'assets/Images/Banner.png' },
     { image: 'assets/Images/Banner2.png' },

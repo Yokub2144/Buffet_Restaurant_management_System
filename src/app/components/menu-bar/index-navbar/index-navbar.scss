@@ -5,7 +5,7 @@ $text-white: #ffffff;
 $text-grey: #a1a1aa;
 $accent-orange: #d35400;
 $sidebar-width-expanded: 280px;
-$sidebar-width-collapsed: 70px; 
+$sidebar-width-collapsed: 70px;
 
 @mixin icon-center {
   display: flex;
@@ -31,7 +31,7 @@ $sidebar-width-collapsed: 70px;
   height: 100vh; // Sidebar สูงเต็มจอเสมอ
   position: sticky; // ให้ Sidebar ติดอยู่กับที่เวลา scroll
   top: 0;
-  
+
   color: $text-grey;
   font-family: 'Kanit', sans-serif;
   display: flex;
@@ -60,7 +60,7 @@ $sidebar-width-collapsed: 70px;
       display: flex;
       align-items: center;
       gap: 12px;
-      
+
       // Logo Wrapper (Sidebar)
       .logo-wrapper {
         width: 40px;
@@ -70,7 +70,7 @@ $sidebar-width-collapsed: 70px;
         border-radius: 50%;
         padding: 2px;
         @include icon-center;
-        
+
         .logo-img {
           width: 100%;
           height: 100%;
@@ -93,10 +93,61 @@ $sidebar-width-collapsed: 70px;
       color: $text-grey;
       cursor: pointer;
       @include icon-center;
-      &:hover { color: white; }
+      &:hover {
+        color: white;
+      }
     }
   }
 
+  .user-profile-section {
+    padding: 0 15px 20px;
+    border-bottom: 1px solid #333;
+
+    .profile-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 40px;
+
+      &.justify-center {
+        justify-content: center;
+      } // จัดกลางตอนปิด
+
+      .user-info {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        .avatar-circle {
+          width: 35px;
+          height: 35px;
+          min-width: 35px;
+          border: 1px solid #555;
+          border-radius: 50%;
+          @include icon-center;
+          mat-icon {
+            font-size: 20px;
+          }
+        }
+        .username {
+          white-space: nowrap;
+        } // ห้ามตัดคำ
+      }
+
+      .profile-badge-btn {
+        background: transparent;
+        border: 1px solid $accent-orange;
+        color: $accent-orange;
+        padding: 2px 8px;
+        border-radius: 4px;
+        cursor: pointer;
+        white-space: nowrap;
+        &:hover {
+          background: $accent-orange;
+          color: white;
+        }
+      }
+    }
+  }
   // --- Menu ---
   .menu-list {
     flex: 1;
@@ -112,7 +163,7 @@ $sidebar-width-collapsed: 70px;
         display: flex;
         align-items: center;
         padding: 12px 0;
-        padding-left: 22px; 
+        padding-left: 22px;
         color: $text-grey;
         cursor: pointer;
         text-decoration: none;
@@ -135,6 +186,24 @@ $sidebar-width-collapsed: 70px;
           border-left: 3px solid $accent-orange;
           padding-left: 19px;
         }
+      }
+    }
+  }
+  .sidebar-footer {
+    padding: 20px 0;
+    padding-left: 22px;
+    border-top: 1px solid #333;
+    .logout {
+      display: flex;
+      align-items: center;
+      color: $text-grey;
+      text-decoration: none;
+      cursor: pointer;
+      .menu-icon {
+        margin-right: 15px;
+      }
+      &:hover {
+        color: #ef4444;
       }
     }
   }
@@ -164,31 +233,33 @@ $sidebar-width-collapsed: 70px;
       display: flex;
       align-items: center;
       gap: 20px;
-      
+
       .hamburger-btn {
         background: none;
         border: none;
         color: white;
         cursor: pointer;
         @include icon-center;
-        &:hover { color: $accent-orange; }
+        &:hover {
+          color: $accent-orange;
+        }
       }
 
-       // Logo Small (Navbar)
-       .logo-wrapper-sm {
-         width: 35px;
-         height: 35px;
-         background: white;
-         border-radius: 50%;
-         padding: 2px;
-         @include icon-center;
-         
-         .logo-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 50%;
-         }
+      // Logo Small (Navbar)
+      .logo-wrapper-sm {
+        width: 35px;
+        height: 35px;
+        background: white;
+        border-radius: 50%;
+        padding: 2px;
+        @include icon-center;
+
+        .logo-img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          border-radius: 50%;
+        }
       }
     }
 
@@ -201,15 +272,22 @@ $sidebar-width-collapsed: 70px;
         color: white;
         text-decoration: none;
         font-weight: 500;
-        &:hover, &.active { color: #ffca28; }
+        &:hover,
+        &.active {
+          color: #ffca28;
+        }
+      }
+      .profile-dropdown {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
       }
     }
   }
 
   .content-area {
-      padding: 0;
-      flex: 1;
-      // background-color: #f5f5f5; // สีพื้นหลัง Content ถ้าต้องการ
+    padding: 0;
+    flex: 1;
   }
 }
 
@@ -218,16 +296,16 @@ $sidebar-width-collapsed: 70px;
   .sidebar-container {
     position: fixed; // มือถือต้องลอยทับ
     height: 100%;
-    width: 0; 
+    width: 0;
     border: none;
-    
+
     &.expanded {
       width: 280px;
-      box-shadow: 5px 0 15px rgba(0,0,0,0.5);
+      box-shadow: 5px 0 15px rgba(0, 0, 0, 0.5);
     }
   }
 
   .main-wrapper {
-    margin-left: 0; 
+    margin-left: 0;
   }
 }

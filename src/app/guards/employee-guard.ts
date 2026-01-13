@@ -13,8 +13,7 @@ export const employeeGuard: CanActivateFn = (route, state) => {
   try {
     const decoded: any = jwtDecode(token);
     console.log('ข้อมูลใน Token:', decoded);
-    const userRole =
-      decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] || decoded['Role'];
+    const userRole = decoded.role;
     const allowedRoles = route.data['roles'] as Array<string>;
 
     if (!allowedRoles) return true;

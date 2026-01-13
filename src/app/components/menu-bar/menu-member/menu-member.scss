@@ -1,137 +1,89 @@
+// Variables
 $bg-black: #000000;
 $bg-sidebar: #1a1a1a;
 $text-white: #ffffff;
 $text-grey: #a1a1aa;
 $accent-orange: #d35400;
+$sidebar-width-expanded: 280px;
+$sidebar-width-collapsed: 70px;
 
-@mixin flex-center {
+@mixin icon-center {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
+:host {
+  display: block;
+  min-height: 100vh;
+  // overflow: hidden; // เอาออกเพื่อให้ scroll หน้าเว็บยาวๆ ได้
+}
+
 .layout-wrapper {
   display: flex;
-  flex-direction: column;
-  height: 100vh;
+  min-height: 100vh; // เปลี่ยนเป็น min-height เพื่อรองรับ content ยาว
   width: 100%;
 }
 
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: $bg-black;
-  color: $text-white;
-  height: 60px;
-  padding: 0 20px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-  flex-shrink: 0; // ห้ามหด
-
-  .navbar-left {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-
-    .hamburger-btn {
-      background: none;
-      border: none;
-      color: white;
-      cursor: pointer;
-      @include flex-center;
-      &:hover {
-        color: $accent-orange;
-      }
-    }
-
-    .brand-logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      .logo-img {
-        width: 32px;
-        height: 32px;
-        background: white;
-        border-radius: 50%;
-        @include flex-center;
-        color: red;
-        mat-icon {
-          font-size: 20px;
-          width: 20px;
-          height: 20px;
-        }
-      }
-      .brand-name {
-        font-weight: 500;
-        font-size: 1.2rem;
-      }
-    }
-  }
-
-  .navbar-right {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    font-size: 0.9rem;
-    margin-left: auto;
-
-    .nav-link {
-      color: white;
-      text-decoration: none;
-    }
-    .profile-dropdown {
-      cursor: pointer;
-      .profile-text {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-      }
-    }
-  }
-}
-
-.content-area {
-  flex-grow: 1;
-  background-color: #121212;
-  overflow-y: auto;
-  padding: 20px;
-  color: white;
-}
-
+// --- SIDEBAR STYLES ---
 .sidebar-container {
   background-color: $bg-sidebar;
-  height: 100%;
-  width: 300px;
-  display: flex;
-  flex-direction: column;
+  height: 100vh; // Sidebar สูงเต็มจอเสมอ
+  position: sticky; // ให้ Sidebar ติดอยู่กับที่เวลา scroll
+  top: 0;
+
   color: $text-grey;
   font-family: 'Kanit', sans-serif;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
 
-  // Header
+  width: $sidebar-width-collapsed;
+  transition: width 0.3s;
+  overflow: hidden;
+  border-right: 1px solid #333;
+  z-index: 1000;
+
+  &.expanded {
+    width: $sidebar-width-expanded;
+  }
+
+  // --- Header ---
   .sidebar-header {
-    padding: 25px 20px;
+    padding: 20px 15px;
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
+    height: 70px;
 
     .brand-group {
       display: flex;
       align-items: center;
       gap: 12px;
-      .logo-circle {
+
+      // Logo Wrapper (Sidebar)
+      .logo-wrapper {
         width: 40px;
         height: 40px;
+        min-width: 40px;
         background: white;
         border-radius: 50%;
-        @include flex-center;
-        mat-icon {
-          color: $accent-orange;
+        padding: 2px;
+        @include icon-center;
+
+        .logo-img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          border-radius: 50%;
         }
       }
+
       .brand-text {
         color: white;
         font-size: 1.4rem;
         font-weight: 600;
+        white-space: nowrap;
       }
     }
 
@@ -140,54 +92,64 @@ $accent-orange: #d35400;
       border: none;
       color: $text-grey;
       cursor: pointer;
+      @include icon-center;
       &:hover {
         color: white;
       }
     }
   }
 
-  // Profile
   .user-profile-section {
-    padding: 0 20px 20px;
+    padding: 10px 15px 10px;
     border-bottom: 1px solid #333;
+    border-top: 1px solid #333;
     .profile-row {
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
+      height: 40px;
+
+      &.justify-center {
+        justify-content: center;
+      } // จัดกลางตอนปิด
+
       .user-info {
         display: flex;
-        gap: 10px;
+        gap: 20px;
         align-items: center;
         .avatar-circle {
           width: 35px;
           height: 35px;
+          min-width: 35px;
           border: 1px solid #555;
           border-radius: 50%;
-          @include flex-center;
+          @include icon-center;
           mat-icon {
-            font-size: 20px;
+            font-size: 25px;
           }
         }
+        .username {
+          white-space: nowrap;
+        } // ห้ามตัดคำ
       }
+
       .profile-badge-btn {
         background: transparent;
         border: 1px solid $accent-orange;
         color: $accent-orange;
         padding: 2px 8px;
         border-radius: 4px;
-        cursor: pointer;
-        &:hover {
-          background: $accent-orange;
-          color: white;
-        }
+        white-space: nowrap;
       }
     }
   }
-
-  // Menu List
+  // --- Menu ---
   .menu-list {
     flex: 1;
     overflow-y: auto;
+    overflow-x: hidden;
+    margin-top: 10px;
+
     ul {
       list-style: none;
       padding: 0;
@@ -195,33 +157,36 @@ $accent-orange: #d35400;
       li .menu-item {
         display: flex;
         align-items: center;
-        padding: 12px 20px;
+        padding: 12px 0;
+        padding-left: 22px;
         color: $text-grey;
-        text-decoration: none;
         cursor: pointer;
-        transition: 0.2s;
+        text-decoration: none;
+        height: 50px;
+        white-space: nowrap;
 
         .menu-icon {
           margin-right: 15px;
+          @include icon-center;
+          font-size: 24px;
         }
 
         &:hover {
-          background: rgba(255, 255, 255, 0.05);
+          background: rgba(255, 255, 255, 0.1);
           color: white;
         }
         &.active {
           background: #2d2d2d;
           color: white;
           border-left: 3px solid $accent-orange;
-          padding-left: 17px;
+          padding-left: 19px;
         }
       }
     }
   }
-
-  // Footer
   .sidebar-footer {
-    padding: 20px;
+    padding: 20px 0;
+    padding-left: 22px;
     border-top: 1px solid #333;
     .logout {
       display: flex;
@@ -236,5 +201,106 @@ $accent-orange: #d35400;
         color: #ef4444;
       }
     }
+  }
+}
+
+// --- MAIN WRAPPER (ขวา) ---
+.main-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: $bg-black;
+    color: $text-white;
+    height: 60px;
+    padding: 0 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    position: sticky;
+    top: 0;
+    z-index: 999;
+
+    .navbar-left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+
+      .hamburger-btn {
+        background: none;
+        border: none;
+        color: white;
+        cursor: pointer;
+        @include icon-center;
+        &:hover {
+          color: $accent-orange;
+        }
+      }
+
+      // Logo Small (Navbar)
+      .logo-wrapper-sm {
+        width: 35px;
+        height: 35px;
+        background: white;
+        border-radius: 50%;
+        padding: 2px;
+        @include icon-center;
+
+        .logo-img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          border-radius: 50%;
+        }
+      }
+    }
+
+    .navbar-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+
+      .nav-link {
+        color: white;
+        text-decoration: none;
+        font-weight: 500;
+        &:hover,
+        &.active {
+          color: #ffca28;
+        }
+      }
+      .profile-dropdown {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+      }
+    }
+  }
+
+  .content-area {
+    padding: 0;
+    flex: 1;
+  }
+}
+
+// --- Mobile ---
+@media (max-width: 768px) {
+  .sidebar-container {
+    position: fixed; // มือถือต้องลอยทับ
+    height: 100%;
+    width: 0;
+    border: none;
+
+    &.expanded {
+      width: 280px;
+      box-shadow: 5px 0 15px rgba(0, 0, 0, 0.5);
+    }
+  }
+
+  .main-wrapper {
+    margin-left: 0;
   }
 }

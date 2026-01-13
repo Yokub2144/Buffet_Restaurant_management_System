@@ -7,9 +7,18 @@ import { AvatarModule } from 'primeng/avatar';
 import { Drawer } from 'primeng/drawer';
 import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
+import { RouterModule } from '@angular/router';
 @Component({
   selector: 'app-menu-manager',
-  imports: [CommonModule, DrawerModule, ButtonModule, Ripple, AvatarModule, MatIconModule],
+  imports: [
+    CommonModule,
+    DrawerModule,
+    ButtonModule,
+    Ripple,
+    AvatarModule,
+    MatIconModule,
+    RouterModule,
+  ],
   templateUrl: './menu-manager.html',
   styleUrl: './menu-manager.scss',
 })
