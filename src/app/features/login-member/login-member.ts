@@ -44,7 +44,7 @@ export class LoginMember {
           detail: 'กำลังพาคุณเข้าสู่ระบบ...',
         });
         setTimeout(() => {
-          this.router.navigate(['/Booking']).then((success) => {});
+          this.router.navigate(['/index']).then((success) => {});
         }, 1500);
       },
       (error) => {

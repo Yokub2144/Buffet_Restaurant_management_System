@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Constants } from '../../config/contants';
 import { HttpHeaders } from '@angular/common/http';
+import { jwtDecode } from 'jwt-decode';
 @Injectable({
   providedIn: 'root',
 })
@@ -34,5 +35,20 @@ export class AuthService {
     const url = this.constants.API_ENDPOINT + '/Auth/login-member';
     const response = this.http.post<any>(url, options);
     return response;
+  }
+
+  public getMember() {
+    let token = localStorage.getItem('token') || sessionStorage.getItem('token');
+
+    if (token) {
+      try {
+        const decoded: any = jwtDecode(token);
+        let member = { id: decoded.sub, fullname: decoded.name };
+        return member;
+      } catch (error) {
+        return null;
+      }
+    }
+    return null;
   }
 }

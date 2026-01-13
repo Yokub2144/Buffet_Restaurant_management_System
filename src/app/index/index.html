@@ -1,4 +1,12 @@
-<app-index-navbar>
+<app-index-navbar *ngIf="!isLoggedIn">
+  <ng-container *ngTemplateOutlet="mainContent"></ng-container>
+</app-index-navbar>
+
+<app-menu-member *ngIf="isLoggedIn">
+  <ng-container *ngTemplateOutlet="mainContent"></ng-container>
+</app-menu-member>
+
+<ng-template #mainContent>
   <div class="page-container">
     <section class="hero-banner-wrapper">
       <p-carousel
@@ -112,4 +120,4 @@
       </div>
     </div>
   </div>
-</app-index-navbar>
+</ng-template>

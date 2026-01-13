@@ -6,26 +6,60 @@ import { Ripple } from 'primeng/ripple';
 import { AvatarModule } from 'primeng/avatar';
 import { Drawer } from 'primeng/drawer';
 import { MatIconModule } from '@angular/material/icon';
-
+import { Router } from '@angular/router';
+import { RouterModule } from '@angular/router';
+import { AuthService } from '../../../service/api/auth.service';
 @Component({
   selector: 'app-menu-member',
-  imports: [CommonModule, DrawerModule, ButtonModule, Ripple, AvatarModule, MatIconModule],
+  imports: [
+    CommonModule,
+    DrawerModule,
+    ButtonModule,
+    Ripple,
+    AvatarModule,
+    MatIconModule,
+    RouterModule,
+  ],
   templateUrl: './menu-member.html',
   styleUrl: './menu-member.scss',
 })
 export class MenuMember {
-  visible: boolean = false;
-
+  constructor(private router: Router, private authService: AuthService) {}
+  isExpanded: boolean = false;
+  userName: string = '';
+  ngOnInit() {
+    const member = this.authService.getMember();
+    console.log('Member info:', member);
+    if (member) {
+      this.userName = member.fullname;
+    }
+  }
   menuItems = [
-    { label: 'หน้าหลัก/dashboard', icon: 'dashboard', active: true },
-    { label: 'จัดการข้อมูลพนักงาน', icon: 'groups', active: false },
-    { label: 'จัดการข้อมูลโต๊ะ', icon: 'table_restaurant', active: false }, // หรือ grid_view
-    { label: 'รายการบิล', icon: 'receipt_long', active: false },
-    { label: 'การตั้งค่าร้าน', icon: 'settings', active: false },
-    { label: 'การตั้งค่าราคาอาหาร', icon: 'restaurant_menu', active: false },
+    { label: 'หน้าหลัก', icon: 'home', route: '/', active: true },
+    { label: 'จองโต๊ะ', icon: 'event_note', route: '/Booking', active: false },
   ];
 
-  closeCallback(e: any): void {
-    this.visible = false;
+  toggleSidebar() {
+    this.isExpanded = !this.isExpanded;
+  }
+
+  closeSidebar() {
+    // ปิดเมนูเมื่อคลิก (สำหรับ Mobile UX)
+    if (window.innerWidth <= 768) {
+      this.isExpanded = false;
+    }
+  }
+  @ViewChild('drawerRef') drawerRef!: Drawer;
+
+  closeCallback(e: Event): void {
+    this.drawerRef.close(e);
+  }
+  visible: boolean = false;
+  logout() {
+    console.log('Logging out...');
+    localStorage.removeItem('token');
+    sessionStorage.removeItem('token');
+    this.router.navigate(['/index']);
+    window.location.reload();
   }
 }
