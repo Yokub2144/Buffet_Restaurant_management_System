@@ -1,0 +1,208 @@
+
+$bg-black: #000000;
+$bg-sidebar: #1a1a1a;
+$text-white: #ffffff;
+$text-grey: #a1a1aa;
+$accent-orange: #d35400; 
+$primary-gold: #ffca28;  
+$badge-red: #ff0000;    
+$sidebar-width-expanded: 280px;
+$sidebar-width-collapsed: 70px;
+
+@mixin icon-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+.layout-wrapper {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.sidebar-container {
+  background-color: $bg-sidebar;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  color: $text-grey;
+  font-family: 'Kanit', sans-serif;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  width: $sidebar-width-collapsed;
+  transition: width 0.3s;
+  overflow: hidden;
+  border-right: 1px solid #333;
+  z-index: 1000;
+
+  &.expanded {
+    width: $sidebar-width-expanded;
+  }
+
+
+  .sidebar-header {
+    padding: 20px 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 70px;
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      overflow: hidden; 
+      .logo-wrapper {
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+        background: white;
+        border-radius: 50%;
+        padding: 2px;
+        @include icon-center;
+        .logo-img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+      }
+      .brand-text {
+        color: white;
+        font-size: 1.4rem;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+    }
+    .close-btn {
+      background: none;
+      border: none;
+      color: $text-grey;
+      cursor: pointer;
+      @include icon-center;
+      &:hover { color: white; }
+    }
+  }
+
+
+  .user-profile-section {
+    padding: 0 15px 20px;
+    border-bottom: 1px solid #333;
+    .profile-row {
+      display: flex; align-items: center; justify-content: flex-start;
+      .user-info {
+        display: flex; gap: 10px; align-items: center; color: white;
+        .avatar-circle {
+          width: 35px; height: 35px; min-width: 35px;
+          border: 1px solid #555; border-radius: 50%;
+          @include icon-center;
+        }
+        .username { white-space: nowrap; font-weight: 500;}
+      }
+    }
+  }
+
+
+  .menu-list {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    margin-top: 10px;
+
+    ul {
+      list-style: none; padding: 0; margin: 0;
+      li .menu-item {
+        display: flex; align-items: center;
+        padding: 12px 0; padding-left: 22px; 
+        color: $text-grey; cursor: pointer; text-decoration: none;
+        height: 50px; white-space: nowrap;
+
+        .menu-icon { margin-right: 15px; @include icon-center; font-size: 24px; }
+        &:hover { background: rgba(255, 255, 255, 0.1); color: white; }
+        &.active {
+          background: #2d2d2d; color: white;
+          border-left: 3px solid $accent-orange;
+          padding-left: 19px;
+        }
+      }
+    }
+  }
+}
+
+.main-wrapper {
+  flex: 1; display: flex; flex-direction: column; min-width: 0;
+
+  .navbar {
+    display: flex; justify-content: space-between; align-items: center;
+    background-color: $bg-black; color: $text-white;
+    height: 60px; padding: 0 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    position: sticky; top: 0; z-index: 999;
+
+    .navbar-left {
+      display: flex; align-items: center; gap: 20px;
+      .hamburger-btn {
+        background: none; border: none; color: white; cursor: pointer;
+        @include icon-center;
+        &:hover { color: $accent-orange; }
+      }
+      .logo-wrapper-sm {
+        width: 35px; height: 35px; background: white; border-radius: 50%; padding: 2px;
+        @include icon-center;
+        .logo-img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+      }
+    }
+
+
+    .navbar-right {
+      display: flex; align-items: center; gap: 20px;
+
+
+      .table-info {
+        font-family: 'Kanit';
+        font-weight: 600;
+        font-size: 1.1rem;
+        color: white; 
+      }
+
+ 
+      .icon-wrapper {
+        position: relative;
+        display: flex; align-items: center; justify-content: center;
+        cursor: pointer; color: #ccc;
+        width: 40px; height: 40px; border-radius: 50%; 
+        transition: background 0.2s;
+
+        mat-icon { font-size: 26px; }
+        &:hover { color: white; background: rgba(255,255,255,0.1); }
+
+        .badge {
+          position: absolute; top: 2px; right: 2px;
+          background-color: $badge-red; color: white;
+          font-size: 0.7rem; font-weight: bold;
+          min-width: 18px; height: 18px;
+          border-radius: 50%;
+          display: flex; align-items: center; justify-content: center;
+          border: 1px solid $bg-black;
+        }
+      }
+    }
+  }
+
+  .content-area {
+    padding: 0;
+    flex: 1;
+    background-color: #0f0f0f; 
+  }
+}
+
+// --- Mobile ---
+@media (max-width: 768px) {
+  .sidebar-container {
+    position: fixed; height: 100%; width: 0; border: none;
+    &.expanded { width: 280px; box-shadow: 5px 0 15px rgba(0, 0, 0, 0.5); }
+  }
+  .main-wrapper { margin-left: 0; }
+}
