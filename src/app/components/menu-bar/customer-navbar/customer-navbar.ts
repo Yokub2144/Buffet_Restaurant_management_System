@@ -20,9 +20,9 @@ export class CustomerNavbar {
   cartCount: number = 3;
 
   menuItems = [
-    { label: 'รายการเมนูอาหาร', icon: 'restaurant_menu', route: '/order' },
-    { label: 'สั่งอาหาร/รถเข็นของคุณ', icon: 'shopping_cart', route: '/cart' },
-    { label: 'ติดตามสถานะออเดอร์', icon: 'receipt_long', route: '/status' },
+    { label: 'รายการเมนูอาหาร', icon: 'restaurant_menu', route: '/Customer' },
+    { label: 'สั่งอาหาร/รถเข็นของคุณ', icon: 'shopping_cart', route: '/Cart' },
+    { label: 'ติดตามสถานะออเดอร์', icon: 'receipt_long', route: '/StatusCustomer' },
   ];
 
   toggleSidebar() {

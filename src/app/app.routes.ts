@@ -12,6 +12,7 @@ import { employeeGuard } from './guards/employee-guard';
 import { CustomerOrder } from './customer-order/customer-order';
 import { ManageEmployee } from './features/manager/manage-employee/manage-employee';
 import { Cart } from './cart/cart';
+import { StatusCustomerOrder } from './status/status-customer-order/status-customer-order';
 export const routes: Routes = [
   { path: '', component: Index },
   { path: 'Registeremployee', component: RegisterEmployee },
@@ -27,6 +28,7 @@ export const routes: Routes = [
   { path: 'Booking', component: Booking, canActivate: [memberGuard], data: { role: ['Member'] } },
   { path: 'Customer', component: CustomerOrder },
   { path: 'Cart', component: Cart },
+  { path: 'StatusCustomer', component: StatusCustomerOrder },
   {
     path: 'ManageEmployee',
     component: ManageEmployee,
