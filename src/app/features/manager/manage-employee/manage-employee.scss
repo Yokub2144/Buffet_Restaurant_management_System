@@ -20,7 +20,7 @@
 }
 
 .custom-add-btn {
-  background-color: #2e7d32 !important; /* ปุ่มเขียว */
+  background-color: #2e7d32 !important;
   border: none;
   border-radius: 6px;
   padding: 0.6rem 1.2rem;
@@ -32,6 +32,7 @@
   cursor: pointer;
   &:hover {
     background-color: #1b5e20 !important;
+    border: none;
   }
 }
 

@@ -4,7 +4,7 @@
       class="header-section flex justify-content-between align-items-center mb-3 flex-wrap gap-2"
     >
       <h1 class="page-title m-0">จัดการข้อมูลพนักงาน</h1>
-      <button pButton class="custom-add-btn">
+      <button pButton class="custom-add-btn" (click)="approve()">
         <i class="pi pi-user-plus mr-2"></i>
         <span class="btn-text ml-2">คำขอเป็นพนักงาน</span>
       </button>
@@ -39,22 +39,38 @@
 
       <div class="filter-box">
         <div class="search-row mb-2">
-          <input pInputText type="text" placeholder="ค้นหาพนักงาน..." class="w-full search-input" />
+          <input
+            pInputText
+            type="text"
+            [(ngModel)]="searchText"
+            (ngModelChange)="filterEmployees()"
+            placeholder="ค้นหาชื่อ หรือ เบอร์โทร..."
+            class="w-full search-input"
+          />
           <i class="pi pi-search search-icon"></i>
         </div>
+
         <div class="dropdowns-row flex gap-2">
           <p-select
             [options]="statusOptions"
+            [(ngModel)]="selectedStatus"
+            (ngModelChange)="filterEmployees()"
             placeholder="ทุกสถานะ"
             class="flex-1 custom-select"
           ></p-select>
+
           <p-select
             [options]="departmentOptions"
+            [(ngModel)]="selectedDepartment"
+            (ngModelChange)="filterEmployees()"
             placeholder="ทุกแผนก"
             class="flex-1 custom-select"
           ></p-select>
+
           <p-select
             [options]="typeOptions"
+            [(ngModel)]="selectedType"
+            (ngModelChange)="filterEmployees()"
             placeholder="ประเภท"
             class="flex-1 custom-select"
           ></p-select>
@@ -64,7 +80,7 @@
 
     <div class="table-container" style="overflow-x: auto">
       <p-table
-        [value]="employees"
+        [value]="filteredEmployees"
         [rows]="10"
         [paginator]="true"
         styleClass="custom-table"
@@ -96,7 +112,7 @@
                   emp.employee_Status === 'ทำงานปัจจุบัน' ? 'status-active' : 'status-inactive'
                 "
               >
-                {{ emp.employee_Status === 'ทำงานปัจจุบัน' ? 'กำลังทำงาน' : 'ลาออก' }}
+                {{ emp.employee_Status === 'ทำงานปัจจุบัน' ? 'ทำงานปัจจุบัน' : 'ลาออก' }}
               </span>
             </td>
             <td class="text-right">{{ emp.wage | number }}฿</td>
@@ -106,6 +122,11 @@
                 <button class="action-btn btn-edit">แก้ไข</button>
               </div>
             </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="8" class="text-center p-4 text-white">ไม่พบพนักงาน</td>
           </tr>
         </ng-template>
       </p-table>

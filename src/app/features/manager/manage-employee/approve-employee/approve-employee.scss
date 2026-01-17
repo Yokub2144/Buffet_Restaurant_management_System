@@ -1,0 +1,176 @@
+.page-container {
+  padding: 20px;
+  background-color: #121212; /* พื้นหลังส่วนเนื้อหา */
+  min-height: 100vh;
+  color: white;
+}
+
+/* --- Header & Back Button --- */
+.header {
+  display: flex;
+  align-items: center;
+}
+
+.page-title {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 400;
+  color: #ccc;
+  margin-left: 1rem;
+}
+
+.back-btn {
+  background: transparent;
+  border: 1px solid #f57c00; /* สีส้ม */
+  color: #f57c00;
+  padding: 0.5rem 1.2rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: 'Kanit', sans-serif;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s;
+
+  &:hover {
+    background-color: #f57c00;
+    color: white;
+  }
+
+  i {
+    font-size: 0.9rem;
+    font-weight: bold;
+  }
+}
+
+/* --- Table Styling (เหมือนรูปเป๊ะ) --- */
+.table-wrapper {
+  background-color: #1e1e1e;
+  border-radius: 8px;
+  padding: 1rem;
+  overflow-x: auto; /* รองรับมือถือ */
+}
+
+::ng-deep .custom-dark-table {
+  font-family: 'Kanit', sans-serif;
+
+  /* Header */
+  .p-datatable-thead > tr > th {
+    background-color: #000000 !important;
+    color: white !important;
+    border: none;
+    padding: 1rem;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  /* Body Rows */
+  .p-datatable-tbody > tr {
+    background-color: #262626 !important; /* สีเทาเข้ม */
+    color: white !important;
+    border-bottom: 4px solid #1e1e1e; /* เส้นคั่นหนาๆ สีเดียวกับพื้นหลัง Wrapper */
+
+    &:hover {
+      background-color: #333 !important;
+    }
+
+    td {
+      border: none !important;
+      padding: 1rem;
+      vertical-align: middle;
+      font-weight: 300;
+    }
+  }
+
+  /* Action Buttons */
+  .action-btn {
+    border: none;
+    padding: 4px 14px;
+    border-radius: 20px; /* ทรงแคปซูล */
+    color: white;
+    font-family: 'Kanit', sans-serif;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: filter 0.2s;
+
+    &:hover {
+      filter: brightness(1.1);
+    }
+  }
+
+  .btn-approve {
+    background-color: #2e7d32; /* สีเขียว */
+    margin-right: 5px;
+  }
+
+  .btn-reject {
+    background-color: #c62828; /* สีแดง */
+  }
+
+  /* --- Pagination Styling --- */
+  .p-paginator {
+    background-color: transparent !important;
+    border: none;
+    padding: 1rem 0 0 0;
+    display: flex;
+    justify-content: flex-end; /* ปุ่มเลขหน้าอยู่ขวา */
+
+    /* ข้อความ Showing ... อยู่ซ้าย */
+    .p-paginator-current {
+      margin-right: auto;
+      color: white;
+      font-weight: 300;
+    }
+
+    .p-paginator-element {
+      color: white;
+      min-width: 2rem;
+      height: 2rem;
+      border-radius: 0; /* สี่เหลี่ยม */
+      margin: 0 2px;
+      font-weight: bold;
+
+      /* ปุ่มปกติ */
+      background-color: #000;
+
+      &:hover {
+        background-color: #333;
+      }
+
+      /* ปุ่มที่เลือกอยู่ (Active) */
+      &.p-highlight {
+        background-color: #333;
+        color: white;
+      }
+
+      /* ไอคอนลูกศร */
+      .p-paginator-icon {
+        font-size: 0.8rem;
+      }
+    }
+  }
+}
+
+/* Helpers */
+.text-center {
+  text-align: center;
+}
+.font-bold {
+  font-weight: 500;
+}
+.flex {
+  display: flex;
+}
+.justify-content-center {
+  justify-content: center;
+}
+.gap-2 {
+  gap: 0.5rem;
+}
+.ml-3 {
+  margin-left: 1rem;
+}
+.mb-4 {
+  margin-bottom: 1.5rem;
+}

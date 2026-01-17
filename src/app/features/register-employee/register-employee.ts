@@ -21,7 +21,7 @@ export class RegisterEmployee {
     private authService: AuthService,
     private http: HttpClient,
     private messageService: MessageService,
-    private router: Router
+    private router: Router,
   ) {}
   fullname: string = '';
   email: string = '';
@@ -60,6 +60,38 @@ export class RegisterEmployee {
       });
       return;
     }
+    if (this.email.indexOf('@') === -1) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'กรุณากรอกอีเมลให้ถูกต้อง',
+      });
+      return;
+    }
+    if (this.phone.length < 10 || this.phone.length > 10) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'กรุณากรอกเบอร์โทรให้ถูกต้อง (10 หลัก)',
+      });
+      return;
+    }
+    if (this.phone.charAt(0) !== '0') {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'เบอร์โทรต้องขึ้นต้นด้วย "0"',
+      });
+      return;
+    }
+    if (isNaN(Number(this.phone))) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'กรุณากรอกเบอร์โทรให้เป็นตัวเลขเท่านั้น',
+      });
+      return;
+    }
     if (!this.idCard || this.idCard.length !== 13) {
       this.messageService.add({
         severity: 'error',
@@ -76,6 +108,7 @@ export class RegisterEmployee {
       });
       return;
     }
+
     const formData = new FormData();
     formData.append('Fullname', this.fullname);
     formData.append('Email', this.email);
