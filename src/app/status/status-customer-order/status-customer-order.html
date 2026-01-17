@@ -1,0 +1,64 @@
+<app-customer-navbar>
+  <div class="status-page">
+    <div class="background-wrapper">
+      <img src="assets/Images/bg.png" alt="background" class="bg-img" />
+      <div class="bg-overlay"></div>
+    </div>
+
+    <div class="container">
+      <div class="page-header">
+        <h1>ติดตามสถานะออเดอร์คุณ</h1>
+        <mat-icon class="header-icon">description</mat-icon>
+      </div>
+
+      <div class="order-tracker-box">
+        <div class="tracker-header">สถานะออเดอร์</div>
+
+        <div class="stepper-wrapper">
+          <div class="stepper-line-background"></div>
+          <div
+            class="stepper-line-progress"
+            [style.width.%]="(currentStep / (steps.length - 1)) * 100"
+          ></div>
+
+          <div
+            class="step-item"
+            *ngFor="let step of steps; let i = index"
+            [class.active]="i <= currentStep"
+          >
+            <div class="circle">
+              <mat-icon *ngIf="i <= currentStep">check</mat-icon>
+            </div>
+            <div class="label">{{ step.label }}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-box">
+        <div class="cart-table">
+          <div class="table-head">
+            <div class="col-name">สินค้า</div>
+            <div class="col-qty">จำนวน</div>
+          </div>
+
+          <div class="table-row" *ngFor="let item of orderItems">
+            <div class="col-name">{{ item.name }}</div>
+            <div class="col-qty">{{ item.quantity }}</div>
+          </div>
+
+          <div class="table-footer">
+            <div class="footer-left">
+              <span>รวม ({{ orderItems.length }} รายการ)</span>
+            </div>
+            <div class="footer-right">
+              <span class="status-label">สถานะ : </span>
+              <div class="status-btn-orange">
+                {{ overallStatusText }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</app-customer-navbar>

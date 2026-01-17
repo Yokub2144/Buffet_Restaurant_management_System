@@ -7,7 +7,7 @@ import { DialogModule } from 'primeng/dialog';
 import { BadgeModule } from 'primeng/badge';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
-import { IndexNavbar } from '../components/menu-bar/index-navbar/index-navbar';
+import { CustomerNavbar } from '../components/menu-bar/customer-navbar/customer-navbar';
 
 interface FoodItem {
   id: number;
@@ -26,7 +26,7 @@ interface CartItem extends FoodItem {
   standalone: true,
   imports: [
     CommonModule,
-    IndexNavbar,
+    CustomerNavbar,
     CarouselModule,
     ButtonModule,
     RippleModule,
@@ -39,7 +39,6 @@ interface CartItem extends FoodItem {
   styleUrl: './customer-order.scss',
 })
 export class CustomerOrder implements OnInit {
-  // --- ส่วนของ Carousel ---
   currentBannerIndex: number = 0;
   slideInterval: number = 5000;
   slideTimer: any;
@@ -50,7 +49,6 @@ export class CustomerOrder implements OnInit {
     { image: 'assets/Images/Banner3.png' },
   ];
 
-  // --- States หน้าสั่งอาหาร ---
   currentCategory: string = 'หมูสไลด์';
   isCartVisible: boolean = false;
   tableNumber: string = 'A1';
@@ -134,7 +132,6 @@ export class CustomerOrder implements OnInit {
     this.filterCategory(this.currentCategory);
   }
 
-  // --- Functions Carousel  ---
   onClicksmailPictures(index: number) {
     if (this.slideTimer) {
       clearInterval(this.slideTimer);
@@ -147,7 +144,6 @@ export class CustomerOrder implements OnInit {
     this.currentBannerIndex = event.page;
   }
 
-  // --- Functions สั่งอาหาร ---
   filterCategory(category: string) {
     this.currentCategory = category;
     this.displayItems = this.allFoodItems.filter((item) => item.category === category);
