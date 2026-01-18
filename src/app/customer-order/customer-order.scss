@@ -1,19 +1,47 @@
-
 $theme-bg: #000000;
-$card-bg: #141414; 
-$primary-red: #9e1c1c; 
+$card-bg: #141414;
+$primary-red: #9e1c1c;
 $primary-gold: #ffca28;
 $text-white: #ffffff;
 $text-gray: #a0a0a0;
+$bar-bg: linear-gradient(to bottom, #3d0000, #1a0000);
+$active-red: #b30000;
+$text-inactive: #e0e0e0;
 
 :host {
   display: block;
   width: 100%;
 }
 
+.background-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+
+  .bg-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .bg-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+  }
+}
+
 .page-container {
+  position: relative;
+  z-index: 1;
   min-height: 100vh;
-  background-color: $theme-bg;
+  background-color: transparent;
   color: $text-white;
   padding-bottom: 80px;
   font-family: 'Kanit', sans-serif;
@@ -41,7 +69,6 @@ $text-gray: #a0a0a0;
       background: linear-gradient(to top, #000, transparent);
     }
   }
-
 
   ::ng-deep .p-carousel-indicators {
     padding: 10px;
@@ -72,37 +99,30 @@ $text-gray: #a0a0a0;
 @media (max-width: 900px) { .hero-banner-wrapper .banner-item { height: 250px; } }
 @media (max-width: 576px) { .banner-thumb-box { width: 50px; height: 30px; } }
 
-
-$bar-bg: linear-gradient(to bottom, #3d0000, #1a0000);
-$active-red: #b30000; 
-$text-white: #ffffff;
-$text-inactive: #e0e0e0;
-
-
 .category-navbar {
   position: sticky;
   top: 0;
   z-index: 100;
   width: 100%;
   background: $bar-bg;
-  border-bottom: 1px solid #c0c0c0; 
+  border-bottom: 1px solid #c0c0c0;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
   padding: 10px 0;
 
   .category-scroll {
     display: flex;
     align-items: center;
-    gap: 5px; 
+    gap: 5px;
     overflow-x: auto;
     padding: 0 15px;
-    scrollbar-width: none; 
+    scrollbar-width: none;
     
     &::-webkit-scrollbar {
-      display: none; 
+      display: none;
     }
 
     .nav-item {
-      background: transparent; 
+      background: transparent;
       color: $text-inactive;
       border: none;
       padding: 8px 24px;
@@ -110,33 +130,26 @@ $text-inactive: #e0e0e0;
       font-family: 'Kanit', sans-serif;
       cursor: pointer;
       white-space: nowrap;
-      border-radius: 50px; 
+      border-radius: 50px;
       transition: all 0.3s ease;
 
-    
       &:hover:not(.active) {
         color: #fff;
         background: rgba(255, 255, 255, 0.1);
       }
 
-    
       &.active {
-        background-color: $active-red; 
+        background-color: $active-red;
         color: $text-white;
         font-weight: 600;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3); 
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
       }
     }
   }
 }
 
-
 .menu-content {
   padding-top: 20px;
-}
-
-
-.menu-content {
   padding: 20px 15px;
 
   .section-header {
@@ -150,8 +163,7 @@ $text-inactive: #e0e0e0;
 
   .food-grid {
     display: grid;
-
-    grid-template-columns: repeat(2, 1fr); 
+    grid-template-columns: repeat(2, 1fr);
     gap: 15px;
 
     @media (min-width: 768px) {
@@ -171,7 +183,7 @@ $text-inactive: #e0e0e0;
 
       .card-img-wrapper {
         width: 100%;
-        aspect-ratio: 4/3; 
+        aspect-ratio: 4/3;
         overflow: hidden;
         position: relative;
         
@@ -208,7 +220,7 @@ $text-inactive: #e0e0e0;
           line-height: 1.4;
           font-weight: 500;
           display: -webkit-box;
-          -webkit-line-clamp: 2; 
+          -webkit-line-clamp: 2;
           -webkit-box-orient: vertical;
           overflow: hidden;
         }
@@ -219,10 +231,9 @@ $text-inactive: #e0e0e0;
           align-items: center;
           gap: 8px;
 
-          /* ปุ่มเพิ่มลงรถเข็น (สีแดงตามรูป) */
           .add-cart-btn {
             flex: 1;
-            background:  $active-red;
+            background: $active-red;
             color: #fff;
             border: none;
             padding: 8px 5px;
@@ -239,11 +250,9 @@ $text-inactive: #e0e0e0;
 
             &:active {
               transform: scale(0.95);
-              background: darken($primary-red, 10%);
             }
           }
 
-          /* ราคา */
           .price {
             font-size: 1.1rem;
             font-weight: bold;
@@ -255,7 +264,6 @@ $text-inactive: #e0e0e0;
     }
   }
 }
-
 
 ::ng-deep .dark-dialog {
   .p-dialog-header {
