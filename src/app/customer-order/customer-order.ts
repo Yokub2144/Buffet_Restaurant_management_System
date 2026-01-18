@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
 import { CarouselModule } from 'primeng/carousel';
 import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
@@ -8,16 +9,9 @@ import { BadgeModule } from 'primeng/badge';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { CustomerNavbar } from '../components/menu-bar/customer-navbar/customer-navbar';
+import { Menu, MenuService } from '../service/api/menu.service';
 
-interface FoodItem {
-  id: number;
-  name: string;
-  price: number;
-  image: string;
-  category: string;
-}
-
-interface CartItem extends FoodItem {
+interface CartItem extends Menu {
   quantity: number;
 }
 
@@ -26,6 +20,7 @@ interface CartItem extends FoodItem {
   standalone: true,
   imports: [
     CommonModule,
+    HttpClientModule,
     CustomerNavbar,
     CarouselModule,
     ButtonModule,
@@ -48,88 +43,48 @@ export class CustomerOrder implements OnInit {
     { image: 'assets/Images/Banner2.png' },
     { image: 'assets/Images/Banner3.png' },
   ];
+  // ----------------------------------------
 
-  currentCategory: string = 'หมูสไลด์';
   isCartVisible: boolean = false;
   tableNumber: string = 'A1';
 
-  categories = [
-    'หมูหมัก',
-    'หมูสไลด์',
-    'ผักและอื่นๆ',
-    'ของทานเล่น',
-    'ทะเลซีฟู้ด',
-    'เครื่องดื่ม',
-    'ของหวาน',
-  ];
+  allFoodItems: Menu[] = [];
+  displayItems: Menu[] = [];
 
-  // ข้อมูลอาหารตัวอย่าง
-  allFoodItems: FoodItem[] = [
-    {
-      id: 1,
-      name: 'กุ้งขาว',
-      price: 0,
-      category: 'ทะเลซีฟู้ด',
-      image: 'assets/Images/product/กุ้ง.png',
-    },
-    {
-      id: 2,
-      name: 'ปูม้า',
-      price: 0,
-      category: 'ทะเลซีฟู้ด',
-      image: 'https://via.placeholder.com/300x300/333/fff?text=Crab',
-    },
-    {
-      id: 3,
-      name: 'ปลาหมึก',
-      price: 0,
-      category: 'ทะเลซีฟู้ด',
-      image: 'https://via.placeholder.com/300x300/333/fff?text=Squid',
-    },
-    {
-      id: 4,
-      name: 'หมูสไลด์ชาบู',
-      price: 0,
-      category: 'หมูสไลด์',
-      image: 'https://via.placeholder.com/300x300/333/fff?text=Pork+Shabu',
-    },
-    {
-      id: 5,
-      name: 'หมูสไลด์สันคอ',
-      price: 0,
-      category: 'หมูสไลด์',
-      image: 'https://via.placeholder.com/300x300/333/fff?text=Pork+Neck',
-    },
-    {
-      id: 6,
-      name: 'หมูสไลด์สามชั้น',
-      price: 0,
-      category: 'หมูสไลด์',
-      image: 'https://via.placeholder.com/300x300/333/fff?text=Pork+Belly',
-    },
-    {
-      id: 7,
-      name: 'เบียร์สิงห์',
-      price: 75,
-      category: 'เครื่องดื่ม',
-      image: 'https://via.placeholder.com/300x300/333/fff?text=Beer',
-    },
-    {
-      id: 8,
-      name: 'ผักกาดขาว',
-      price: 0,
-      category: 'ผักและอื่นๆ',
-      image: 'https://via.placeholder.com/300x300/333/fff?text=Veggie',
-    },
-  ];
+  categories: string[] = ['ทั้งหมด'];
+  currentCategory: string = 'ทั้งหมด';
 
-  displayItems: FoodItem[] = [];
   cart: CartItem[] = [];
 
-  constructor(private messageService: MessageService) {}
+  constructor(
+    private messageService: MessageService,
+    private menuService: MenuService,
+  ) {}
 
   ngOnInit() {
-    this.filterCategory(this.currentCategory);
+    this.loadMenus();
+  }
+
+  loadMenus() {
+    this.menuService.getMenus().subscribe({
+      next: (data) => {
+        console.log('API Response:', data);
+        this.allFoodItems = data;
+
+        const uniqueCats = [...new Set(data.map((item) => item.category))];
+        this.categories = ['ทั้งหมด', ...uniqueCats];
+
+        this.filterCategory('ทั้งหมด');
+      },
+      error: (err) => {
+        console.error('Error fetching menus:', err);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'โหลดเมนูไม่สำเร็จ',
+        });
+      },
+    });
   }
 
   onClicksmailPictures(index: number) {
@@ -146,20 +101,26 @@ export class CustomerOrder implements OnInit {
 
   filterCategory(category: string) {
     this.currentCategory = category;
-    this.displayItems = this.allFoodItems.filter((item) => item.category === category);
+    if (category === 'ทั้งหมด') {
+      this.displayItems = this.allFoodItems;
+    } else {
+      this.displayItems = this.allFoodItems.filter((item) => item.category === category);
+    }
   }
 
-  addToCart(item: FoodItem) {
-    const existing = this.cart.find((c) => c.id === item.id);
+  addToCart(item: Menu) {
+    const existing = this.cart.find((c) => c.menu_id === item.menu_id);
+
     if (existing) {
       existing.quantity++;
     } else {
       this.cart.push({ ...item, quantity: 1 });
     }
+
     this.messageService.add({
       severity: 'success',
       summary: 'เพิ่มสำเร็จ',
-      detail: item.name,
+      detail: item.menu_Name,
       life: 1000,
     });
   }

@@ -1,9 +1,10 @@
-// Variables
-$bg-dark: #0f0f0f;
-$primary-red: #8b0000;
-$accent-red: #b30000;
+
+$theme-bg: #000000;
+$card-bg: #141414; 
+$primary-red: #9e1c1c; 
+$primary-gold: #ffca28;
 $text-white: #ffffff;
-$primary-gold: #ffca28; // เพิ่มสีทองจาก Index
+$text-gray: #a0a0a0;
 
 :host {
   display: block;
@@ -12,223 +13,314 @@ $primary-gold: #ffca28; // เพิ่มสีทองจาก Index
 
 .page-container {
   min-height: 100vh;
-  background-color: $bg-dark;
+  background-color: $theme-bg;
   color: $text-white;
   padding-bottom: 80px;
   font-family: 'Kanit', sans-serif;
 }
 
-// --- 1. Status Bar ---
-.status-bar-wrapper {
-  background-color: #000;
-  padding: 10px 20px;
-  display: flex;
-  justify-content: flex-end;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-}
-
-.status-info {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-
-  .table-badge {
-    font-weight: bold;
-    font-size: 1.1rem;
-  }
-
-  .icon-btn {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 1.5rem;
-    position: relative;
-    cursor: pointer;
-    
-    .badge-count {
-      position: absolute;
-      top: -5px;
-      right: -8px;
-      background: red;
-      color: white;
-      font-size: 0.75rem;
-      padding: 2px 6px;
-      border-radius: 10px;
-    }
-  }
-}
-
-// --- 2. Hero Banner (คัดลอกและปรับจาก Index.scss) ---
 .hero-banner-wrapper {
   width: 100%;
   background: #000;
-  
+
   .banner-item {
     position: relative;
     width: 100%;
-    height: 250px; // ปรับความสูงให้เหมาะกับมือถือ (Index เดิม 400px)
+    height: 400px;
     overflow: hidden;
-    
+
     .banner-img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       object-position: center;
     }
-
     .banner-overlay {
       position: absolute;
-      bottom: 0; left: 0; width: 100%; height: 50px;
+      bottom: 0; left: 0; width: 100%; height: 100px;
       background: linear-gradient(to top, #000, transparent);
     }
   }
 
-  // Thumbnails
-  .banner-thumbnails {
-    display: flex;
-    justify-content: left; // หรือ center ตามชอบ
-    gap: 10px;
-    padding: 10px 15px;
-    background: #000;
 
-    .banner-thumb-box {
-      width: 60px;
-      height: 35px;
-      border-radius: 4px;
-      overflow: hidden;
+  ::ng-deep .p-carousel-indicators {
+    padding: 10px;
+    background: rgba(0,0,0,0.5);
+    .p-carousel-indicator button {
+      width: 30px; height: 4px; background-color: rgba(255,255,255,0.3); border-radius: 2px;
+      &:hover { background-color: $primary-gold; }
+    }
+    .p-highlight button { background-color: $primary-gold; }
+  }
+}
+
+.banner-thumbnails {
+  display: flex; justify-content: left; gap: 12px; padding: 15px;
+  background: #000; margin-top: -10px; position: relative; z-index: 2;
+
+  .banner-thumb-box {
+    width: 80px; height: 45px; border-radius: 6px; overflow: hidden; cursor: pointer;
+    border: 2px solid rgba(255,255,255,0.2); transition: all 0.3s ease; opacity: 0.6;
+    img { width: 100%; height: 100%; object-fit: cover; }
+    &.active, &:hover {
+      border-color: $primary-gold; opacity: 1; transform: scale(1.1);
+      box-shadow: 0 0 10px rgba(255, 202, 40, 0.5);
+    }
+  }
+}
+
+@media (max-width: 900px) { .hero-banner-wrapper .banner-item { height: 250px; } }
+@media (max-width: 576px) { .banner-thumb-box { width: 50px; height: 30px; } }
+
+
+$bar-bg: linear-gradient(to bottom, #3d0000, #1a0000);
+$active-red: #b30000; 
+$text-white: #ffffff;
+$text-inactive: #e0e0e0;
+
+
+.category-navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  width: 100%;
+  background: $bar-bg;
+  border-bottom: 1px solid #c0c0c0; 
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  padding: 10px 0;
+
+  .category-scroll {
+    display: flex;
+    align-items: center;
+    gap: 5px; 
+    overflow-x: auto;
+    padding: 0 15px;
+    scrollbar-width: none; 
+    
+    &::-webkit-scrollbar {
+      display: none; 
+    }
+
+    .nav-item {
+      background: transparent; 
+      color: $text-inactive;
+      border: none;
+      padding: 8px 24px;
+      font-size: 1rem;
+      font-family: 'Kanit', sans-serif;
       cursor: pointer;
-      border: 2px solid rgba(255, 255, 255, 0.2);
-      opacity: 0.6;
+      white-space: nowrap;
+      border-radius: 50px; 
       transition: all 0.3s ease;
 
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
+    
+      &:hover:not(.active) {
+        color: #fff;
+        background: rgba(255, 255, 255, 0.1);
       }
 
-      &.active, &:hover {
-        border-color: $primary-gold;
-        opacity: 1;
+    
+      &.active {
+        background-color: $active-red; 
+        color: $text-white;
+        font-weight: 600;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3); 
+      }
+    }
+  }
+}
+
+
+.menu-content {
+  padding-top: 20px;
+}
+
+
+.menu-content {
+  padding: 20px 15px;
+
+  .section-header {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 20px;
+    text-align: center;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  }
+
+  .food-grid {
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 15px;
+
+    @media (min-width: 768px) {
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 25px;
+    }
+
+    .food-card {
+      background: $bar-bg;
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      border: 1px solid #2a2a2a;
+
+      .card-img-wrapper {
+        width: 100%;
+        aspect-ratio: 4/3; 
+        overflow: hidden;
+        position: relative;
+        
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 0.5s ease;
+        }
+
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: 0; left: 0; width: 100%; height: 40%;
+          background: linear-gradient(to top, $card-bg, transparent);
+        }
+      }
+
+      &:hover .card-img-wrapper img {
         transform: scale(1.1);
       }
-    }
-  }
-}
 
-// Responsive Banner for Tablet/PC
-@media (min-width: 768px) {
-  .hero-banner-wrapper .banner-item {
-    height: 400px; // กลับไปสูงเท่า Index บนจอใหญ่
-  }
-}
+      .card-body {
+        padding: 12px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
 
-// --- 3. Category Nav ---
-.category-nav-wrapper {
-  background: $primary-red;
-  position: sticky;
-  top: 60px; // ปรับตามความสูง Navbar
-  z-index: 99;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-}
+        .food-name {
+          font-size: 1rem;
+          color: #fff;
+          margin: 0 0 12px 0;
+          line-height: 1.4;
+          font-weight: 500;
+          display: -webkit-box;
+          -webkit-line-clamp: 2; 
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
 
-.category-scroll {
-  display: flex;
-  overflow-x: auto;
-  padding: 15px 10px;
-  gap: 10px;
-  &::-webkit-scrollbar { display: none; } // ซ่อน Scrollbar
+        .card-action-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 8px;
 
-  .cat-pill {
-    background: transparent;
-    border: none;
-    color: rgba(255,255,255,0.7);
-    padding: 8px 20px;
-    border-radius: 20px;
-    font-size: 1rem;
-    white-space: nowrap;
-    cursor: pointer;
-    
-    &.active {
-      background: rgba(255,255,255,0.2);
-      color: white;
-      font-weight: bold;
-    }
-  }
-}
+          /* ปุ่มเพิ่มลงรถเข็น (สีแดงตามรูป) */
+          .add-cart-btn {
+            flex: 1;
+            background:  $active-red;
+            color: #fff;
+            border: none;
+            padding: 8px 5px;
+            border-radius: 100rem;
+            font-size: 0.8rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            transition: background 0.2s;
 
-// --- 4. Menu Content ---
-.menu-content {
-  padding: 20px;
-  .section-title { margin-bottom: 20px; font-size: 1.5rem; }
-}
+            i { font-size: 0.9rem; }
 
-.food-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); // เล็กพอสำหรับมือถือ 2 แถว
-  gap: 15px;
-}
+            &:active {
+              transform: scale(0.95);
+              background: darken($primary-red, 10%);
+            }
+          }
 
-.food-card {
-  background: #1a1a1a;
-  border-radius: 12px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-
-  .card-img-wrapper {
-    width: 100%;
-    aspect-ratio: 1/1;
-    img { width: 100%; height: 100%; object-fit: cover; }
-  }
-
-  .card-body {
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    flex: 1;
-
-    .food-name { font-size: 1rem; margin-bottom: 10px; font-weight: 500; }
-    
-    .card-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      
-      .add-btn {
-        background: $primary-red;
-        border: none;
-        color: white;
-        padding: 5px 12px;
-        border-radius: 15px;
-        font-size: 0.8rem;
-        cursor: pointer;
+          /* ราคา */
+          .price {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #fff;
+            white-space: nowrap;
+          }
+        }
       }
-      .price { font-weight: bold; font-size: 1rem; }
     }
   }
 }
 
-// Cart Styles (เหมือนเดิม)
+
+::ng-deep .dark-dialog {
+  .p-dialog-header {
+    background: #1f1f1f;
+    color: #fff;
+    border-bottom: 1px solid #333;
+  }
+  .p-dialog-content {
+    background: #121212;
+    color: #fff;
+    padding-top: 20px;
+  }
+  .p-dialog-footer {
+    background: #1f1f1f;
+    border-top: 1px solid #333;
+    padding: 15px;
+  }
+}
+
 .cart-list {
-  max-height: 60vh;
-  overflow-y: auto;
   .cart-item {
-    display: flex; gap: 10px; padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #333;
-    .cart-thumb { width: 50px; height: 50px; border-radius: 5px; object-fit: cover; }
-    .cart-details { flex: 1; }
-    .cart-row-top { display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 5px; }
-    .cart-actions {
-      display: flex; align-items: center; gap: 8px;
-      .qty-btn { width: 24px; height: 24px; border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;}
-      .qty-btn.add { background: $primary-red; color: white; }
-      .qty-btn.remove { background: #444; color: white; }
-      .del-btn { margin-left: auto; background: none; border: none; color: #666; cursor: pointer; }
+    display: flex; gap: 12px; padding-bottom: 15px; margin-bottom: 15px;
+    border-bottom: 1px solid #333;
+    
+    .cart-thumb { width: 60px; height: 60px; border-radius: 8px; object-fit: cover; }
+    
+    .cart-details {
+      flex: 1;
+      .row-top { 
+        display: flex; justify-content: space-between; margin-bottom: 8px; 
+        .item-name { font-weight: 500; font-size: 1rem; }
+        .item-price { color: $primary-gold; font-weight: bold; }
+      }
+      
+      .row-actions {
+        display: flex; align-items: center; justify-content: space-between;
+        
+        .qty-ctrl {
+          display: flex; align-items: center; background: #333; border-radius: 20px; padding: 2px;
+          button {
+            width: 28px; height: 28px; border-radius: 50%; border: none; background: #444; color: #fff;
+            display: flex; align-items: center; justify-content: center; cursor: pointer;
+            &:active { background: $primary-red; }
+          }
+          .qty { margin: 0 10px; min-width: 20px; text-align: center; font-weight: bold; }
+        }
+
+        .del-btn { 
+          background: none; border: none; color: #ff5555; 
+          cursor: pointer; font-size: 1.1rem; padding: 5px;
+        }
+      }
     }
   }
 }
-.cart-footer {
-  .total-row { display: flex; justify-content: space-between; font-size: 1.2rem; font-weight: bold; margin-bottom: 15px; color: $primary-red; }
-  .confirm-btn { width: 100%; }
+
+.cart-summary {
+  .total-line {
+    display: flex; justify-content: space-between; font-size: 1.2rem; margin-bottom: 15px; color: #fff;
+    .highlight-price { color: $primary-gold; font-weight: bold; font-size: 1.4rem; }
+  }
+  .confirm-btn {
+    width: 100%; background: #28a745; color: white; border: none;
+    padding: 14px; font-size: 1.1rem; font-weight: bold; border-radius: 8px; cursor: pointer;
+    box-shadow: 0 4px 10px rgba(40, 167, 69, 0.4);
+    &:disabled { background: #444; color: #888; box-shadow: none; cursor: not-allowed; }
+  }
 }

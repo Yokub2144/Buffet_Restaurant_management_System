@@ -1,5 +1,5 @@
 <app-customer-navbar>
-  <p-toast position="bottom-right"></p-toast>
+  <p-toast position="bottom-center"></p-toast>
 
   <div class="page-container">
     <section class="hero-banner-wrapper">
@@ -32,14 +32,14 @@
         </div>
       </div>
     </section>
-
-    <div class="category-nav-wrapper">
+    <div class="category-navbar">
       <div class="category-scroll">
         <button
           *ngFor="let cat of categories"
-          class="cat-pill"
+          class="nav-item"
           [class.active]="currentCategory === cat"
           (click)="filterCategory(cat)"
+          pRipple
         >
           {{ cat }}
         </button>
@@ -47,20 +47,28 @@
     </div>
 
     <div class="menu-content">
-      <h2 class="section-title">{{ currentCategory }}</h2>
+      <h2 class="section-header">{{ currentCategory }}</h2>
+
       <div class="food-grid">
-        <div class="food-card" *ngFor="let item of displayItems">
+        <div class="food-card" *ngFor="let item of displayItems" pRipple>
           <div class="card-img-wrapper">
-            <img [src]="item.image" [alt]="item.name" />
+            <img
+              [src]="'assets/Images/product/' + item.menu_Image"
+              [alt]="item.menu_Name"
+              loading="lazy"
+            />
           </div>
+
           <div class="card-body">
-            <h3 class="food-name">{{ item.name }}</h3>
-            <div class="card-footer">
-              <button class="add-btn" pRipple (click)="addToCart(item)">
-                <i class="pi pi-shopping-cart" style="margin-right: 5px"></i>
-                เพิ่มไปยังรถเข็น
+            <h3 class="food-name">{{ item.menu_Name }}</h3>
+
+            <div class="card-action-row">
+              <button class="add-cart-btn" (click)="addToCart(item)" pRipple>
+                <i class="pi pi-shopping-cart"></i> เพิ่มไปยังรถเข็น
               </button>
-              <span class="price">{{ item.price === 0 ? '0 ฿' : item.price + ' ฿' }}</span>
+              <span class="price">
+                {{ item.price === 0 ? '0 ฿' : (item.price | number) + ' ฿' }}
+              </span>
             </div>
           </div>
         </div>
@@ -70,52 +78,55 @@
 </app-customer-navbar>
 
 <p-dialog
-  header="รายการอาหารที่สั่ง"
+  header="รายการอาหารที่เลือก"
   [(visible)]="isCartVisible"
   [modal]="true"
-  [style]="{ width: '90vw', maxWidth: '500px' }"
+  [style]="{ width: '90vw', maxWidth: '400px' }"
   [draggable]="false"
   [resizable]="false"
-  position="top"
+  [dismissableMask]="true"
+  styleClass="dark-dialog"
 >
   <div class="cart-list">
     <div class="cart-item" *ngFor="let item of cart">
-      <img [src]="item.image" class="cart-thumb" />
+      <img [src]="'assets/Images/product/' + item.menu_Image" class="cart-thumb" />
       <div class="cart-details">
-        <div class="cart-row-top">
-          <span class="c-name">{{ item.name }}</span>
-          <span class="c-price">{{ item.price * item.quantity }} ฿</span>
+        <div class="row-top">
+          <span class="item-name">{{ item.menu_Name }}</span>
+          <span class="item-price">{{ item.price * item.quantity | number }} ฿</span>
         </div>
-        <div class="cart-actions">
-          <button class="qty-btn remove" (click)="updateQuantity(item, -1)">
-            <i class="pi pi-minus"></i>
+        <div class="row-actions">
+          <div class="qty-ctrl">
+            <button class="minus" (click)="updateQuantity(item, -1)">
+              <i class="pi pi-minus"></i>
+            </button>
+            <span class="qty">{{ item.quantity }}</span>
+            <button class="plus" (click)="updateQuantity(item, 1)">
+              <i class="pi pi-plus"></i>
+            </button>
+          </div>
+          <button class="del-btn" (click)="removeItem(item)">
+            <i class="pi pi-trash"></i>
           </button>
-          <span class="qty-val">{{ item.quantity }}</span>
-          <button class="qty-btn add" (click)="updateQuantity(item, 1)">
-            <i class="pi pi-plus"></i>
-          </button>
-          <button class="del-btn" (click)="removeItem(item)"><i class="pi pi-trash"></i></button>
         </div>
       </div>
     </div>
-    <div class="empty-cart" *ngIf="cart.length === 0">
-      <p>ไม่มีรายการอาหาร</p>
+
+    <div class="empty-state" *ngIf="cart.length === 0">
+      <i class="pi pi-shopping-cart" style="font-size: 2rem; margin-bottom: 10px; color: #666"></i>
+      <p>ยังไม่มีรายการอาหาร</p>
     </div>
   </div>
 
   <ng-template pTemplate="footer">
-    <div class="cart-footer">
-      <div class="total-row">
-        <span>รวมยอด : </span>
-        <span class="total-price">{{ cartTotalPrice }} ฿</span>
+    <div class="cart-summary">
+      <div class="total-line">
+        <span>รวมทั้งหมด</span>
+        <span class="highlight-price">{{ cartTotalPrice | number }} ฿</span>
       </div>
-      <button
-        pButton
-        label="ยืนยันการสั่ง"
-        class="confirm-btn p-button-danger"
-        (click)="confirmOrder()"
-        [disabled]="cart.length === 0"
-      ></button>
+      <button class="confirm-btn" (click)="confirmOrder()" [disabled]="cart.length === 0" pRipple>
+        ยืนยันการสั่ง
+      </button>
     </div>
   </ng-template>
 </p-dialog>
