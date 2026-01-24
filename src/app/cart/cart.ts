@@ -1,22 +1,29 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
 import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 import { CustomerNavbar } from '../components/menu-bar/customer-navbar/customer-navbar';
+import { CartService } from '../service/api/cart.service';
 
 interface CartItem {
   id: number;
+  menuId: number;
   name: string;
   price: number;
   quantity: number;
+  image?: string;
   selected: boolean;
 }
 
 @Component({
   selector: 'app-cart',
+  standalone: true,
   imports: [
     CommonModule,
     MatIconModule,
@@ -24,24 +31,57 @@ interface CartItem {
     RippleModule,
     FormsModule,
     RouterModule,
+    HttpClientModule,
+    ToastModule,
     CustomerNavbar,
   ],
+  providers: [MessageService],
   templateUrl: './cart.html',
   styleUrl: './cart.scss',
 })
-export class Cart {
-  cartItems: CartItem[] = [
-    { id: 1, name: 'หมูหมักพริกไทยดำ', price: 0, quantity: 2, selected: true },
-    { id: 2, name: 'หมูสไลด์สามชั้น', price: 0, quantity: 6, selected: true },
-    { id: 3, name: 'หมูสไลด์สามชั้นแผ่น', price: 0, quantity: 5, selected: true },
-    { id: 4, name: 'ผักกระหล่ำ', price: 0, quantity: 2, selected: true },
-    { id: 5, name: 'สาหร่ายวากาเมะ', price: 0, quantity: 3, selected: true },
-    { id: 6, name: 'เบียร์สิงห์', price: 75, quantity: 1, selected: true },
-  ];
+export class Cart implements OnInit {
+  cartItems: CartItem[] = [];
+  currentCartId: number = 0;
+  tableId: number = 5; // โต๊ะ 5
+
+  constructor(
+    private cartService: CartService,
+    private messageService: MessageService,
+  ) {}
+
+  ngOnInit() {
+    this.loadCart();
+  }
+
+  // 1. โหลดข้อมูลตะกร้าจาก DB
+  loadCart() {
+    this.cartService.getCartItems(this.tableId).subscribe({
+      next: (res: any) => {
+        this.currentCartId = res.cartId;
+
+        // แปลงข้อมูลจาก API ให้เข้ากับ Interface ของหน้าบ้าน
+        if (res.items) {
+          this.cartItems = res.items.map((item: any) => ({
+            id: item.id,
+            menuId: item.menuId,
+            name: item.name,
+            price: item.price,
+            quantity: item.quantity,
+            image: item.image,
+            selected: true,
+          }));
+        }
+      },
+      error: (err) => {
+        console.error('Load cart error:', err);
+        // ถ้าไม่เจอ หรือ Error อาจจะแค่ console log หรือแจ้งเตือน
+      },
+    });
+  }
 
   // Logic เลือกทั้งหมด
   get isAllSelected(): boolean {
-    return this.cartItems.every((item) => item.selected);
+    return this.cartItems.length > 0 && this.cartItems.every((item) => item.selected);
   }
 
   set isAllSelected(value: boolean) {
@@ -60,32 +100,71 @@ export class Cart {
       .reduce((sum, item) => sum + item.price * item.quantity, 0);
   }
 
-  // เพิ่มจำนวน
+  // 2. เพิ่มจำนวน
   increaseQty(item: CartItem) {
-    item.quantity++;
+    this.updateCartQuantity(item, 1);
   }
 
-  // ลดจำนวน
+  // 3. ลดจำนวน
   decreaseQty(item: CartItem) {
-    if (item.quantity > 1) {
-      item.quantity--;
-    }
+    this.updateCartQuantity(item, -1);
+  }
+  // ฟังก์ชันกลางสำหรับยิง API บวก/ลบ
+  updateCartQuantity(item: CartItem, change: number) {
+    const payload = {
+      tableId: this.tableId,
+      menuId: item.menuId,
+      quantity: change,
+      booking_id: null,
+    };
+
+    this.cartService.addToCart(payload).subscribe({
+      next: () => {
+        item.quantity += change;
+        if (item.quantity <= 0) {
+          this.cartItems = this.cartItems.filter((x) => x.id !== item.id);
+        }
+      },
+      error: () => this.messageService.add({ severity: 'error', summary: 'Error' }),
+    });
   }
 
-  // ลบรายการ
+  // 4. ลบรายการ
+
   removeItem(id: number) {
-    this.cartItems = this.cartItems.filter((item) => item.id !== id);
+    this.cartService.deleteItem(id).subscribe({
+      next: () => {
+        // ลบออกจากหน้าจอทันที
+        this.cartItems = this.cartItems.filter((item) => item.id !== id);
+        this.messageService.add({ severity: 'success', summary: 'ลบสำเร็จ' });
+
+        // ถ้าลบจนหมด ให้เคลียร์ CartId ทิ้งด้วย
+        if (this.cartItems.length === 0) this.currentCartId = 0;
+      },
+      error: () => {
+        this.messageService.add({ severity: 'error', summary: 'ลบไม่สำเร็จ' });
+      },
+    });
   }
 
-  // สั่งอาหาร
+  // 5. สั่งอาหาร
   placeOrder() {
-    const selectedItems = this.cartItems.filter((i) => i.selected);
-    if (selectedItems.length === 0) {
-      alert('กรุณาเลือกรายการอาหารอย่างน้อย 1 รายการ');
-      return;
-    }
-    console.log('Ordering:', selectedItems);
-    alert(`สั่งอาหารเรียบร้อย! ราคารวม ${this.totalPrice} บาท`);
-    // TODO: เชื่อมต่อ API สั่งอาหารจริงตรงนี้
+    if (this.currentCartId === 0 || this.cartItems.length === 0) return;
+
+    this.cartService.placeOrder(this.currentCartId).subscribe({
+      next: () => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'สั่งอาหารเรียบร้อย',
+          detail: 'รายการถูกส่งเข้าครัวแล้ว',
+        });
+
+        this.cartItems = [];
+        this.currentCartId = 0;
+      },
+      error: () => {
+        this.messageService.add({ severity: 'error', summary: 'เกิดข้อผิดพลาด' });
+      },
+    });
   }
 }

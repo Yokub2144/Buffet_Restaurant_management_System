@@ -10,6 +10,7 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { CustomerNavbar } from '../components/menu-bar/customer-navbar/customer-navbar';
 import { Menu, MenuService } from '../service/api/menu.service';
+import { CartService } from '../service/api/cart.service';
 
 interface CartItem extends Menu {
   quantity: number;
@@ -46,7 +47,7 @@ export class CustomerOrder implements OnInit {
   // ----------------------------------------
 
   isCartVisible: boolean = false;
-  tableNumber: string = 'A1';
+  tableNumber: string = 'A1'; // (อาจจะเปลี่ยนเป็น A5 หรือดึงจาก DB ในอนาคต)
 
   allFoodItems: Menu[] = [];
   displayItems: Menu[] = [];
@@ -59,6 +60,7 @@ export class CustomerOrder implements OnInit {
   constructor(
     private messageService: MessageService,
     private menuService: MenuService,
+    private cartService: CartService,
   ) {}
 
   ngOnInit() {
@@ -108,20 +110,34 @@ export class CustomerOrder implements OnInit {
     }
   }
 
+  // (Fix โต๊ะ 5)
   addToCart(item: Menu) {
-    const existing = this.cart.find((c) => c.menu_id === item.menu_id);
+    const payload = {
+      tableId: 5, // <--- FIX
+      booking_id: null,
+      menuId: item.menu_id,
+      quantity: 1,
+    };
 
-    if (existing) {
-      existing.quantity++;
-    } else {
-      this.cart.push({ ...item, quantity: 1 });
-    }
-
-    this.messageService.add({
-      severity: 'success',
-      summary: 'เพิ่มสำเร็จ',
-      detail: item.menu_Name,
-      life: 1000,
+    // ยิง API
+    this.cartService.addToCart(payload).subscribe({
+      next: (res) => {
+        // แสดงข้อความสำเร็จ
+        this.messageService.add({
+          severity: 'success',
+          summary: 'เพิ่มลงตะกร้าแล้ว',
+          detail: item.menu_Name,
+          life: 1000,
+        });
+      },
+      error: (err) => {
+        console.error(err);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'ผิดพลาด',
+          detail: 'ไม่สามารถเพิ่มรายการได้',
+        });
+      },
     });
   }
 
@@ -149,6 +165,7 @@ export class CustomerOrder implements OnInit {
 
   confirmOrder() {
     if (this.cart.length === 0) return;
+
     this.isCartVisible = false;
     this.messageService.add({
       severity: 'success',
