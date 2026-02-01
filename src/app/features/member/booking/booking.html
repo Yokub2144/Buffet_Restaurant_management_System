@@ -1,8 +1,127 @@
 <app-menu-member>
-  <main class="main-content">
-    <div class="content-placeholder">
-      <h2>Dashboard Content</h2>
-      <p></p>
+  <div class="booking-container">
+    <header class="page-header">
+      <h1>การจองโต๊ะ</h1>
+      <button class="status-btn">ดูสถานะการจอง</button>
+    </header>
+
+    <div class="tables-grid-wrapper">
+      <div class="tables-grid">
+        <div
+          *ngFor="let table of tables"
+          class="table-item"
+          [ngClass]="{
+            selected: isSelected(table),
+            'status-free': table.Table_Status === 'ว่าง' && !isSelected(table),
+            'status-reserved': table.Table_Status === 'ติดจอง',
+            'status-occupied': table.Table_Status === 'ไม่ว่าง',
+          }"
+          (click)="toggleTableSelection(table)"
+        >
+          <span *ngIf="table.Table_Status !== 'ไม่ว่าง' && !isSelected(table)">
+            {{ table.Table_Number }}
+          </span>
+
+          <span *ngIf="table.Table_Status === 'ไม่ว่าง' || isSelected(table)" class="occupied-icon">
+            ✔
+          </span>
+
+          <span class="tooltip-text" *ngIf="table.Table_Status === 'ติดจอง'"> ติดจอง </span>
+          <span class="tooltip-text" *ngIf="table.Table_Status === 'ไม่ว่าง'">
+            กำลังให้บริการ
+          </span>
+          <span class="tooltip-text" *ngIf="table.Table_Status === 'ว่าง'"> ว่าง </span>
+        </div>
+      </div>
     </div>
-  </main>
+
+    <div class="bottom-bar">
+      <div class="selected-info">
+        <span>โต๊ะที่เลือก</span>
+        <h2 class="selected-numbers">{{ getSelectedTableString() }}</h2>
+      </div>
+      <button class="action-btn" (click)="openBookingModal()">ดำเนินการจอง</button>
+    </div>
+
+    <div class="modal-overlay" *ngIf="showBookingModal">
+      <div class="modal-content form-modal">
+        <div class="modal-header">
+          <h3>การจองโต๊ะ</h3>
+          <button class="close-btn" (click)="closeBookingModal()">×</button>
+        </div>
+
+        <div class="modal-body">
+          <div class="warning-box">
+            <div class="warning-icon">⚠️</div>
+            <p>
+              โปรดทราบ: หากไม่มาในเวลา 30 นาที ระบบจะยกเลิกการจองอัตโนมัติ /
+              การจองโต๊ะต้องจ่ายค่ามัดจำ <span class="highlight-red">50%</span> ของราคาจำนวนลูกค้า
+            </p>
+          </div>
+
+          <div class="form-group">
+            <label>โต๊ะที่เลือก :</label>
+            <div class="selected-display">{{ getSelectedTableString() }}</div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group half">
+              <label>จำนวนเด็ก /คน</label>
+              <input type="number" [(ngModel)]="bookingForm.NumChildren" placeholder="0" />
+            </div>
+            <div class="form-group half">
+              <label>จำนวนผู้ใหญ่ /คน</label>
+              <input type="number" [(ngModel)]="bookingForm.NumAdults" placeholder="0" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>เลือกวันที่จอง <span class="required">*</span></label>
+            <input type="date" [(ngModel)]="bookingForm.BookingDate" />
+          </div>
+
+          <div class="form-group">
+            <label>เลือกเวลาจอง <span class="required">*</span></label>
+            <input type="time" [(ngModel)]="bookingForm.BookingTime" />
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="confirm-btn" (click)="proceedToPayment()">จอง/ชำระค่ามัดจำ</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-overlay" *ngIf="showPaymentModal">
+      <div class="modal-content payment-modal">
+        <div class="modal-header">
+          <h3 class="blue-text">ชำระเงินค่ามัดจำเพื่อจองโต๊ะ</h3>
+          <button class="close-btn" (click)="closePaymentModal()">×</button>
+        </div>
+
+        <div class="modal-body text-center">
+          <div class="qr-scan-box">
+            <span>📷 สแกน คิวอาร์โค้ด</span>
+            <span class="check-circle">✔</span>
+          </div>
+
+          <div class="qr-image-container">
+            <div class="thai-qr-header">THAI QR PAYMENT</div>
+            <div class="prompt-pay">PromptPay</div>
+            <img
+              src="assets/qr-placeholder.png"
+              alt="QR Code"
+              class="qr-code-img"
+              style="min-height: 150px; background: #eee"
+            />
+            <div class="ref-name">ชื่อบัญชีร้านค้า</div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="confirm-btn" (click)="confirmPayment()">ยืนยันการชำระเงิน</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </app-menu-member>
