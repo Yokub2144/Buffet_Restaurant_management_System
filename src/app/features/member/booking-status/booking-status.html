@@ -1,0 +1,67 @@
+<div class="status-container">
+  <header class="page-header">
+    <div class="header-left" (click)="goBack()">
+      <span class="back-arrow">❮</span>
+      <h1>สถานะการจองโต๊ะ</h1>
+    </div>
+    <button class="pre-order-btn">สั่งล่วงหน้า</button>
+  </header>
+
+  <div class="booking-card">
+    <div class="card-header">
+      <span class="label">โต๊ะที่เลือก</span>
+      <button class="edit-btn" (click)="onEditBooking()">แก้ไขจอง</button>
+    </div>
+
+    <div class="table-display">
+      {{ bookingData.tableNumbers.join(' , ') }}
+    </div>
+
+    <div class="details-grid">
+      <div class="detail-item">
+        <label>จำนวนเด็ก /คน :</label>
+        <span class="value">{{ bookingData.childCount }}</span>
+      </div>
+      <div class="detail-item">
+        <label>จำนวนผู้ใหญ่ /คน :</label>
+        <span class="value">{{ bookingData.adultCount }}</span>
+      </div>
+
+      <div class="detail-item">
+        <label>วันที่จอง :</label>
+        <span class="value">{{ bookingData.date }}</span>
+      </div>
+      <div class="detail-item">
+        <label>เวลาจอง :</label>
+        <span class="value">{{ bookingData.time }}</span>
+      </div>
+    </div>
+
+    <div class="status-row">
+      <div class="status-info">
+        <label>สถานะ :</label>
+        <div class="status-text success">{{ bookingData.status }}</div>
+      </div>
+      <button class="qr-checkin-btn" (click)="toggleQrModal(true)">คิวอาร์โค้ดเช็คอิน</button>
+    </div>
+
+    <button class="cancel-btn-full" (click)="onCancelBooking()">ยกเลิกการจอง</button>
+  </div>
+
+  <div class="modal-overlay" *ngIf="showQrModal">
+    <div class="modal-content qr-modal">
+      <div class="modal-header-qr">
+        <h3>คิวอาร์โค้ดเช็คอินโต๊ะ</h3>
+        <button class="close-icon" (click)="toggleQrModal(false)">✕</button>
+      </div>
+
+      <div class="modal-body-qr">
+        <img src="assets/qr-placeholder.png" alt="QR Code Check-in" class="qr-image" />
+      </div>
+
+      <div class="modal-footer-qr">
+        <button class="close-btn-red" (click)="toggleQrModal(false)">ปิด</button>
+      </div>
+    </div>
+  </div>
+</div>

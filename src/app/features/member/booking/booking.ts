@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MenuMember } from '../../../components/menu-bar/menu-member/menu-member';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 
 interface Table {
   Table_id: number;
@@ -19,7 +20,7 @@ interface BookingForm {
 
 @Component({
   selector: 'app-booking',
-  imports: [MenuMember, CommonModule, FormsModule],
+  imports: [MenuMember, CommonModule, FormsModule, RouterLink],
   templateUrl: './booking.html',
   styleUrl: './booking.scss',
 })

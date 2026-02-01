@@ -1,0 +1,256 @@
+// Variables (อิงจากไฟล์เดิมเพื่อให้ Theme ตรงกัน)
+$bg-dark: #000000;
+$card-dark: #121212; // ปรับให้เข้มขึ้นตามรูป
+$text-white: #ffffff;
+$text-gray: #aaaaaa;
+$color-orange: #d84315;
+$color-blue-text: #448aff;
+$color-green-success: #00e676;
+$color-red-danger: #b71c1c;
+
+.status-container {
+  background-color: $bg-dark;
+  min-height: 100vh;
+  padding: 20px;
+  color: $text-white;
+  font-family: 'Sarabun', sans-serif;
+  box-sizing: border-box;
+
+  @media (max-width: 480px) {
+    padding: 15px;
+  }
+}
+
+// Header
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    gap: 15px;
+
+    .back-arrow {
+      color: #ff9100; // สีส้มทองๆ ตามรูป
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    h1 {
+      font-size: 1.4rem;
+      margin: 0;
+      font-weight: normal;
+    }
+  }
+
+  .pre-order-btn {
+    background: transparent;
+    border: 1px solid #d84315;
+    color: #d84315;
+    padding: 6px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+      background: rgba(216, 67, 21, 0.1);
+    }
+  }
+}
+
+// Main Card
+.booking-card {
+  background-color: #0a0a0a; // พื้นหลังการ์ดเกือบดำสนิท
+  border-radius: 12px;
+  padding: 30px;
+  max-width: 600px;
+  margin: 0 auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+
+    .label {
+      font-size: 1.1rem;
+      color: $text-white;
+    }
+
+    .edit-btn {
+      background-color: #e65100;
+      color: white;
+      border: none;
+      padding: 6px 16px;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      
+      &:hover { background-color: #ef6c00; }
+    }
+  }
+
+  // ตัวเลขโต๊ะใหญ่ๆ สีฟ้า
+  .table-display {
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: $color-blue-text;
+    margin: 20px 0 40px 0;
+  }
+
+  // Grid ข้อมูล เด็ก/ผู้ใหญ่/วัน/เวลา
+  .details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px; // ระยะห่างแนวตั้ง/นอน
+    margin-bottom: 30px;
+
+    .detail-item {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+
+      label {
+        color: $text-white;
+        font-size: 0.95rem;
+      }
+
+      .value {
+        font-size: 1.8rem; // ตัวเลขใหญ่
+        font-weight: 500;
+      }
+    }
+  }
+
+  // แถวสถานะ และ ปุ่ม QR
+  .status-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 40px;
+
+    .status-info {
+      label {
+        display: block;
+        color: $text-white;
+        margin-bottom: 5px;
+        font-size: 0.9rem;
+      }
+      .status-text {
+        font-size: 1.5rem;
+        &.success { color: $color-green-success; }
+      }
+    }
+
+    .qr-checkin-btn {
+      background-color: #1976d2;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+      
+      &:hover { background-color: #1565c0; }
+    }
+  }
+
+  // ปุ่มยกเลิกด้านล่างสุด
+  .cancel-btn-full {
+    width: 100%;
+    background-color: $color-red-danger;
+    color: white;
+    border: none;
+    padding: 15px;
+    border-radius: 6px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+
+    &:hover { background-color: #d32f2f; }
+  }
+}
+
+// --- QR Modal Styles ---
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  backdrop-filter: blur(2px);
+}
+
+.modal-content.qr-modal {
+  background: white;
+  color: black;
+  width: 90%;
+  max-width: 400px;
+  border-radius: 8px;
+  overflow: hidden;
+
+  .modal-header-qr {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    
+    h3 {
+      margin: 0;
+      font-size: 1.4rem;
+      font-weight: bold;
+    }
+
+    .close-icon {
+      background: none;
+      border: none;
+      font-size: 1.8rem;
+      cursor: pointer;
+      line-height: 1;
+    }
+  }
+
+  .modal-body-qr {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background-color: white;
+
+    .qr-image {
+      width: 250px;
+      height: 250px;
+      object-fit: contain;
+      // ใส่ border หรือเงาให้ QR หน่อยให้ดูเด่น
+      border: 4px solid #000; 
+      border-radius: 4px; 
+    }
+  }
+
+  .modal-footer-qr {
+    padding: 10px 20px 20px 20px;
+    
+    .close-btn-red {
+      width: 100%;
+      background-color: #b71c1c;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 6px;
+      font-size: 1.1rem;
+      cursor: pointer;
+
+      &:hover { background-color: #c62828; }
+    }
+  }
+}
