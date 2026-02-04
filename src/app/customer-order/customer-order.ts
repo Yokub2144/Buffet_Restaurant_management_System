@@ -11,6 +11,7 @@ import { MessageService } from 'primeng/api';
 import { CustomerNavbar } from '../components/menu-bar/customer-navbar/customer-navbar';
 import { Menu, MenuService } from '../service/api/menu.service';
 import { CartService } from '../service/api/cart.service';
+import { ActivatedRoute } from '@angular/router';
 
 interface CartItem extends Menu {
   quantity: number;
@@ -47,7 +48,7 @@ export class CustomerOrder implements OnInit {
   // ----------------------------------------
 
   isCartVisible: boolean = false;
-  tableNumber: string = 'A1'; // (อาจจะเปลี่ยนเป็น A5 หรือดึงจาก DB ในอนาคต)
+  tableNumber: string | null = null;
 
   allFoodItems: Menu[] = [];
   displayItems: Menu[] = [];
@@ -61,10 +62,13 @@ export class CustomerOrder implements OnInit {
     private messageService: MessageService,
     private menuService: MenuService,
     private cartService: CartService,
+    private route: ActivatedRoute,
   ) {}
 
   ngOnInit() {
     this.loadMenus();
+    this.tableNumber = this.route.snapshot.queryParamMap.get('table');
+    console.log('เลขโต๊ะที่ดึงได้:', this.tableNumber);
   }
 
   loadMenus() {
@@ -110,10 +114,9 @@ export class CustomerOrder implements OnInit {
     }
   }
 
-  // (Fix โต๊ะ 5)
   addToCart(item: Menu) {
     const payload = {
-      tableId: 5, // <--- FIX
+      tableId: this.tableNumber, // <--- FIX
       booking_id: null,
       menuId: item.menu_id,
       quantity: 1,
