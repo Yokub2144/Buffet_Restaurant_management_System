@@ -73,7 +73,10 @@ $border-color: #4b5563;
             -webkit-appearance: none; // ล้าง default UI ของ Safari
             display: flex;
             align-items: center;
-
+            &::-webkit-date-and-time-value {
+              text-align: left;
+              margin: 0;
+            }
             &::-webkit-calendar-picker-indicator {
               position: absolute;
               top: 0;
@@ -84,9 +87,9 @@ $border-color: #4b5563;
               height: 100%;
               margin: 0;
               padding: 0;
-              opacity: 0; // ซ่อนไอคอนปฏิทินของ Browser
+              opacity: 0;
               cursor: pointer;
-              z-index: 3; // ให้อยู่บนสุดเพื่อให้กดตรงไหนก็ติด
+              z-index: 3;
             }
           }
         }
@@ -97,8 +100,8 @@ $border-color: #4b5563;
           top: 50%;
           transform: translateY(-50%);
           color: #9ca3af;
-          z-index: 2; // ให้อยู่บน input แต่ต่ำกว่า indicator เพื่อไม่ให้บังการคลิก
-          pointer-events: none; // อันนี้แหละที่ต้องใส่ตรงนี้ เพื่อให้คลิกทะลุไอคอนไปโดน input
+          z-index: 2;
+          pointer-events: none;
         }
       }
     }
