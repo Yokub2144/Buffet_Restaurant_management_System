@@ -4,7 +4,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
-import { ActivatedRoute } from '@angular/router';
+import { TableService } from '../../../service/api/table.service';
 
 @Component({
   selector: 'app-customer-navbar',
@@ -25,10 +25,9 @@ export class CustomerNavbar implements OnInit {
     { label: 'สั่งอาหาร/รถเข็นของคุณ', icon: 'shopping_cart', route: '/Cart' },
     { label: 'ติดตามสถานะออเดอร์', icon: 'receipt_long', route: '/StatusCustomer' },
   ];
-  constructor(private route: ActivatedRoute) {}
+  constructor(private tableService: TableService) {}
   ngOnInit(): void {
-    this.tableNumber = this.route.snapshot.queryParamMap.get('table');
-    console.log('เลขโต๊ะที่ดึงได้:', this.tableNumber);
+    this.tableNumber = this.tableService.getTable();
   }
   toggleSidebar() {
     this.isExpanded = !this.isExpanded;

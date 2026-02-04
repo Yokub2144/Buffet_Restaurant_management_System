@@ -12,6 +12,7 @@ import { CustomerNavbar } from '../components/menu-bar/customer-navbar/customer-
 import { Menu, MenuService } from '../service/api/menu.service';
 import { CartService } from '../service/api/cart.service';
 import { ActivatedRoute } from '@angular/router';
+import { TableService } from '../service/api/table.service';
 
 interface CartItem extends Menu {
   quantity: number;
@@ -63,12 +64,18 @@ export class CustomerOrder implements OnInit {
     private menuService: MenuService,
     private cartService: CartService,
     private route: ActivatedRoute,
+    private tableService: TableService,
   ) {}
 
   ngOnInit() {
     this.loadMenus();
-    this.tableNumber = this.route.snapshot.queryParamMap.get('table');
-    console.log('เลขโต๊ะที่ดึงได้:', this.tableNumber);
+    const urlTable = this.route.snapshot.queryParamMap.get('table');
+    if (urlTable) {
+      this.tableService.setTable(urlTable);
+      this.tableNumber = urlTable;
+    } else {
+      this.tableNumber = this.tableService.getTable();
+    }
   }
 
   loadMenus() {
