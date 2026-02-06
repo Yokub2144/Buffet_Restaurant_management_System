@@ -90,8 +90,10 @@ $color-red-danger: #b71c1c;
       border-radius: 4px;
       font-size: 0.9rem;
       cursor: pointer;
-      
-      &:hover { background-color: #ef6c00; }
+
+      &:hover {
+        background-color: #ef6c00;
+      }
     }
   }
 
@@ -144,7 +146,9 @@ $color-red-danger: #b71c1c;
       }
       .status-text {
         font-size: 1.5rem;
-        &.success { color: $color-green-success; }
+        &.success {
+          color: $color-green-success;
+        }
       }
     }
 
@@ -156,8 +160,10 @@ $color-red-danger: #b71c1c;
       border-radius: 6px;
       font-size: 1rem;
       cursor: pointer;
-      
-      &:hover { background-color: #1565c0; }
+
+      &:hover {
+        background-color: #1565c0;
+      }
     }
   }
 
@@ -174,15 +180,19 @@ $color-red-danger: #b71c1c;
     cursor: pointer;
     transition: background 0.2s;
 
-    &:hover { background-color: #d32f2f; }
+    &:hover {
+      background-color: #d32f2f;
+    }
   }
 }
 
 // --- QR Modal Styles ---
 .modal-overlay {
   position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   background: rgba(0, 0, 0, 0.85);
   display: flex;
   align-items: center;
@@ -204,7 +214,7 @@ $color-red-danger: #b71c1c;
     justify-content: space-between;
     align-items: center;
     padding: 15px 20px;
-    
+
     h3 {
       margin: 0;
       font-size: 1.4rem;
@@ -232,14 +242,14 @@ $color-red-danger: #b71c1c;
       height: 250px;
       object-fit: contain;
       // ใส่ border หรือเงาให้ QR หน่อยให้ดูเด่น
-      border: 4px solid #000; 
-      border-radius: 4px; 
+      border: 4px solid #000;
+      border-radius: 4px;
     }
   }
 
   .modal-footer-qr {
     padding: 10px 20px 20px 20px;
-    
+
     .close-btn-red {
       width: 100%;
       background-color: #b71c1c;
@@ -250,7 +260,9 @@ $color-red-danger: #b71c1c;
       font-size: 1.1rem;
       cursor: pointer;
 
-      &:hover { background-color: #c62828; }
+      &:hover {
+        background-color: #c62828;
+      }
     }
   }
 }

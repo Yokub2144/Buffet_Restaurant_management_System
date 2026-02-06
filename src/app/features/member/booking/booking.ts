@@ -3,12 +3,13 @@ import { MenuMember } from '../../../components/menu-bar/menu-member/menu-member
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-
+import { TableService } from '../../../service/api/table.service';
+import { SignalrService } from '../../../service/api/signalr.service';
 interface Table {
-  Table_id: number;
-  Table_Number: string;
-  Table_Status: 'ว่าง' | 'ติดจอง' | 'ไม่ว่าง';
-  Table_QR_Code?: string;
+  table_id: number;
+  table_Number: string;
+  table_Status: 'ว่าง' | 'ติดจอง' | 'ไม่ว่าง';
+  table_QR_Code: string;
 }
 
 interface BookingForm {
@@ -38,37 +39,39 @@ export class Booking implements OnInit {
   showBookingModal: boolean = false;
   showPaymentModal: boolean = false;
 
-  constructor() {}
+  constructor(
+    private signalrService: SignalrService,
+    private tableService: TableService,
+  ) {}
 
   ngOnInit() {
     this.loadTables();
+
+    this.signalrService.tableStatus$.subscribe((updatedTable) => {
+      const index = this.tables.findIndex((t) => t.table_id === updatedTable.tableId);
+      if (index !== -1) {
+        this.tables[index].table_Status = updatedTable.status as 'ว่าง' | 'ติดจอง' | 'ไม่ว่าง';
+        console.log(`โต๊ะที่ ${updatedTable.tableId} เปลี่ยนเป็น ${updatedTable.status}`);
+      }
+    });
   }
 
-  // --- ส่วนเชื่อมต่อ API ---
   loadTables() {
-    this.tables = [
-      { Table_id: 1, Table_Number: 'A1', Table_Status: 'ว่าง' },
-      { Table_id: 2, Table_Number: 'A2', Table_Status: 'ไม่ว่าง' },
-      { Table_id: 3, Table_Number: 'A3', Table_Status: 'ไม่ว่าง' },
-      { Table_id: 4, Table_Number: 'A4', Table_Status: 'ว่าง' },
-      { Table_id: 5, Table_Number: 'A5', Table_Status: 'ติดจอง' },
-      { Table_id: 6, Table_Number: 'A6', Table_Status: 'ว่าง' },
-      { Table_id: 7, Table_Number: 'A7', Table_Status: 'ติดจอง' },
-      { Table_id: 8, Table_Number: 'A8', Table_Status: 'ว่าง' },
-      { Table_id: 9, Table_Number: 'A9', Table_Status: 'ว่าง' },
-      { Table_id: 10, Table_Number: 'A10', Table_Status: 'ว่าง' },
-      { Table_id: 11, Table_Number: 'A11', Table_Status: 'ว่าง' },
-      { Table_id: 12, Table_Number: 'A12', Table_Status: 'ว่าง' },
-      { Table_id: 13, Table_Number: 'A13', Table_Status: 'ไม่ว่าง' },
-      { Table_id: 14, Table_Number: 'A14', Table_Status: 'ว่าง' },
-      { Table_id: 15, Table_Number: 'A15', Table_Status: 'ว่าง' },
-    ];
+    this.tableService.getAlltables().subscribe({
+      next: (response: Table[]) => {
+        this.tables = response;
+        console.log('ข้อมูลโต๊ะทั้งหมดถูกโหลดแล้ว:', this.tables);
+      },
+      error: (err) => {
+        console.error('โหลดข้อมูลไม่สำเร็จ:', err);
+      },
+    });
   }
 
   toggleTableSelection(table: Table) {
-    if (table.Table_Status !== 'ว่าง') return;
+    if (table.table_Status !== 'ว่าง') return;
 
-    const index = this.selectedTables.findIndex((t) => t.Table_id === table.Table_id);
+    const index = this.selectedTables.findIndex((t) => t.table_id === table.table_id);
 
     // เพิ่มหรือลบโต๊ะ
     if (index > -1) {
@@ -79,7 +82,7 @@ export class Booking implements OnInit {
 
     //  สั่งเรียงลำดับใหม่ทันที (Sort Natural Order)
     this.selectedTables.sort((a, b) => {
-      return a.Table_Number.localeCompare(b.Table_Number, undefined, {
+      return a.table_Number.localeCompare(b.table_Number, undefined, {
         numeric: true,
         sensitivity: 'base',
       });
@@ -88,13 +91,13 @@ export class Booking implements OnInit {
 
   // เช็คว่าเลือกหรือยัง
   isSelected(table: Table): boolean {
-    return this.selectedTables.some((t) => t.Table_id === table.Table_id);
+    return this.selectedTables.some((t) => t.table_id === table.table_id);
   }
 
   // แสดงผล
   getSelectedTableString(): string {
     if (this.selectedTables.length === 0) return '-';
-    return this.selectedTables.map((t) => t.Table_Number).join(', ');
+    return this.selectedTables.map((t) => t.table_Number).join(', ');
   }
   // --- Modal Logic ---
   openBookingModal() {
@@ -126,7 +129,7 @@ export class Booking implements OnInit {
   confirmPayment() {
     // TODO: ยิง API จองโต๊ะตรงนี้
     const payload = {
-      tables: this.selectedTables.map((t) => t.Table_id),
+      tables: this.selectedTables.map((t) => t.table_id),
       ...this.bookingForm,
     };
 

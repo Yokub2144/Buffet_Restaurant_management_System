@@ -12,25 +12,25 @@
           class="table-item"
           [ngClass]="{
             selected: isSelected(table),
-            'status-free': table.Table_Status === 'ว่าง' && !isSelected(table),
-            'status-reserved': table.Table_Status === 'ติดจอง',
-            'status-occupied': table.Table_Status === 'ไม่ว่าง',
+            'status-free': table.table_Status === 'ว่าง' && !isSelected(table),
+            'status-reserved': table.table_Status === 'ติดจอง',
+            'status-occupied': table.table_Status === 'ไม่ว่าง',
           }"
           (click)="toggleTableSelection(table)"
         >
-          <span *ngIf="table.Table_Status !== 'ไม่ว่าง' && !isSelected(table)">
-            {{ table.Table_Number }}
+          <span *ngIf="table.table_Status !== 'ไม่ว่าง' && !isSelected(table)">
+            {{ table.table_Number }}
           </span>
 
-          <span *ngIf="table.Table_Status === 'ไม่ว่าง' || isSelected(table)" class="occupied-icon">
+          <span *ngIf="table.table_Status === 'ไม่ว่าง' || isSelected(table)" class="occupied-icon">
             ✔
           </span>
 
-          <span class="tooltip-text" *ngIf="table.Table_Status === 'ติดจอง'"> ติดจอง </span>
-          <span class="tooltip-text" *ngIf="table.Table_Status === 'ไม่ว่าง'">
+          <span class="tooltip-text" *ngIf="table.table_Status === 'ติดจอง'"> ติดจอง </span>
+          <span class="tooltip-text" *ngIf="table.table_Status === 'ไม่ว่าง'">
             กำลังให้บริการ
           </span>
-          <span class="tooltip-text" *ngIf="table.Table_Status === 'ว่าง'"> ว่าง </span>
+          <span class="tooltip-text" *ngIf="table.table_Status === 'ว่าง'"> ว่าง </span>
         </div>
       </div>
     </div>

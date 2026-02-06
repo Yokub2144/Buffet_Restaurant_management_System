@@ -1,0 +1,269 @@
+$bg-dark: #121212;
+$card-dark: #000000;
+$text-white: #ffffff;
+$text-gray: #aaaaaa;
+
+$color-free: #2e7d32;
+$color-reserved: #ef6c00;
+$color-occupied: #c62828;
+
+.booking-container {
+  background-color: $bg-dark;
+  min-height: calc(100vh - 60px);
+  padding: 20px;
+  color: $text-white;
+  font-family: 'Sarabun', sans-serif;
+  position: relative; // เพื่อให้ปุ่ม FAB อ้างอิงได้ถูกต้อง
+
+  @media (max-width: 480px) {
+    padding: 10px;
+  }
+}
+
+.tables-grid-wrapper {
+  background-color: $card-dark;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  min-height: 350px;
+  padding: 15px;
+
+  /* หัวใจสำคัญ: ทำให้ Modal อ้างอิงกึ่งกลางของ Card นี้ */
+  position: relative;
+  overflow: hidden;
+
+  .num-table {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0 30px 0;
+    color: white;
+
+    .table-count-info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      font-size: 1.4rem;
+      .count-number {
+        font-size: 1.6rem;
+        font-weight: 500;
+      }
+    }
+
+    .status-btn {
+      background: #8b0000;
+      color: white;
+      border: none;
+      padding: 6px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      &:hover {
+        background: #a50000;
+      }
+    }
+  }
+
+  /* --- แก้ไขส่วน Modal Overlay ให้อยู่ตรงกลาง --- */
+  .modal-overlay {
+    position: absolute; // ลอยทับภายใน Card เท่านั้น
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.1); // มืดลงเล็กน้อยเพื่อให้ Modal เด่น
+    display: flex;
+    align-items: center; // จัดกลางแนวตั้ง
+    justify-content: center; // จัดกลางแนวนอน
+    z-index: 100;
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    border-radius: 12px;
+  }
+}
+
+.modal-content.add-table-modal {
+  background: #111111;
+  color: white;
+  width: 90%;
+  max-width: 380px;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  border: 1px solid #222;
+
+  .modal-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    position: relative;
+    h3 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+    .close-icon-btn {
+      position: absolute;
+      right: 20px;
+      background: none;
+      border: none;
+      color: #888;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+  }
+
+  .modal-body {
+    padding: 10px 30px 30px 30px;
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #ccc;
+    }
+    .input-wrapper {
+      position: relative;
+      input {
+        width: 100%;
+        background: #1a1a1a;
+        border: 1px solid #333;
+        border-radius: 8px;
+        padding: 12px 15px;
+        color: white;
+        font-size: 1.2rem;
+        outline: none;
+        &:focus {
+          border-color: #555;
+        }
+      }
+      mat-icon {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #666;
+      }
+    }
+  }
+
+  .modal-footer {
+    display: flex;
+    gap: 15px;
+    padding: 0 30px 30px 30px;
+    button {
+      flex: 1;
+      border: none;
+      padding: 14px;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .btn-cancel {
+      background-color: #7e0000;
+      color: white;
+    }
+    .btn-confirm {
+      background-color: #1a00aa;
+      color: white;
+    }
+  }
+}
+
+/* --- ส่วนอื่นๆ คงเดิม --- */
+.tables-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(55px, 1fr));
+  gap: 15px;
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(auto-fill, minmax(65px, 1fr));
+    gap: 20px;
+  }
+}
+
+.table-item {
+  width: 100%;
+  aspect-ratio: 1/1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  font-weight: bold;
+  color: white;
+  position: relative;
+  &.status-free {
+    background-color: $color-free;
+    cursor: pointer;
+  }
+  &.status-reserved {
+    background-color: $color-reserved;
+    cursor: pointer;
+  }
+  &.status-occupied {
+    background-color: $color-occupied;
+    cursor: pointer;
+  }
+  .tooltip-text {
+    visibility: hidden;
+    width: max-content;
+    background-color: rgba(50, 50, 50, 0.95);
+    color: #fff;
+    text-align: center;
+    border-radius: 4px;
+    padding: 6px 10px;
+    font-size: 0.8rem;
+    font-weight: normal;
+
+    position: absolute;
+    bottom: 115%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-left: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: rgba(50, 50, 50, 0.95) transparent transparent transparent;
+    }
+  }
+
+  &:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+  }
+}
+
+.fab-add-button {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background-color: #44bd32;
+  color: white;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  z-index: 1000;
+  &:hover {
+    transform: scale(1.1);
+    background-color: #4cd137;
+  }
+  mat-icon {
+    font-size: 35px;
+    width: 35px;
+    height: 35px;
+  }
+}

@@ -15,6 +15,7 @@ import { ApproveEmployee } from './features/manager/manage-employee/approve-empl
 import { Cart } from './cart/cart';
 import { StatusCustomerOrder } from './status/status-customer-order/status-customer-order';
 import { BookingStatus } from './features/member/booking-status/booking-status';
+import { ManageTables } from './features/manager/manage-tables/manage-tables';
 export const routes: Routes = [
   { path: '', component: Index },
   { path: 'Registeremployee', component: RegisterEmployee },
@@ -44,6 +45,12 @@ export const routes: Routes = [
     component: ApproveEmployee,
     canActivate: [employeeGuard],
     data: { roles: ['เจ้าของร้าน'] },
+  },
+  {
+    path: 'ManageTable',
+    component: ManageTables,
+    canActivate: [employeeGuard],
+    data: { route: ['เจ้าของร้าน'] },
   },
 
   { path: '**', redirectTo: '' },

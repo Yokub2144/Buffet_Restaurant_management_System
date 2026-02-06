@@ -1,0 +1,67 @@
+<p-toast [breakpoints]="{ '120px': { width: '50%' } }" />
+<app-menu-manager>
+  <div class="booking-container">
+    <header class="page-header">
+      <h3>จัดการข้อมูลโต๊ะ</h3>
+    </header>
+
+    <div class="tables-grid-wrapper">
+      <div class="num-table">
+        <div class="table-count-info">
+          <span>จำนวนโต๊ะ</span>
+          <span class="count-number">{{ totalTable }}</span>
+        </div>
+
+        <button class="status-btn" routerLink="/BookingStatus">
+          <mat-icon>edit</mat-icon>
+          <span>จัดการโต๊ะ</span>
+        </button>
+      </div>
+
+      <div class="tables-grid">
+        <div
+          *ngFor="let table of tables"
+          class="table-item"
+          [ngClass]="{
+            'status-free': table.table_Status === 'ว่าง',
+            'status-reserved': table.table_Status === 'ติดจอง',
+            'status-occupied': table.table_Status === 'ไม่ว่าง',
+          }"
+        >
+          <span>{{ table.table_Number }}</span>
+          <span class="tooltip-text" *ngIf="table.table_Status === 'ติดจอง'"> ติดจอง </span>
+          <span class="tooltip-text" *ngIf="table.table_Status === 'ไม่ว่าง'">
+            กำลังให้บริการ
+          </span>
+          <span class="tooltip-text" *ngIf="table.table_Status === 'ว่าง'"> ว่าง </span>
+        </div>
+      </div>
+
+      <div class="modal-overlay" *ngIf="showAddTableModal">
+        <div class="modal-content add-table-modal">
+          <div class="modal-header">
+            <h3>เพิ่มโต๊ะ</h3>
+            <button class="close-icon-btn" (click)="toggleAddTableModal(false)">✕</button>
+          </div>
+
+          <div class="modal-body">
+            <label>เลขโต๊ะ</label>
+            <div class="input-wrapper">
+              <input type="text" placeholder="10" [(ngModel)]="tableNumber" />
+              <mat-icon>table_restaurant</mat-icon>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button class="btn-cancel" (click)="toggleAddTableModal(false)">ยกเลิก</button>
+            <button class="btn-confirm" (click)="confirmAddTable()">เพิ่ม</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button class="fab-add-button" (click)="addTable()">
+    <mat-icon>add</mat-icon>
+  </button>
+</app-menu-manager>
