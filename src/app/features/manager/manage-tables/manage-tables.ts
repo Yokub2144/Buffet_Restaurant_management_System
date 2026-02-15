@@ -10,12 +10,7 @@ import { lastValueFrom } from 'rxjs';
 import { MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
 import { Toast } from 'primeng/toast';
-interface Table {
-  table_id: number;
-  table_Number: string;
-  table_Status: 'ว่าง' | 'ติดจอง' | 'ไม่ว่าง';
-  table_QR_Code: string;
-}
+import { Table } from '../../../models/table.model';
 @Component({
   selector: 'app-manage-tables',
   imports: [MenuManager, CommonModule, MatIcon, MatIconModule, FormsModule, Toast],

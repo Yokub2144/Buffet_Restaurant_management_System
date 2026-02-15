@@ -3,11 +3,15 @@ import { HttpClient } from '@angular/common/http';
 import { Constants } from '../../config/contants';
 import { HttpHeaders } from '@angular/common/http';
 import { jwtDecode } from 'jwt-decode';
+import { Employee } from '../../models/employee.model';
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private http: HttpClient, private constants: Constants) {}
+  constructor(
+    private http: HttpClient,
+    private constants: Constants,
+  ) {}
   public registerEmployee(options?: any) {
     const url = this.constants.API_ENDPOINT + '/Auth/register-employee';
     const response = this.http.post<any>(url, options);
@@ -50,5 +54,11 @@ export class AuthService {
       }
     }
     return null;
+  }
+
+  public getEmployeebyId(empId: number) {
+    const url = this.constants.API_ENDPOINT + '/Auth/getEmployeeById';
+    const response = this.http.get<Employee[]>(url);
+    return response;
   }
 }

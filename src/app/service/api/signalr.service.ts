@@ -1,22 +1,22 @@
 import { Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import { Subject } from 'rxjs';
+import { Constants } from '../../config/contants';
 @Injectable({
   providedIn: 'root',
 })
 export class SignalrService {
   private hubConnection!: signalR.HubConnection;
   public tableStatus$ = new Subject<any>();
-  constructor() {
+  constructor(private constants: Constants) {
     this.initConnection();
   }
   private initConnection() {
     this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl('http://localhost:5277/tableStatusHub')
+      .withUrl(this.constants.URL_signalR + 'tableStatusHub')
       .withAutomaticReconnect()
       .build();
 
-    // เริ่มการดักฟัง Event ทันทีที่ Build เสร็จ
     this.registerOnEvents();
     this.start();
   }

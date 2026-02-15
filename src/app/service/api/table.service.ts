@@ -1,13 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Constants } from '../../config/contants';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-
-export interface TableResponse {
-  table_id: number;
-  table_Number: string;
-  table_Status: 'ว่าง' | 'ติดจอง' | 'ไม่ว่าง';
-  table_QR_Code: string;
-}
+import { Table } from '../../models/table.model';
 @Injectable({
   providedIn: 'root',
 })
@@ -31,7 +25,7 @@ export class TableService {
 
   public getAlltables() {
     const url = this.constants.API_ENDPOINT + '/Manager/getTables';
-    const reponse = this.http.get<TableResponse[]>(url);
+    const reponse = this.http.get<Table[]>(url);
     return reponse;
   }
 
@@ -45,6 +39,15 @@ export class TableService {
       }),
     };
     const response = this.http.post<any>(url, options, httpOptions);
+    return response;
+  }
+  public updateTableStatus(table_id: number, status: string) {
+    const url = this.constants.API_ENDPOINT + '/Manager/updateTable';
+    const payload = {
+      tableId: table_id,
+      status: status,
+    };
+    const response = this.http.put<any>(url, payload);
     return response;
   }
 }

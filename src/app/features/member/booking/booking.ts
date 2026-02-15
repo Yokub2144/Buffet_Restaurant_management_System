@@ -5,12 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { TableService } from '../../../service/api/table.service';
 import { SignalrService } from '../../../service/api/signalr.service';
-interface Table {
-  table_id: number;
-  table_Number: string;
-  table_Status: 'ว่าง' | 'ติดจอง' | 'ไม่ว่าง';
-  table_QR_Code: string;
-}
+import { Table } from '../../../models/table.model';
 
 interface BookingForm {
   NumAdults: number;
