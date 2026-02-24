@@ -1,0 +1,250 @@
+
+$theme-bg: #000000;
+$card-bg: #141414;
+$primary-red: #9e1c1c;
+$primary-gold: #ffca28;
+$text-white: #ffffff;
+$text-muted: #cccccc;
+$border-color: #333333;
+$bar-bg: linear-gradient(to bottom, #3d0000, #1a0000);
+
+
+.page-container {
+  min-height: 100vh;
+  background-color: $theme-bg;
+  color: $text-white;
+  padding: 20px;
+  font-family: 'Kanit', sans-serif;
+}
+
+.content-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+
+.header-action {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid $border-color;
+
+  .section-header {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: $primary-gold;
+    margin: 0;
+  }
+}
+
+.action-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+
+ 
+  .search-wrapper {
+    position: relative;
+    width: 280px;
+
+    i.pi-search {
+      color: #888;
+      z-index: 1;
+    }
+
+    .dark-input {
+      width: 100%;
+      padding-left: 2.5rem !important; 
+      background: #1f1f1f !important;
+      border: 1px solid #444 !important;
+      color: $text-white !important;
+      border-radius: 6px;
+
+      &:focus {
+        border-color: $primary-gold !important;
+        box-shadow: 0 0 0 0.1rem rgba(255, 202, 40, 0.2) !important;
+      }
+    }
+  }
+
+
+  .add-btn {
+    background: #28a745;
+    border: none;
+    font-family: 'Kanit', sans-serif;
+    white-space: nowrap; 
+
+    &:hover {
+      background: #218838;
+    }
+  }
+}
+
+
+.table-card {
+  background: $card-bg;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  border: 1px solid #2a2a2a;
+}
+
+.menu-thumb {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 1px solid $border-color;
+}
+
+.price-text {
+  color: $primary-gold;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.category-badge {
+  background: $bar-bg;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  border: 1px solid #444;
+}
+
+.action-btn {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+
+@media screen and (max-width: 768px) {
+  .header-action {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .action-right {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+
+    .search-wrapper,
+    .add-btn {
+      width: 100%;
+    }
+
+    .add-btn {
+      justify-content: center;
+    }
+  }
+}
+
+
+::ng-deep {
+  
+  .p-datatable-dark {
+    .p-datatable-header,
+    .p-datatable-thead > tr > th {
+      background: #1f1f1f;
+      color: $text-white;
+      border-color: $border-color;
+      font-family: 'Kanit', sans-serif;
+    }
+
+    .p-datatable-tbody > tr {
+      background: $card-bg;
+      color: $text-white;
+      transition: background 0.2s;
+
+      & > td {
+        border-color: $border-color;
+      }
+
+      &:hover {
+        background: #1f1f1f;
+      }
+    }
+    .p-paginator {
+      background: #1f1f1f;
+      border-color: $border-color;
+
+      .p-paginator-pages .p-paginator-page {
+        color: $primary-gold; 
+        &:hover:not(.p-highlight) {
+          background: #333;
+        }
+
+        &.p-highlight {
+          background: $primary-gold;
+          color: #000; 
+        }
+      }
+
+      .p-paginator-first,
+      .p-paginator-prev,
+      .p-paginator-next,
+      .p-paginator-last {
+        color: $text-white;
+
+        &:hover {
+          background: #333;
+        }
+      }
+    }
+  }
+
+  .dark-dialog {
+    font-family: 'Kanit', sans-serif;
+
+    .p-dialog-header {
+      background: #1f1f1f;
+      color: $primary-gold;
+      border-bottom: 1px solid $border-color;
+    }
+
+    .p-dialog-content {
+      background: #121212;
+      color: $text-white;
+      padding: 20px;
+    }
+
+    .p-dialog-footer {
+      background: #1f1f1f;
+      border-top: 1px solid $border-color;
+    }
+
+    .field {
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: $text-muted;
+    }
+
+    .dark-input,
+    .p-inputtext {
+      background: #2a2a2a !important;
+      color: $text-white !important;
+      border: 1px solid #444 !important;
+      width: 100%;
+
+      &:focus {
+        border-color: $primary-gold !important;
+        box-shadow: none !important;
+      }
+    }
+    .dark-input-num {
+      width: 100%;
+      .p-inputtext {
+        width: 100%;
+      }
+    }
+  }
+}

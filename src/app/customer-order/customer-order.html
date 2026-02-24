@@ -58,11 +58,7 @@
       <div class="food-grid">
         <div class="food-card" *ngFor="let item of displayItems" pRipple>
           <div class="card-img-wrapper">
-            <img
-              [src]="'assets/Images/product/' + item.menu_Image"
-              [alt]="item.menu_Name"
-              loading="lazy"
-            />
+            <img [src]="item.menu_Image" class="cart-thumb" />
           </div>
 
           <div class="card-body">

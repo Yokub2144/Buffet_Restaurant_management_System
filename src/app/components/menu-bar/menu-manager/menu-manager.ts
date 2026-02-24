@@ -34,9 +34,9 @@ export class MenuManager {
     { label: 'การตั้งค่าร้าน', icon: 'settings', route: '/SettingsRestaurant', active: false },
     {
       label: 'การตั้งค่าราคาอาหาร',
-      icon: 'restaurant_menu',
-      route: '/FoodPriceSettings',
+      route: '/ManageMenu',
       active: false,
+      icon: 'restaurant_menu',
     },
   ];
 
