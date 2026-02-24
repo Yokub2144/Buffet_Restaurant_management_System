@@ -16,6 +16,7 @@ import { Cart } from './cart/cart';
 import { StatusCustomerOrder } from './status/status-customer-order/status-customer-order';
 import { BookingStatus } from './features/member/booking-status/booking-status';
 import { ManageTables } from './features/manager/manage-tables/manage-tables';
+import { ManageMenu } from './features/manager/manage-menu/manage-menu';
 export const routes: Routes = [
   { path: '', component: Index },
   { path: 'Registeremployee', component: RegisterEmployee },
@@ -34,6 +35,7 @@ export const routes: Routes = [
   { path: 'Customer', component: CustomerOrder },
   { path: 'Cart', component: Cart },
   { path: 'StatusCustomer', component: StatusCustomerOrder },
+
   {
     path: 'ManageEmployee',
     component: ManageEmployee,
@@ -52,6 +54,11 @@ export const routes: Routes = [
     canActivate: [employeeGuard],
     data: { route: ['เจ้าของร้าน'] },
   },
-
+  {
+    path: 'ManageMenu',
+    component: ManageMenu,
+    canActivate: [employeeGuard],
+    data: { route: ['เจ้าของร้าน'] },
+  },
   { path: '**', redirectTo: '' },
 ];

@@ -1,0 +1,201 @@
+<p-toast position="bottom-center"></p-toast>
+<p-confirmDialog [style]="{ width: '450px' }" styleClass="dark-dialog"></p-confirmDialog>
+
+<div class="page-container">
+  <div class="content-wrapper">
+    <div class="header-action">
+      <h2 class="section-header">จัดการเมนูอาหาร (Admin)</h2>
+
+      <div class="action-right">
+        <span class="p-input-icon-left search-wrapper">
+          <i class="pi pi-search" style="color: #888; z-index: 1"></i>
+          <input
+            pInputText
+            type="text"
+            (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+            placeholder="ค้นหาชื่อ, หมวดหมู่..."
+            class="dark-input"
+          />
+        </span>
+        <button
+          pButton
+          pRipple
+          label="เพิ่มเมนูใหม่"
+          icon="pi pi-plus"
+          class="add-btn"
+          (click)="openNew()"
+        ></button>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <p-table
+        #dt
+        [value]="menus"
+        [rows]="10"
+        [paginator]="true"
+        [globalFilterFields]="['menu_Name', 'category', 'menu_Type']"
+        responsiveLayout="scroll"
+        styleClass="p-datatable-dark"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th>รูปภาพ</th>
+            <th pSortableColumn="menu_Name">
+              ชื่อเมนู <p-sortIcon field="menu_Name"></p-sortIcon>
+            </th>
+            <th pSortableColumn="category">หมวดหมู่ <p-sortIcon field="category"></p-sortIcon></th>
+            <th pSortableColumn="menu_Type">ประเภท <p-sortIcon field="menu_Type"></p-sortIcon></th>
+            <th pSortableColumn="price">ราคา <p-sortIcon field="price"></p-sortIcon></th>
+            <th class="text-center">จัดการ</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-menu>
+          <tr>
+            <td>
+              <img [src]="menu.menu_Image" class="menu-thumb" />
+            </td>
+            <td>{{ menu.menu_Name }}</td>
+            <td>
+              <span class="badge category-badge">{{ menu.category }}</span>
+            </td>
+            <td>{{ menu.menu_Type }}</td>
+            <td class="price-text">{{ menu.price | number }} ฿</td>
+            <td class="text-center">
+              <button
+                pButton
+                pRipple
+                icon="pi pi-pencil"
+                class="p-button-rounded p-button-warning action-btn mr-2"
+                (click)="editMenu(menu)"
+              ></button>
+              <button
+                pButton
+                pRipple
+                icon="pi pi-trash"
+                class="p-button-rounded p-button-danger action-btn"
+                (click)="deleteMenu(menu)"
+              ></button>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="6" class="text-center p-4">ไม่พบข้อมูลเมนูอาหาร</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</div>
+
+<p-dialog
+  [(visible)]="menuDialog"
+  [style]="{ width: '500px' }"
+  header="รายละเอียดเมนู"
+  [modal]="true"
+  styleClass="dark-dialog p-fluid"
+  [draggable]="false"
+>
+  <ng-template pTemplate="content">
+    <div class="field">
+      <label for="name">ชื่อเมนู</label>
+      <input
+        type="text"
+        pInputText
+        id="name"
+        [(ngModel)]="menu.menu_Name"
+        required
+        autofocus
+        class="dark-input"
+      />
+      <small class="p-error" *ngIf="!menu.menu_Name">จำเป็นต้องระบุชื่อเมนู</small>
+    </div>
+
+    <div class="formgrid grid">
+      <div class="field col-6">
+        <label for="category">หมวดหมู่ (Category)</label>
+        <input
+          type="text"
+          pInputText
+          id="category"
+          [(ngModel)]="menu.category"
+          required
+          class="dark-input"
+        />
+      </div>
+      <div class="field col-6">
+        <label for="type">ประเภท (Type)</label>
+        <input type="text" pInputText id="type" [(ngModel)]="menu.menu_Type" class="dark-input" />
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="price">ราคา</label>
+      <p-inputNumber
+        id="price"
+        [(ngModel)]="menu.price"
+        mode="currency"
+        currency="THB"
+        locale="th-TH"
+        styleClass="dark-input-num"
+      ></p-inputNumber>
+    </div>
+
+    <div class="field">
+      <label for="image">อัปโหลดรูปภาพ</label>
+      <input
+        type="file"
+        id="image"
+        (change)="onFileSelected($event)"
+        accept="image/*"
+        class="dark-input"
+        style="
+          padding: 8px;
+          width: 100%;
+          background: #222;
+          border: 1px solid #333;
+          border-radius: 6px;
+          color: #fff;
+        "
+      />
+      <div
+        *ngIf="imagePreview"
+        style="
+          margin-top: 15px;
+          text-align: center;
+          background: #1a1a1a;
+          padding: 10px;
+          border-radius: 8px;
+          border: 1px dashed #444;
+        "
+      >
+        <img
+          [src]="imagePreview"
+          alt="Preview"
+          style="max-width: 100%; height: 150px; object-fit: contain; border-radius: 4px"
+        />
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      pRipple
+      label="ยกเลิก"
+      icon="pi pi-times"
+      class="p-button-text text-white"
+      (click)="hideDialog()"
+    ></button>
+    <button
+      pButton
+      pRipple
+      label="บันทึก"
+      icon="pi pi-check"
+      class="p-button-success"
+      (click)="saveMenu()"
+      [disabled]="!menu.menu_Name"
+    ></button>
+  </ng-template>
+</p-dialog>
