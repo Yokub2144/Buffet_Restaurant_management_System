@@ -12,4 +12,7 @@ export interface Employee {
   wage: number | null;
   employee_Type: string;
   employee_Status: string;
+  hire_Date: Date;
+  start_Time: string;
+  end_Time: string;
 }

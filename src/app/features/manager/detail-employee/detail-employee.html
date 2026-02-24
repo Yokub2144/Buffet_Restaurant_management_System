@@ -1,1 +1,120 @@
-<p>detail-employee works!</p>
+<app-menu-manager>
+  <div class="page-container" *ngIf="employee; else loading">
+    <header class="top-bar">
+      <button class="back-btn" (click)="goBack()"><i class="pi pi-angle-left"></i> Back</button>
+      <h1 class="page-title">ข้อมูลพนักงาน</h1>
+    </header>
+
+    <section class="profile-banner">
+      <div class="profile-info">
+        <div class="avatar-circle">
+          <img *ngIf="employee.image_Profile" [src]="employee.image_Profile" alt="profile" />
+          <i *ngIf="!employee.image_Profile" class="pi pi-user"></i>
+        </div>
+        <div class="text-info">
+          <h2>{{ employee.fullname }}</h2>
+          <p>ID: {{ employee.emp_id }} | {{ employee.department }}</p>
+        </div>
+      </div>
+
+      <div class="work-time-badge">
+        <span>เวลาทำงาน</span>
+        <div class="time">{{ employee.start_Time }} - {{ employee.end_Time }}</div>
+      </div>
+    </section>
+
+    <div class="content-grid">
+      <div class="info-card">
+        <div class="card-title">ข้อมูลส่วนตัว</div>
+
+        <div class="info-row">
+          <label>รหัสพนักงาน :</label>
+          <span>{{ employee.emp_id }}</span>
+        </div>
+
+        <div class="info-row">
+          <label>อีเมล :</label>
+          <span>{{ employee.email || '-' }}</span>
+        </div>
+
+        <div class="info-row">
+          <label>ชื่อ-นามสกุล :</label>
+          <span>{{ employee.fullname }}</span>
+        </div>
+        <div class="info-row">
+          <label>เบอร์โทรศัพท์ :</label>
+          <span>{{ employee.phone }}</span>
+        </div>
+        <div class="info-row">
+          <label>เพศ :</label>
+          <span>{{ employee.gender }}</span>
+        </div>
+
+        <div class="info-row">
+          <label>เลขบัตรประชาชน :</label>
+          <span>{{ employee.identification_Number }}</span>
+        </div>
+        <div class="info-row address-row">
+          <label>ที่อยู่ :</label>
+          <span>{{ employee.address }}</span>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <div class="card-title">ข้อมูลการทำงาน</div>
+
+        <div class="info-row">
+          <label>แผนก :</label>
+          <span>{{ employee.department }}</span>
+        </div>
+        <div class="info-row">
+          <label>วันที่เริ่มงาน :</label>
+          <span>{{ employee.hire_Date | date: 'dd/MM/yyyy' }}</span>
+        </div>
+
+        <div class="info-row">
+          <label>ระยะเวลาการทำงาน :</label>
+          <span>{{ workDuration }}</span>
+        </div>
+        <div class="info-row">
+          <label>สถานะ :</label>
+          <span
+            class="status-pill"
+            [ngClass]="employee.employee_Status === 'ทำงานปัจจุบัน' ? 'green' : 'red'"
+          >
+            {{ employee.employee_Status }}
+          </span>
+        </div>
+        <div class="info-row">
+          <label>ประเภทพนักงาน :</label>
+          <span class="text-orange">{{ employee.employee_Type }}</span>
+        </div>
+
+        <div class="action-buttons">
+          <button class="btn-action brown" (click)="editDepartment()">แก้ไขแผนก</button>
+          <button class="btn-action blue" (click)="editStatus()">แก้ไขสถานะทำงาน</button>
+          <button class="btn-action purple" (click)="editType()">แก้ไขประเภทพนักงาน</button>
+        </div>
+      </div>
+    </div>
+
+    <section class="management-section">
+      <h3 class="section-title">จัดการรายได้</h3>
+
+      <div class="mgmt-row">
+        <label>เวลาทำงาน :</label>
+        <span class="highlight-orange"> {{ employee.start_Time }} - {{ employee.end_Time }} </span>
+      </div>
+      <div class="mgmt-row">
+        <label>ค่าจ้างต่อวัน</label>
+        <span class="highlight-purple">{{ employee.wage || 0 | number }} ฿</span>
+      </div>
+
+      <button class="btn-full-orange" (click)="editRevenue()">แก้ไขรายได้</button>
+    </section>
+  </div>
+
+  <ng-template #loading>
+    <div class="loading-state">Loading...</div>
+  </ng-template>
+</app-menu-manager>

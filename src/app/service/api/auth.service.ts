@@ -57,7 +57,7 @@ export class AuthService {
   }
 
   public getEmployeebyId(empId: number) {
-    const url = this.constants.API_ENDPOINT + '/Auth/getEmployeeById';
+    const url = this.constants.API_ENDPOINT + '/Manager/getEmployeeById?empId=' + empId;
     const response = this.http.get<Employee[]>(url);
     return response;
   }

@@ -111,4 +111,7 @@ export class ManageEmployee implements OnInit {
   approve() {
     this.router.navigate(['ApproveEmployee']);
   }
+  detail(emp_id: number) {
+    this.router.navigate(['/DetailEmployee', emp_id]);
+  }
 }
