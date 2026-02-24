@@ -131,7 +131,7 @@ export class ManageMenu implements OnInit {
   }
   saveMenu() {
     if (this.menu.menu_Name?.trim()) {
-      //  สร้างFormData เพื่อเตรียมส่งข้อมูลและไฟล์
+      // 1. สร้างFormData เพื่อเตรียมส่งข้อมูลและไฟล์
       const formData = new FormData();
       formData.append('Menu_Name', this.menu.menu_Name);
       formData.append('Category', this.menu.category || '');
