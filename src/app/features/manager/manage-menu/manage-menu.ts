@@ -10,7 +10,7 @@ import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { Menu, MenuService } from '../../../service/api/menu.service';
-
+import { lastValueFrom } from 'rxjs';
 @Component({
   selector: 'app-manage-menu',
   standalone: true,
@@ -60,8 +60,6 @@ export class ManageMenu implements OnInit {
     this.menu = this.getEmptyMenu();
     this.isEditMode = false;
     this.menuDialog = true;
-
-    // เคลียร์รูปภาพเมื่อเปิดหน้าต่างเพิ่มเมนูใหม่
     this.selectedFile = null;
     this.imagePreview = null;
   }
@@ -70,16 +68,18 @@ export class ManageMenu implements OnInit {
     this.menu = { ...menu };
     this.isEditMode = true;
     this.menuDialog = true;
-
-    // เคลียร์ไฟล์ที่เลือกก่อนหน้านี้
     this.selectedFile = null;
 
-    // จัดการการแสดงผลรูป Preview สำหรับเมนูเดิม
     if (this.menu.menu_Image) {
-      if (this.menu.menu_Image.startsWith('data:image')) {
-        this.imagePreview = this.menu.menu_Image;
+      const imgPath = String(this.menu.menu_Image);
+      if (
+        imgPath.startsWith('http') ||
+        imgPath.startsWith('https') ||
+        imgPath.startsWith('data:image')
+      ) {
+        this.imagePreview = imgPath;
       } else {
-        this.imagePreview = 'assets/Images/product/' + this.menu.menu_Image;
+        this.imagePreview = 'assets/Images/product/' + imgPath;
       }
     } else {
       this.imagePreview = null;
@@ -117,6 +117,7 @@ export class ManageMenu implements OnInit {
   hideDialog() {
     this.menuDialog = false;
   }
+
   onFileSelected(event: any) {
     const file: File = event.target.files[0];
     if (file) {
@@ -129,65 +130,71 @@ export class ManageMenu implements OnInit {
       reader.readAsDataURL(file);
     }
   }
-  saveMenu() {
-    if (this.menu.menu_Name?.trim()) {
-      // 1. สร้างFormData เพื่อเตรียมส่งข้อมูลและไฟล์
-      const formData = new FormData();
-      formData.append('Menu_Name', this.menu.menu_Name);
-      formData.append('Category', this.menu.category || '');
-      formData.append('Menu_Type', this.menu.menu_Type || '');
-      formData.append('Price', this.menu.price ? this.menu.price.toString() : '0');
 
-      if (this.selectedFile) {
-        formData.append('ImageFile', this.selectedFile, this.selectedFile.name);
-      }
+  async saveMenu() {
+    // เช็คว่ากรอกชื่อเมนูหรือยัง
+    if (!this.menu.menu_Name?.trim()) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'แจ้งเตือน',
+        detail: 'กรุณากรอกชื่อเมนูอาหาร',
+      });
+      return;
+    }
 
-      if (this.isEditMode) {
-        // อัปเดตข้อมูล
-        this.menuService.updateMenu(this.menu.menu_id, formData).subscribe({
-          next: () => {
-            this.loadMenus();
-            this.messageService.add({
-              severity: 'success',
-              summary: 'สำเร็จ',
-              detail: 'อัปเดตข้อมูลเมนูเรียบร้อย',
-            });
-            this.menuDialog = false;
-          },
-          error: (err) => {
-            console.error(err);
-            this.messageService.add({
-              severity: 'error',
-              summary: 'ผิดพลาด',
-              detail: 'ไม่สามารถอัปเดตเมนูได้',
-            });
-          },
+    // 1. สร้าง FormData แบบเดียวกับหน้า Register
+    const formData = new FormData();
+    formData.append('Menu_Name', this.menu.menu_Name);
+    formData.append('Category', this.menu.category || '');
+    formData.append('Menu_Type', this.menu.menu_Type || '');
+    formData.append('Price', this.menu.price ? this.menu.price.toString() : '0');
+
+    // 2. แนบไฟล์รูป (ชื่อตัวแปร ImageFile ต้องตรงกับ MenuFormDto ใน C#)
+    if (this.selectedFile) {
+      formData.append('ImageFile', this.selectedFile, this.selectedFile.name);
+    }
+
+    try {
+      // 3. ยิง API แบบ async/await
+      if (this.isEditMode && this.menu.menu_id) {
+        // กรณีแก้ไข
+        const response = await lastValueFrom(
+          this.menuService.updateMenu(this.menu.menu_id, formData),
+        );
+        console.log('Update Response:', response);
+
+        this.messageService.add({
+          severity: 'success',
+          summary: 'สำเร็จ',
+          detail: 'อัปเดตข้อมูลเมนูและรูปภาพเรียบร้อยแล้ว',
         });
       } else {
-        // สร้างข้อมูลใหม่ (POST)
-        this.menuService.createMenu(formData).subscribe({
-          next: () => {
-            this.loadMenus();
-            this.messageService.add({
-              severity: 'success',
-              summary: 'สำเร็จ',
-              detail: 'เพิ่มเมนูใหม่เรียบร้อย',
-            });
-            this.menuDialog = false;
-          },
-          error: (err) => {
-            console.error(err);
-            this.messageService.add({
-              severity: 'error',
-              summary: 'ผิดพลาด',
-              detail: 'ไม่สามารถเพิ่มเมนูได้',
-            });
-          },
+        // กรณีเพิ่มใหม่
+        const response = await lastValueFrom(this.menuService.createMenu(formData));
+        console.log('Create Response:', response);
+
+        this.messageService.add({
+          severity: 'success',
+          summary: 'สำเร็จ',
+          detail: 'เพิ่มเมนูใหม่เรียบร้อยแล้ว',
         });
       }
+
+      // 4. รีเฟรชข้อมูลและปิด Dialog
+      this.loadMenus();
+      this.menuDialog = false;
+    } catch (error: any) {
+      // 5. จัดการ Error ให้แสดงผลชัดเจนแบบหน้า Register
+      console.error('API Error:', error);
+      const errorMessage = error.error?.message || 'ไม่สามารถบันทึกเมนูได้ กรุณาลองใหม่';
+
+      this.messageService.add({
+        severity: 'error',
+        summary: 'ข้อผิดพลาด',
+        detail: errorMessage,
+      });
     }
   }
-
   getEmptyMenu(): Menu {
     return {
       menu_id: 0,
@@ -197,5 +204,14 @@ export class ManageMenu implements OnInit {
       menu_Image: '',
       menu_Type: '',
     } as Menu;
+  }
+
+  getImageUrl(imagePath: any): string {
+    if (!imagePath) return 'assets/Images/default-food.png';
+    const path = String(imagePath);
+    if (path.startsWith('http') || path.startsWith('https') || path.startsWith('data:image')) {
+      return path;
+    }
+    return 'assets/Images/product/' + path;
   }
 }

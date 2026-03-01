@@ -46,7 +46,6 @@ export class CustomerOrder implements OnInit {
     { image: 'assets/Images/Banner2.png' },
     { image: 'assets/Images/Banner3.png' },
   ];
-  // ----------------------------------------
 
   isCartVisible: boolean = false;
   tableNumber: string | null = null;
@@ -123,16 +122,14 @@ export class CustomerOrder implements OnInit {
 
   addToCart(item: Menu) {
     const payload = {
-      tableId: this.tableNumber, // <--- FIX
+      tableId: this.tableNumber,
       booking_id: null,
       menuId: item.menu_id,
       quantity: 1,
     };
 
-    // ยิง API
     this.cartService.addToCart(payload).subscribe({
       next: (res) => {
-        // แสดงข้อความสำเร็จ
         this.messageService.add({
           severity: 'success',
           summary: 'เพิ่มลงตะกร้าแล้ว',

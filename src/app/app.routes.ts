@@ -66,7 +66,7 @@ export const routes: Routes = [
     path: 'ManageMenu',
     component: ManageMenu,
     canActivate: [employeeGuard],
-    data: { route: ['เจ้าของร้าน'] },
+    data: { roles: ['เจ้าของร้าน'] },
   },
   { path: '**', redirectTo: '' },
 ];

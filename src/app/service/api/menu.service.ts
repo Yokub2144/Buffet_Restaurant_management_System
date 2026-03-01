@@ -21,25 +21,21 @@ export class MenuService {
     private constants: Constants,
   ) {}
 
-  // 1. ดึงข้อมูลทั้งหมด
   public getMenus(): Observable<Menu[]> {
     const url = this.constants.API_ENDPOINT + '/Menu';
     return this.http.get<Menu[]>(url);
   }
 
-  // 2. เพิ่มข้อมูลใหม่ (ส่งเป็น FormData)
   public createMenu(formData: FormData): Observable<any> {
     const url = this.constants.API_ENDPOINT + '/Menu';
-    return this.http.post(url, formData); // <-- แก้ไขตรงนี้ให้ใช้ตัวแปร url
+    return this.http.post(url, formData);
   }
 
-  // 3. แก้ไขข้อมูล (ส่งเป็น FormData)
   public updateMenu(id: number, formData: FormData): Observable<any> {
-    const url = `${this.constants.API_ENDPOINT}/Menu/${id}`; // <-- สร้าง url ให้ถูกต้อง
-    return this.http.put(url, formData); // <-- แก้ไขตรงนี้ให้ใช้ตัวแปร url
+    const url = `${this.constants.API_ENDPOINT}/Menu/${id}`;
+    return this.http.put(url, formData);
   }
 
-  // 4. ลบข้อมูล
   public deleteMenu(menuId: number): Observable<any> {
     const url = `${this.constants.API_ENDPOINT}/Menu/${menuId}`;
     return this.http.delete(url);
