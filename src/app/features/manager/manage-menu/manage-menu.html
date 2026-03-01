@@ -1,92 +1,98 @@
 <p-toast position="bottom-center"></p-toast>
 <p-confirmDialog [style]="{ width: '450px' }" styleClass="dark-dialog"></p-confirmDialog>
 
-<div class="page-container">
-  <div class="content-wrapper">
-    <div class="header-action">
-      <h2 class="section-header">จัดการเมนูอาหาร (Admin)</h2>
+<app-menu-manager>
+  <div class="page-container">
+    <div class="content-wrapper">
+      <div class="header-action">
+        <h2 class="section-header">จัดการเมนูอาหาร (Admin)</h2>
 
-      <div class="action-right">
-        <span class="p-input-icon-left search-wrapper">
-          <input
-            pInputText
-            type="text"
-            (input)="dt.filterGlobal($any($event.target).value, 'contains')"
-            placeholder="ค้นหาชื่อ, หมวดหมู่..."
-            class="dark-input"
-          />
-        </span>
-        <button
-          pButton
-          pRipple
-          label="เพิ่มเมนูใหม่"
-          icon="pi pi-plus"
-          class="add-btn"
-          (click)="openNew()"
-        ></button>
+        <div class="action-right">
+          <span class="p-input-icon-left search-wrapper">
+            <input
+              pInputText
+              type="text"
+              (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+              placeholder="ค้นหาชื่อ, หมวดหมู่..."
+              class="dark-input"
+            />
+          </span>
+          <button
+            pButton
+            pRipple
+            label="เพิ่มเมนูใหม่"
+            icon="pi pi-plus"
+            class="add-btn"
+            (click)="openNew()"
+          ></button>
+        </div>
+      </div>
+
+      <div class="table-card">
+        <p-table
+          #dt
+          [value]="menus"
+          [rows]="10"
+          [paginator]="true"
+          [globalFilterFields]="['menu_Name', 'category', 'menu_Type']"
+          responsiveLayout="scroll"
+          styleClass="p-datatable-dark"
+        >
+          <ng-template pTemplate="header">
+            <tr>
+              <th>รูปภาพ</th>
+              <th pSortableColumn="menu_Name">
+                ชื่อเมนู <p-sortIcon field="menu_Name"></p-sortIcon>
+              </th>
+              <th pSortableColumn="category">
+                หมวดหมู่ <p-sortIcon field="category"></p-sortIcon>
+              </th>
+              <th pSortableColumn="menu_Type">
+                ประเภท <p-sortIcon field="menu_Type"></p-sortIcon>
+              </th>
+              <th pSortableColumn="price">ราคา <p-sortIcon field="price"></p-sortIcon></th>
+              <th class="text-center">จัดการ</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-menu>
+            <tr>
+              <td>
+                <img [src]="menu.menu_Image" class="menu-thumb" />
+              </td>
+              <td>{{ menu.menu_Name }}</td>
+              <td>
+                <span class="badge category-badge">{{ menu.category }}</span>
+              </td>
+              <td>{{ menu.menu_Type }}</td>
+              <td class="price-text">{{ menu.price | number }} ฿</td>
+              <td class="text-center">
+                <button
+                  pButton
+                  pRipple
+                  icon="pi pi-pencil"
+                  class="p-button-rounded p-button-warning action-btn mr-2"
+                  (click)="editMenu(menu)"
+                ></button>
+                <button
+                  pButton
+                  pRipple
+                  icon="pi pi-trash"
+                  class="p-button-rounded p-button-danger action-btn"
+                  (click)="deleteMenu(menu)"
+                ></button>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="6" class="text-center p-4">ไม่พบข้อมูลเมนูอาหาร</td>
+            </tr>
+          </ng-template>
+        </p-table>
       </div>
     </div>
-
-    <div class="table-card">
-      <p-table
-        #dt
-        [value]="menus"
-        [rows]="10"
-        [paginator]="true"
-        [globalFilterFields]="['menu_Name', 'category', 'menu_Type']"
-        responsiveLayout="scroll"
-        styleClass="p-datatable-dark"
-      >
-        <ng-template pTemplate="header">
-          <tr>
-            <th>รูปภาพ</th>
-            <th pSortableColumn="menu_Name">
-              ชื่อเมนู <p-sortIcon field="menu_Name"></p-sortIcon>
-            </th>
-            <th pSortableColumn="category">หมวดหมู่ <p-sortIcon field="category"></p-sortIcon></th>
-            <th pSortableColumn="menu_Type">ประเภท <p-sortIcon field="menu_Type"></p-sortIcon></th>
-            <th pSortableColumn="price">ราคา <p-sortIcon field="price"></p-sortIcon></th>
-            <th class="text-center">จัดการ</th>
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-menu>
-          <tr>
-            <td>
-              <img [src]="menu.menu_Image" class="menu-thumb" />
-            </td>
-            <td>{{ menu.menu_Name }}</td>
-            <td>
-              <span class="badge category-badge">{{ menu.category }}</span>
-            </td>
-            <td>{{ menu.menu_Type }}</td>
-            <td class="price-text">{{ menu.price | number }} ฿</td>
-            <td class="text-center">
-              <button
-                pButton
-                pRipple
-                icon="pi pi-pencil"
-                class="p-button-rounded p-button-warning action-btn mr-2"
-                (click)="editMenu(menu)"
-              ></button>
-              <button
-                pButton
-                pRipple
-                icon="pi pi-trash"
-                class="p-button-rounded p-button-danger action-btn"
-                (click)="deleteMenu(menu)"
-              ></button>
-            </td>
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="emptymessage">
-          <tr>
-            <td colspan="6" class="text-center p-4">ไม่พบข้อมูลเมนูอาหาร</td>
-          </tr>
-        </ng-template>
-      </p-table>
-    </div>
   </div>
-</div>
+</app-menu-manager>
 
 <p-dialog
   [(visible)]="menuDialog"

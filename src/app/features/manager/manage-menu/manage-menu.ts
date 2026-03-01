@@ -11,6 +11,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { Menu, MenuService } from '../../../service/api/menu.service';
 import { lastValueFrom } from 'rxjs';
+import { MenuManager } from '../../../components/menu-bar/menu-manager/menu-manager';
 @Component({
   selector: 'app-manage-menu',
   standalone: true,
@@ -24,6 +25,7 @@ import { lastValueFrom } from 'rxjs';
     InputNumberModule,
     ToastModule,
     ConfirmDialogModule,
+    MenuManager,
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './manage-menu.html',
@@ -132,7 +134,6 @@ export class ManageMenu implements OnInit {
   }
 
   async saveMenu() {
-    // เช็คว่ากรอกชื่อเมนูหรือยัง
     if (!this.menu.menu_Name?.trim()) {
       this.messageService.add({
         severity: 'warn',
@@ -142,22 +143,18 @@ export class ManageMenu implements OnInit {
       return;
     }
 
-    // 1. สร้าง FormData แบบเดียวกับหน้า Register
     const formData = new FormData();
     formData.append('Menu_Name', this.menu.menu_Name);
     formData.append('Category', this.menu.category || '');
     formData.append('Menu_Type', this.menu.menu_Type || '');
     formData.append('Price', this.menu.price ? this.menu.price.toString() : '0');
 
-    // 2. แนบไฟล์รูป (ชื่อตัวแปร ImageFile ต้องตรงกับ MenuFormDto ใน C#)
     if (this.selectedFile) {
       formData.append('ImageFile', this.selectedFile, this.selectedFile.name);
     }
 
     try {
-      // 3. ยิง API แบบ async/await
       if (this.isEditMode && this.menu.menu_id) {
-        // กรณีแก้ไข
         const response = await lastValueFrom(
           this.menuService.updateMenu(this.menu.menu_id, formData),
         );
@@ -169,7 +166,6 @@ export class ManageMenu implements OnInit {
           detail: 'อัปเดตข้อมูลเมนูและรูปภาพเรียบร้อยแล้ว',
         });
       } else {
-        // กรณีเพิ่มใหม่
         const response = await lastValueFrom(this.menuService.createMenu(formData));
         console.log('Create Response:', response);
 
@@ -179,12 +175,9 @@ export class ManageMenu implements OnInit {
           detail: 'เพิ่มเมนูใหม่เรียบร้อยแล้ว',
         });
       }
-
-      // 4. รีเฟรชข้อมูลและปิด Dialog
       this.loadMenus();
       this.menuDialog = false;
     } catch (error: any) {
-      // 5. จัดการ Error ให้แสดงผลชัดเจนแบบหน้า Register
       console.error('API Error:', error);
       const errorMessage = error.error?.message || 'ไม่สามารถบันทึกเมนูได้ กรุณาลองใหม่';
 
