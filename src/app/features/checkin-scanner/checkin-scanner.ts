@@ -92,8 +92,14 @@ export class CheckinScanner implements OnInit {
   confirmCheckin() {
     if (!this.isAuthorized) return;
     this.loading = true;
+
     const token = localStorage.getItem('token') ?? sessionStorage.getItem('token');
     const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+
+    const checkedInTables =
+      this.checkinInfo?.all_tables && this.checkinInfo.all_tables.length > 0
+        ? this.checkinInfo.all_tables.join(', ')
+        : this.checkinInfo?.table.table_number;
 
     this.http
       .post(
@@ -103,12 +109,12 @@ export class CheckinScanner implements OnInit {
       )
       .subscribe({
         next: () => {
-          this.successMessage = `✅ เช็คอินโต๊ะ ${this.checkinInfo?.table.table_number} สำเร็จ!`;
+          this.successMessage = `✅ เช็คอินโต๊ะ ${checkedInTables} สําเร็จ!`;
           this.checkinInfo = null;
           this.loading = false;
         },
         error: (err) => {
-          this.errorMessage = err.error?.message ?? 'เช็คอินไม่สำเร็จ';
+          this.errorMessage = err.error?.message ?? 'เช็คอินไม่สําเร็จ';
           this.loading = false;
         },
       });

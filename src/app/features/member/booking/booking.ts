@@ -122,7 +122,6 @@ export class Booking implements OnInit {
   }
 
   confirmPayment() {
-    // TODO: ยิง API จองโต๊ะตรงนี้
     const payload = {
       tables: this.selectedTables.map((t) => t.table_id),
       ...this.bookingForm,

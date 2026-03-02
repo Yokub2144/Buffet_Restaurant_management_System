@@ -18,13 +18,7 @@
           }"
           (click)="toggleTableSelection(table)"
         >
-          <span *ngIf="table.table_Status !== 'ไม่ว่าง' && !isSelected(table)">
-            {{ table.table_Number }}
-          </span>
-
-          <span *ngIf="table.table_Status === 'ไม่ว่าง' || isSelected(table)" class="occupied-icon">
-            ✔
-          </span>
+          <span>{{ table.table_Number }}</span>
 
           <span class="tooltip-text" *ngIf="table.table_Status === 'ติดจอง'"> ติดจอง </span>
           <span class="tooltip-text" *ngIf="table.table_Status === 'ไม่ว่าง'">
