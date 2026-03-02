@@ -118,4 +118,58 @@
       </div>
     </div>
   </div>
+
+  <!-- QR Check-in Modal -->
+  <div class="modal-overlay" *ngIf="showQrModal">
+    <div class="modal-content form-modal">
+      <div class="modal-header">
+        <h3>คิวอาร์โค้ดเช็คอินโต๊ะ</h3>
+        <button class="close-btn" (click)="closeQrModal()">×</button>
+      </div>
+
+      <div class="modal-body text-center">
+        <p style="color: #4caf50; font-weight: bold; font-size: 16px; margin-bottom: 8px">
+          ✅ จองสำเร็จ! (Booking #{{ bookingId }})
+        </p>
+        <p style="color: #aaa; font-size: 13px; margin-bottom: 20px">
+          สแกน QR เพื่อเช็คอินเมื่อมาถึงร้าน
+        </p>
+
+        <div *ngFor="let qr of qrList" style="margin-bottom: 24px">
+          <p style="color: #ff8c00; font-weight: bold; margin-bottom: 8px">
+            โต๊ะ ID: {{ qr.tableId }}
+          </p>
+          <img
+            [src]="qr.qrImageUrl"
+            alt="QR Code Check-in"
+            style="width: 200px; height: 200px; border: 2px solid #555; border-radius: 8px"
+          />
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="confirm-btn" style="background: #c0392b" (click)="closeQrModal()">
+          ปิด
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div
+    *ngIf="isLoading"
+    style="
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    "
+  >
+    <div style="color: white; font-size: 20px; text-align: center">
+      <div style="font-size: 40px; margin-bottom: 12px">⏳</div>
+      <div>กำลังดำเนินการ...</div>
+    </div>
+  </div>
 </app-menu-member>

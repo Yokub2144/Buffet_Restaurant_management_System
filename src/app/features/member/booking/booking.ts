@@ -6,12 +6,18 @@ import { RouterLink } from '@angular/router';
 import { TableService } from '../../../service/api/table.service';
 import { SignalrService } from '../../../service/api/signalr.service';
 import { Table } from '../../../models/table.model';
+import { BookingService } from '../../../service/api/booking.service';
 
 interface BookingForm {
   NumAdults: number;
   NumChildren: number;
   BookingDate: string;
   BookingTime: string;
+}
+
+interface QrItem {
+  tableId: number;
+  qrImageUrl: string;
 }
 
 @Component({
@@ -31,22 +37,27 @@ export class Booking implements OnInit {
     BookingTime: '',
   };
 
-  showBookingModal: boolean = false;
-  showPaymentModal: boolean = false;
+  showBookingModal = false;
+  showPaymentModal = false;
+  showQrModal = false;
+
+  isLoading = false;
+  bookingId: number | null = null;
+  qrList: QrItem[] = [];
+  authService: any;
 
   constructor(
     private signalrService: SignalrService,
     private tableService: TableService,
+    private bookingService: BookingService,
   ) {}
 
   ngOnInit() {
     this.loadTables();
-
     this.signalrService.tableStatus$.subscribe((updatedTable) => {
       const index = this.tables.findIndex((t) => t.table_id === updatedTable.tableId);
       if (index !== -1) {
         this.tables[index].table_Status = updatedTable.status as 'ว่าง' | 'ติดจอง' | 'ไม่ว่าง';
-        console.log(`โต๊ะที่ ${updatedTable.tableId} เปลี่ยนเป็น ${updatedTable.status}`);
       }
     });
   }
@@ -55,7 +66,6 @@ export class Booking implements OnInit {
     this.tableService.getAlltables().subscribe({
       next: (response: Table[]) => {
         this.tables = response;
-        console.log('ข้อมูลโต๊ะทั้งหมดถูกโหลดแล้ว:', this.tables);
       },
       error: (err) => {
         console.error('โหลดข้อมูลไม่สำเร็จ:', err);
@@ -65,36 +75,29 @@ export class Booking implements OnInit {
 
   toggleTableSelection(table: Table) {
     if (table.table_Status !== 'ว่าง') return;
-
     const index = this.selectedTables.findIndex((t) => t.table_id === table.table_id);
-
-    // เพิ่มหรือลบโต๊ะ
     if (index > -1) {
-      this.selectedTables.splice(index, 1); // ยกเลิกเลือก
+      this.selectedTables.splice(index, 1);
     } else {
-      this.selectedTables.push(table); // เลือกเพิ่ม
+      this.selectedTables.push(table);
     }
-
-    //  สั่งเรียงลำดับใหม่ทันที (Sort Natural Order)
-    this.selectedTables.sort((a, b) => {
-      return a.table_Number.localeCompare(b.table_Number, undefined, {
+    this.selectedTables.sort((a, b) =>
+      a.table_Number.localeCompare(b.table_Number, undefined, {
         numeric: true,
         sensitivity: 'base',
-      });
-    });
+      }),
+    );
   }
 
-  // เช็คว่าเลือกหรือยัง
   isSelected(table: Table): boolean {
     return this.selectedTables.some((t) => t.table_id === table.table_id);
   }
 
-  // แสดงผล
   getSelectedTableString(): string {
     if (this.selectedTables.length === 0) return '-';
     return this.selectedTables.map((t) => t.table_Number).join(', ');
   }
-  // --- Modal Logic ---
+
   openBookingModal() {
     if (this.selectedTables.length === 0) {
       alert('กรุณาเลือกโต๊ะก่อนดำเนินการ');
@@ -112,7 +115,6 @@ export class Booking implements OnInit {
       alert('กรุณาระบุวันและเวลาจอง');
       return;
     }
-
     this.showBookingModal = false;
     this.showPaymentModal = true;
   }
@@ -122,16 +124,60 @@ export class Booking implements OnInit {
   }
 
   confirmPayment() {
-    const payload = {
-      tables: this.selectedTables.map((t) => t.table_id),
-      ...this.bookingForm,
+    this.isLoading = true;
+
+    const member = this.authService.getMember();
+    if (!member) {
+      alert('กรุณาเข้าสู่ระบบก่อน');
+      this.isLoading = false;
+      return;
+    }
+
+    const createPayload = {
+      member_id: Number(member.id),
+      table_ids: this.selectedTables.map((t) => t.table_id),
+      booking_date: this.bookingForm.BookingDate,
+      booking_time: this.bookingForm.BookingTime,
+      adult_count: this.bookingForm.NumAdults,
+      child_count: this.bookingForm.NumChildren,
     };
 
-    console.log('Booking Payload:', payload);
-    alert('บันทึกการจองเรียบร้อย (Mock)');
+    this.bookingService.createBooking(createPayload).subscribe({
+      next: (res: any) => {
+        this.bookingId = res.booking_id;
 
-    this.showPaymentModal = false;
-    this.selectedTables = [];
-    this.loadTables(); // โหลดสถานะใหม่
+        this.bookingService.mockPayment(res.booking_id).subscribe({
+          next: (payRes: any) => {
+            this.qrList = payRes.qr_list;
+            this.isLoading = false;
+            this.showPaymentModal = false;
+            this.showQrModal = true;
+
+            this.selectedTables = [];
+            this.loadTables();
+          },
+          error: (err) => {
+            this.isLoading = false;
+            alert('ชำระเงินไม่สำเร็จ: ' + (err.error?.message || err.message));
+          },
+        });
+      },
+      error: (err) => {
+        this.isLoading = false;
+        if (err.status === 409) {
+          alert('โต๊ะที่เลือกไม่ว่างแล้ว กรุณาเลือกใหม่');
+          this.loadTables();
+          this.showPaymentModal = false;
+        } else {
+          alert('สร้างการจองไม่สำเร็จ: ' + (err.error?.message || err.message));
+        }
+      },
+    });
+  }
+
+  closeQrModal() {
+    this.showQrModal = false;
+    this.qrList = [];
+    this.bookingId = null;
   }
 }
