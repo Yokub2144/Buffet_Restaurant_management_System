@@ -18,6 +18,8 @@ import { BookingStatus } from './features/member/booking-status/booking-status';
 import { ManageTables } from './features/manager/manage-tables/manage-tables';
 import { DetailEmployee } from './features/manager/detail-employee/detail-employee';
 import { ManageMenu } from './features/manager/manage-menu/manage-menu';
+import { CheckinScanner } from './features/checkin-scanner/checkin-scanner';
+
 export const routes: Routes = [
   { path: '', component: Index },
   { path: 'Registeremployee', component: RegisterEmployee },
@@ -68,5 +70,6 @@ export const routes: Routes = [
     canActivate: [employeeGuard],
     data: { roles: ['เจ้าของร้าน'] },
   },
+  { path: 'Checkin', component: CheckinScanner },
   { path: '**', redirectTo: '' },
 ];
