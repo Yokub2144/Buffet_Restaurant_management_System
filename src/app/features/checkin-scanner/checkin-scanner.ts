@@ -3,9 +3,11 @@ import { CommonModule } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
+import { Constants } from '../../config/contants';
 
 interface CheckinInfo {
   booking_id: number;
+  booking_status: string;
   booking_date: string;
   booking_time: string;
   adult_count: number;
@@ -28,16 +30,14 @@ export class CheckinScanner implements OnInit {
   errorMessage = '';
   successMessage = '';
   isAuthorized = false;
-
   bookingId!: number;
   tableId!: number;
-
-  private API = 'http://localhost:5277/api/';
 
   constructor(
     private http: HttpClient,
     private route: ActivatedRoute,
     private router: Router,
+    private constants: Constants,
   ) {}
 
   ngOnInit() {
@@ -50,7 +50,6 @@ export class CheckinScanner implements OnInit {
     }
 
     const token = localStorage.getItem('token') ?? sessionStorage.getItem('token');
-
     if (!token) {
       this.router.navigate(['/Loginemployee'], {
         queryParams: { returnUrl: this.router.url },
@@ -75,7 +74,7 @@ export class CheckinScanner implements OnInit {
 
     this.http
       .get<CheckinInfo>(
-        `${this.API}Booking/checkin-info?bookingId=${this.bookingId}&tableId=${this.tableId}`,
+        `${this.constants.API_ENDPOINT}/Booking/checkin-info?bookingId=${this.bookingId}&tableId=${this.tableId}`,
         { headers },
       )
       .subscribe({
@@ -93,13 +92,12 @@ export class CheckinScanner implements OnInit {
   confirmCheckin() {
     if (!this.isAuthorized) return;
     this.loading = true;
-
     const token = localStorage.getItem('token') ?? sessionStorage.getItem('token');
     const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
 
     this.http
       .post(
-        `${this.API}Booking/checkin`,
+        `${this.constants.API_ENDPOINT}/Booking/checkin`,
         { bookingId: this.bookingId, tableId: this.tableId },
         { headers },
       )

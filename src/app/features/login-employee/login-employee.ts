@@ -6,7 +6,7 @@ import { Toast } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router'; // ← เพิ่ม ActivatedRoute
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-login-employee',
