@@ -1,0 +1,64 @@
+<div class="scanner-container">
+  <div class="loading-box" *ngIf="loading">
+    <p>⏳ กำลังโหลดข้อมูล...</p>
+  </div>
+
+  <div class="error-box" *ngIf="errorMessage && !loading">
+    <p>❌ {{ errorMessage }}</p>
+  </div>
+
+  <div class="success-box" *ngIf="successMessage">
+    <h3>{{ successMessage }}</h3>
+    <p>สามารถปิดหน้านี้ได้แล้ว</p>
+  </div>
+
+  <div class="info-card" *ngIf="checkinInfo && !loading && !successMessage">
+    <h2>📋 ข้อมูลการจอง #{{ checkinInfo.booking_id }}</h2>
+
+    <div class="info-row">
+      <span class="label">ชื่อลูกค้า</span>
+      <span class="value">{{ checkinInfo.member.name }}</span>
+    </div>
+    <div class="info-row">
+      <span class="label">เบอร์โทร</span>
+      <span class="value">{{ checkinInfo.member.phone }}</span>
+    </div>
+    <div class="info-row">
+      <span class="label">วันที่จอง</span>
+      <span class="value">{{ checkinInfo.booking_date | date: 'dd/MM/yyyy' }}</span>
+    </div>
+    <div class="info-row">
+      <span class="label">เวลา</span>
+      <span class="value">{{ checkinInfo.booking_time }}</span>
+    </div>
+    <div class="info-row">
+      <span class="label">ผู้ใหญ่</span>
+      <span class="value">{{ checkinInfo.adult_count }} คน</span>
+    </div>
+    <div class="info-row">
+      <span class="label">เด็ก</span>
+      <span class="value">{{ checkinInfo.child_count }} คน</span>
+    </div>
+    <div class="info-row">
+      <span class="label">โต๊ะที่สแกน</span>
+      <span class="value highlight">{{ checkinInfo.table.table_number }}</span>
+    </div>
+    <div class="info-row">
+      <span class="label">โต๊ะทั้งหมด</span>
+      <span class="value">{{ checkinInfo.all_tables.join(', ') }}</span>
+    </div>
+
+    <button
+      *ngIf="isAuthorized"
+      class="btn-confirm"
+      (click)="confirmCheckin()"
+      [disabled]="loading"
+    >
+      ✅ ยืนยันเช็คอิน
+    </button>
+
+    <div class="no-access" *ngIf="!isAuthorized">
+      🚫 คุณไม่มีสิทธิ์เช็คอิน (เฉพาะพนักงานเสิร์ฟเท่านั้น)
+    </div>
+  </div>
+</div>

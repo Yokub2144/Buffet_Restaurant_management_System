@@ -6,6 +6,9 @@ import { Constants } from '../../config/contants';
   providedIn: 'root',
 })
 export class SignalrService {
+  on(arg0: string, arg1: (data: any) => void) {
+    throw new Error('Method not implemented.');
+  }
   private hubConnection!: signalR.HubConnection;
   public tableStatus$ = new Subject<any>();
   constructor(private constants: Constants) {

@@ -42,14 +42,22 @@ export class AuthService {
   }
 
   public getMember() {
-    let token = localStorage.getItem('token') || sessionStorage.getItem('token');
+    let token: string | null = null;
+
+    try {
+      token = localStorage.getItem('token');
+    } catch (e) {}
+    if (!token) {
+      try {
+        token = sessionStorage.getItem('token');
+      } catch (e) {}
+    }
 
     if (token) {
       try {
         const decoded: any = jwtDecode(token);
-        let member = { id: decoded.sub, fullname: decoded.name };
-        return member;
-      } catch (error) {
+        return { id: decoded.sub, fullname: decoded.name };
+      } catch (e) {
         return null;
       }
     }

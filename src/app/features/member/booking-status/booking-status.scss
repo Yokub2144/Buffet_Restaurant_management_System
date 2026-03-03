@@ -1,6 +1,6 @@
-// Variables (อิงจากไฟล์เดิมเพื่อให้ Theme ตรงกัน)
+
 $bg-dark: #000000;
-$card-dark: #121212; // ปรับให้เข้มขึ้นตามรูป
+$card-dark: #121212; 
 $text-white: #ffffff;
 $text-gray: #aaaaaa;
 $color-orange: #d84315;
@@ -35,7 +35,7 @@ $color-red-danger: #b71c1c;
     gap: 15px;
 
     .back-arrow {
-      color: #ff9100; // สีส้มทองๆ ตามรูป
+      color: #ff9100;
       font-size: 1.5rem;
       font-weight: bold;
     }
@@ -64,7 +64,7 @@ $color-red-danger: #b71c1c;
 
 // Main Card
 .booking-card {
-  background-color: #0a0a0a; // พื้นหลังการ์ดเกือบดำสนิท
+  background-color: #0a0a0a;
   border-radius: 12px;
   padding: 30px;
   max-width: 600px;
@@ -110,7 +110,7 @@ $color-red-danger: #b71c1c;
   .details-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 30px; // ระยะห่างแนวตั้ง/นอน
+    gap: 30px; 
     margin-bottom: 30px;
 
     .detail-item {
@@ -124,7 +124,7 @@ $color-red-danger: #b71c1c;
       }
 
       .value {
-        font-size: 1.8rem; // ตัวเลขใหญ่
+        font-size: 1.8rem; 
         font-weight: 500;
       }
     }
@@ -241,7 +241,7 @@ $color-red-danger: #b71c1c;
       width: 250px;
       height: 250px;
       object-fit: contain;
-      // ใส่ border หรือเงาให้ QR หน่อยให้ดูเด่น
+   
       border: 4px solid #000;
       border-radius: 4px;
     }
@@ -262,6 +262,242 @@ $color-red-danger: #b71c1c;
 
       &:hover {
         background-color: #c62828;
+      }
+    }
+  }
+  .booking-card + .booking-card {
+  margin-top: 20px; 
+}
+
+.date-value {
+  font-size: 1.3rem !important;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #aaa;
+  font-size: 1.1rem;
+}
+
+.qr-table-label {
+  text-align: center;
+  color: #ff8c00;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+}
+.success-alert-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(3px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  animation: fadeIn 0.3s ease-out;
+
+  .success-alert-box {
+    background: #1e1e1e;
+    padding: 30px 40px;
+    border-radius: 16px;
+    text-align: center;
+    border: 2px solid $color-green-success;
+    box-shadow: 0 10px 30px rgba(0, 230, 118, 0.2);
+    animation: popUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+
+    .icon-wrapper {
+      width: 65px;
+      height: 65px;
+      background: $color-green-success;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0 auto 15px;
+
+      .checkmark {
+        color: #000;
+        font-size: 32px;
+        font-weight: bold;
+      }
+    }
+
+    h2 {
+      color: $color-green-success;
+      margin: 0 0 10px;
+      font-size: 1.6rem;
+    }
+
+    p {
+      color: $text-gray;
+      margin: 0;
+      font-size: 1rem;
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes popUp {
+  from { transform: scale(0.5); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.edit-form {
+  padding: 20px;
+  text-align: left;
+
+  .form-group {
+    margin-bottom: 15px;
+
+    label {
+      display: block;
+      color: #aaa;
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      background: #1a1a1a;
+      border: 1px solid #333;
+      color: #fff;
+      font-family: inherit;
+      box-sizing: border-box;
+      
+      &:focus {
+        outline: none;
+        border-color: #ff9100;
+      }
+    }
+
+    .hint-text {
+      display: block;
+      color: #ff9100;
+      font-size: 0.75rem;
+      margin-top: 5px;
+    }
+  }
+}
+.edit-form {
+  padding: 10px 20px 20px;
+  text-align: left;
+
+  .row-group {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+
+    .form-group {
+      flex: 1;
+      margin-bottom: 0;
+    }
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+
+    label {
+      display: flex;
+      justify-content: space-between;
+      color: #aaa;
+      margin-bottom: 8px;
+      font-size: 0.95rem;
+
+      .selected-time-text {
+        color: #ff9100;
+        font-weight: bold;
+      }
+    }
+
+    .input-with-icon {
+      position: relative;
+      display: flex;
+      align-items: center;
+
+      .icon {
+        position: absolute;
+        left: 12px;
+        font-size: 1.1rem;
+        pointer-events: none; // ไม่ให้บังการคลิก input
+      }
+
+      .form-input {
+        width: 100%;
+        padding: 12px 12px 12px 40px; // เว้นซ้ายให้ Icon
+        border-radius: 8px;
+        background: #1a1a1a;
+        border: 1px solid #333;
+        color: #fff;
+        font-family: inherit;
+        font-size: 1rem;
+        box-sizing: border-box;
+        transition: border-color 0.3s ease;
+        
+        &:focus {
+          outline: none;
+          border-color: #ff9100;
+        }
+      }
+    }
+
+    .hint-text {
+      display: block;
+      color: #ff9100;
+      font-size: 0.75rem;
+      margin-top: 10px;
+      opacity: 0.8;
+    }
+  }
+
+  // --- สไตล์สำหรับปุ่มเลือกเวลา (Time Grid) ---
+  .time-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+    gap: 10px;
+    max-height: 200px; // กำหนดความสูง
+    overflow-y: auto;  // ให้เลื่อนขึ้นลงได้ถ้าเวลาเยอะ
+    padding-right: 5px;
+
+    /* แต่ง Scrollbar ให้สวยงาม */
+    &::-webkit-scrollbar {
+      width: 4px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: #444;
+      border-radius: 4px;
+    }
+
+    .time-slot-btn {
+      padding: 10px 4px;
+      background: #1e1e1e;
+      color: #ccc;
+      border: 1px solid #333;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+
+      &:hover {
+        background: #2a2a2a;
+        border-color: #555;
+        color: white;
+      }
+
+      &.active {
+        background: rgba(255, 145, 0, 0.1);
+        border-color: #ff9100;
+        color: #ff9100;
+        font-weight: bold;
+        transform: scale(1.05);
+        box-shadow: 0 4px 10px rgba(255, 145, 0, 0.2);
       }
     }
   }

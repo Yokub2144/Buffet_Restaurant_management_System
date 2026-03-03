@@ -19,7 +19,7 @@ export class LoginEmployee {
     private authService: AuthService,
     private http: HttpClient,
     private messageService: MessageService,
-    private router: Router
+    private router: Router,
   ) {}
   email: string = '';
   password: string = '';
@@ -70,7 +70,7 @@ export class LoginEmployee {
           summary: 'Login Failed',
           detail: errorMessage,
         });
-      }
+      },
     );
   }
 
