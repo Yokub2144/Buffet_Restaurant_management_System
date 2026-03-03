@@ -33,7 +33,7 @@ export class Booking implements OnInit {
 
   bookingForm: BookingForm = {
     NumAdults: null as any,
-    NumChildren: null as any,
+    NumChildren: 0,
     BookingDate: '',
     BookingTime: '',
   };
