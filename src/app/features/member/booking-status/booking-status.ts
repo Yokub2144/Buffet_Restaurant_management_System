@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { BookingService } from '../../../service/api/booking.service';
 import { AuthService } from '../../../service/api/auth.service';
 import { SignalrService } from '../../../service/api/signalr.service';
+import { FormsModule } from '@angular/forms';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 interface BookingDetail {
   booking_id: number;
@@ -13,13 +15,13 @@ interface BookingDetail {
   date: string;
   time: string;
   status: string;
-  qrList: { tableId: number; qrImageUrl: string }[];
+  qrUrl: SafeUrl | string;
 }
 
 @Component({
   selector: 'app-booking-status',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './booking-status.html',
   styleUrl: './booking-status.scss',
 })
@@ -32,16 +34,28 @@ export class BookingStatus implements OnInit {
 
   showCheckInSuccessAlert = false;
 
+  showEditModal = false;
+  isEditing = false;
+  editingBookingId: number | null = null;
+  editFormData = {
+    adultCount: 0,
+    childCount: 0,
+    time: '',
+  };
+
+  availableTimeSlots: string[] = [];
+
   constructor(
     private bookingService: BookingService,
     private authService: AuthService,
     private router: Router,
     private signalrService: SignalrService,
+    private sanitizer: DomSanitizer,
   ) {}
 
   ngOnInit() {
     this.loadLatestBooking();
-
+    this.generateTimeSlots();
     this.signalrService.on('BookingStatusUpdated', (data: any) => {
       const newStatus = data.status ? data.status.toLowerCase() : '';
 
@@ -57,6 +71,19 @@ export class BookingStatus implements OnInit {
         this.loadLatestBooking();
       }
     });
+  }
+
+  generateTimeSlots() {
+    const slots = [];
+    for (let hour = 10; hour <= 21; hour++) {
+      slots.push(`${hour.toString().padStart(2, '0')}:00`);
+      slots.push(`${hour.toString().padStart(2, '0')}:30`);
+    }
+    this.availableTimeSlots = slots;
+  }
+
+  selectTime(slot: string) {
+    this.editFormData.time = slot;
   }
 
   showSuccessAlert() {
@@ -105,7 +132,8 @@ export class BookingStatus implements OnInit {
           date: this.formatDate(b.booking_Date),
           time: this.formatTime(b.booking_Time),
           status: this.mapStatus(b.booking_Status),
-          qrList: this.loadQrFromStorage(b.booking_id),
+          qrUrl: b.qR_Url || b.qr_Url || b.QR_Url || this.loadQrFromStorage(b.booking_id),
+          ConsoleLog: `Booking ID: ${b.booking_id}, QR URL: ${b.qR_Url || b.qr_Url || b.QR_Url}`,
         }));
       },
       error: (err: any) => {
@@ -115,11 +143,20 @@ export class BookingStatus implements OnInit {
     });
   }
 
-  loadQrFromStorage(bookingId: number): { tableId: number; qrImageUrl: string }[] {
+  loadQrFromStorage(bookingId: number): SafeUrl | string {
     try {
-      return JSON.parse(localStorage.getItem(`qr_${bookingId}`) || '[]');
+      const raw = localStorage.getItem(`qr_${bookingId}`);
+      if (!raw) return '';
+      let url: string;
+      try {
+        url = JSON.parse(raw);
+      } catch {
+        url = raw;
+      }
+      if (!url) return '';
+      return this.sanitizer.bypassSecurityTrustUrl(url);
     } catch (e) {
-      return [];
+      return '';
     }
   }
 
@@ -158,8 +195,47 @@ export class BookingStatus implements OnInit {
     this.activeQrBookingId = bookingId;
   }
 
-  onEditBooking(bookingId: number) {
-    console.log('Edit booking:', bookingId);
+  onEditBooking(booking: BookingDetail) {
+    this.editingBookingId = booking.booking_id;
+    this.editFormData = {
+      adultCount: booking.adultCount,
+      childCount: booking.childCount,
+      time: booking.time ? booking.time.substring(0, 5) : '',
+    };
+    this.showEditModal = true;
+  }
+
+  closeEditModal() {
+    this.showEditModal = false;
+    this.editingBookingId = null;
+  }
+
+  saveEditBooking() {
+    if (!this.editingBookingId) return;
+
+    this.isEditing = true;
+    const payload = {
+      adultCount: this.editFormData.adultCount,
+      childCount: this.editFormData.childCount,
+      time: this.editFormData.time,
+    };
+
+    this.bookingService.updateBooking(this.editingBookingId, payload).subscribe({
+      next: () => {
+        alert('อัปเดตข้อมูลการจองสำเร็จ');
+        this.isEditing = false;
+        this.closeEditModal();
+        this.loadLatestBooking();
+      },
+      error: (err) => {
+        this.isEditing = false;
+        if (err.status === 409) {
+          alert('เวลาใหม่ที่คุณเลือก มีคิวอื่นจองไปแล้ว กรุณาเลือกเวลาอื่นครับ');
+        } else {
+          alert('เกิดข้อผิดพลาดในการอัปเดต: ' + (err.error?.message || 'กรุณาลองใหม่'));
+        }
+      },
+    });
   }
 
   onCancelBooking(booking: BookingDetail) {

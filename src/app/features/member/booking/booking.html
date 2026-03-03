@@ -207,9 +207,9 @@
             <p style="color: #aaa; font-size: 13px; margin-bottom: 16px">
               📲 สแกน QR เพื่อเช็คอินเมื่อมาถึงร้าน
             </p>
-            <div *ngFor="let qr of qrList" style="margin-bottom: 24px">
+            <div *ngIf="qrUrl" style="margin-bottom: 24px">
               <img
-                [src]="qr.qrImageUrl"
+                [src]="qrUrl"
                 alt="QR Code Check-in"
                 style="width: 200px; height: 200px; border: 2px solid #555; border-radius: 8px"
               />

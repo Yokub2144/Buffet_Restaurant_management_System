@@ -29,4 +29,7 @@ export class BookingService {
   cancelBooking(bookingId: number): Observable<any> {
     return this.http.delete(`${this.constants.API_ENDPOINT}/Booking/${bookingId}`);
   }
+  updateBooking(bookingId: number, data: any) {
+    return this.http.put(`${this.constants.API_ENDPOINT}/Booking/update/${bookingId}`, data);
+  }
 }

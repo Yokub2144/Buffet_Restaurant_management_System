@@ -47,7 +47,7 @@ export class Booking implements OnInit {
   pendingBookingId: number | null = null;
   bookingId: number | null = null;
   bookedTableNames: string[] = [];
-  qrList: QrItem[] = [];
+  qrUrl: string = '';
 
   // วันที่ขั้นต่ำ = วันนี้ (format yyyy-MM-dd)
   minDate: string = '';
@@ -194,7 +194,7 @@ export class Booking implements OnInit {
   closeWaitingModal() {
     this.showWaitingModal = false;
     this.paymentSuccess = false;
-    this.qrList = [];
+    this.qrUrl = '';
     this.bookingId = null;
     this.bookedTableNames = [];
   }
@@ -261,10 +261,10 @@ export class Booking implements OnInit {
     this.bookingService.mockPayment(this.pendingBookingId).subscribe({
       next: (payRes: any) => {
         this.bookingId = this.pendingBookingId;
-        this.qrList = payRes.qr_list;
+        this.qrUrl = payRes.qr_url;
 
         try {
-          localStorage.setItem(`qr_${this.pendingBookingId}`, JSON.stringify(payRes.qr_list));
+          localStorage.setItem(`qr_${this.pendingBookingId}`, JSON.stringify(payRes.qr_url));
         } catch (e) {}
 
         this.isLoading = false;
