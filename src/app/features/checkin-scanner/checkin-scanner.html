@@ -1,21 +1,17 @@
 <div class="scanner-container">
-  <!-- Loading -->
   <div class="loading-box" *ngIf="loading">
     <p>⏳ กำลังโหลดข้อมูล...</p>
   </div>
 
-  <!-- Error -->
   <div class="error-box" *ngIf="errorMessage && !loading">
     <p>❌ {{ errorMessage }}</p>
   </div>
 
-  <!-- Success -->
   <div class="success-box" *ngIf="successMessage">
     <h3>{{ successMessage }}</h3>
     <p>สามารถปิดหน้านี้ได้แล้ว</p>
   </div>
 
-  <!-- ข้อมูลการจอง -->
   <div class="info-card" *ngIf="checkinInfo && !loading && !successMessage">
     <h2>📋 ข้อมูลการจอง #{{ checkinInfo.booking_id }}</h2>
 
@@ -52,7 +48,6 @@
       <span class="value">{{ checkinInfo.all_tables.join(', ') }}</span>
     </div>
 
-    <!-- ถ้าเป็นพนักงานเสิร์ฟ → ปุ่มแดง -->
     <button
       *ngIf="isAuthorized"
       class="btn-confirm"
@@ -62,7 +57,6 @@
       ✅ ยืนยันเช็คอิน
     </button>
 
-    <!-- ถ้าไม่ใช่ → แจ้งเตือน -->
     <div class="no-access" *ngIf="!isAuthorized">
       🚫 คุณไม่มีสิทธิ์เช็คอิน (เฉพาะพนักงานเสิร์ฟเท่านั้น)
     </div>

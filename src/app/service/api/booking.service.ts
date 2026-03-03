@@ -25,4 +25,8 @@ export class BookingService {
   getByMember(memberId: number): Observable<any> {
     return this.http.get(`${this.constants.API_ENDPOINT}/Booking/member/${memberId}`);
   }
+
+  cancelBooking(bookingId: number): Observable<any> {
+    return this.http.delete(`${this.constants.API_ENDPOINT}/Booking/${bookingId}`);
+  }
 }

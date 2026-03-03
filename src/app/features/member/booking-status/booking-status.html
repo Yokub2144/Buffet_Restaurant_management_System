@@ -4,64 +4,90 @@
       <span class="back-arrow">❮</span>
       <h1>สถานะการจองโต๊ะ</h1>
     </div>
-    <button class="pre-order-btn">สั่งล่วงหน้า</button>
+    <button class="pre-order-btn" (click)="goPreOrder()">สั่งล่วงหน้า</button>
   </header>
 
-  <div class="booking-card">
+  <div *ngIf="errorMessage && bookingList.length === 0" class="empty-state">
+    <p>{{ errorMessage }}</p>
+  </div>
+
+  <div *ngFor="let booking of bookingList" class="booking-card">
     <div class="card-header">
       <span class="label">โต๊ะที่เลือก</span>
-      <button class="edit-btn" (click)="onEditBooking()">แก้ไขจอง</button>
+      <button class="edit-btn" (click)="onEditBooking(booking.booking_id)">แก้ไขจอง</button>
     </div>
 
     <div class="table-display">
-      {{ bookingData.tableNumbers.join(' , ') }}
+      {{ booking.tableNumbers.join(' , ') }}
     </div>
 
     <div class="details-grid">
       <div class="detail-item">
         <label>จำนวนเด็ก /คน :</label>
-        <span class="value">{{ bookingData.childCount }}</span>
+        <span class="value">{{ booking.childCount }}</span>
       </div>
       <div class="detail-item">
         <label>จำนวนผู้ใหญ่ /คน :</label>
-        <span class="value">{{ bookingData.adultCount }}</span>
+        <span class="value">{{ booking.adultCount }}</span>
       </div>
-
       <div class="detail-item">
         <label>วันที่จอง :</label>
-        <span class="value">{{ bookingData.date }}</span>
+        <span class="value date-value">{{ booking.date }}</span>
       </div>
       <div class="detail-item">
         <label>เวลาจอง :</label>
-        <span class="value">{{ bookingData.time }}</span>
+        <span class="value">{{ booking.time }}</span>
       </div>
     </div>
 
     <div class="status-row">
       <div class="status-info">
         <label>สถานะ :</label>
-        <div class="status-text success">{{ bookingData.status }}</div>
+        <div class="status-text success">{{ booking.status }}</div>
       </div>
-      <button class="qr-checkin-btn" (click)="toggleQrModal(true)">คิวอาร์โค้ดเช็คอิน</button>
+      <button class="qr-checkin-btn" (click)="toggleQrModal(booking.booking_id)">
+        คิวอาร์โค้ดเช็คอิน
+      </button>
     </div>
 
-    <button class="cancel-btn-full" (click)="onCancelBooking()">ยกเลิกการจอง</button>
+    <button class="cancel-btn-full" (click)="onCancelBooking(booking)">ยกเลิกการจอง</button>
   </div>
 
-  <div class="modal-overlay" *ngIf="showQrModal">
+  <div class="modal-overlay" *ngIf="activeQrBookingId !== null">
     <div class="modal-content qr-modal">
       <div class="modal-header-qr">
         <h3>คิวอาร์โค้ดเช็คอินโต๊ะ</h3>
-        <button class="close-icon" (click)="toggleQrModal(false)">✕</button>
+        <button class="close-icon" (click)="toggleQrModal(null)">✕</button>
       </div>
 
-      <div class="modal-body-qr">
-        <img src="assets/qr-placeholder.png" alt="QR Code Check-in" class="qr-image" />
-      </div>
+      <ng-container *ngFor="let booking of bookingList">
+        <ng-container *ngIf="booking.booking_id === activeQrBookingId">
+          <ng-container *ngIf="booking.qrList && booking.qrList.length > 0; else noQr">
+            <div class="modal-body-qr" *ngFor="let qr of booking.qrList">
+              <img [src]="qr.qrImageUrl" alt="QR Code Check-in" class="qr-image" />
+            </div>
+          </ng-container>
+          <ng-template #noQr>
+            <div class="modal-body-qr">
+              <img src="assets/qr-placeholder.png" alt="QR Code Check-in" class="qr-image" />
+            </div>
+          </ng-template>
+        </ng-container>
+      </ng-container>
 
       <div class="modal-footer-qr">
-        <button class="close-btn-red" (click)="toggleQrModal(false)">ปิด</button>
+        <button class="close-btn-red" (click)="toggleQrModal(null)">ปิด</button>
       </div>
+    </div>
+  </div>
+
+  <div class="success-alert-overlay" *ngIf="showCheckInSuccessAlert">
+    <div class="success-alert-box">
+      <div class="icon-wrapper">
+        <span class="checkmark">✔</span>
+      </div>
+      <h2>เช็คอินสำเร็จ!</h2>
+      <p>ยินดีต้อนรับเข้าสู่ร้าน ขอให้มีความสุขกับมื้ออาหารครับ</p>
     </div>
   </div>
 </div>

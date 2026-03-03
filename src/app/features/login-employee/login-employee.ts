@@ -6,8 +6,7 @@ import { Toast } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
-
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-login-employee',
   imports: [CommonModule, MatIconModule, FormsModule, Toast],
@@ -21,26 +20,19 @@ export class LoginEmployee {
     private http: HttpClient,
     private messageService: MessageService,
     private router: Router,
-    private route: ActivatedRoute,
   ) {}
-
   email: string = '';
   password: string = '';
   phone: string = '';
   rememberMe: boolean = false;
 
   ngOnInit() {
-    const token = localStorage.getItem('token') ?? sessionStorage.getItem('token');
+    const token = localStorage.getItem('token');
     if (token) {
-      const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
-      if (returnUrl) {
-        this.router.navigateByUrl(returnUrl);
-      } else {
-        this.router.navigate(['/Dashboard']);
-      }
+      // ถ้ามี Token ให้ลองส่งไปเช็กกับ Server หรือข้ามหน้า Login ได้เลย
+      this.router.navigate(['/Dashboard']);
     }
   }
-
   onLogin() {
     const forms = new FormData();
     forms.append('Phone', this.phone);
@@ -48,6 +40,7 @@ export class LoginEmployee {
 
     this.authService.loginEmployee(forms).subscribe(
       (res) => {
+        console.log(res);
         if (this.rememberMe) {
           localStorage.setItem('token', res.token);
         } else {
@@ -59,18 +52,19 @@ export class LoginEmployee {
           summary: 'Login Successful',
           detail: 'กำลังพาคุณเข้าสู่ระบบ...',
         });
-
         setTimeout(() => {
-          const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
-          if (returnUrl) {
-            this.router.navigateByUrl(returnUrl);
-          } else {
-            this.router.navigate(['/Dashboard']);
-          }
+          this.router.navigate(['/Dashboard']).then((success) => {
+            if (success) {
+              console.log('2. เปลี่ยนหน้าสำเร็จ!');
+            } else {
+              console.error('3. เปลี่ยนหน้าล้มเหลว! (อาจจะติด Guard)');
+            }
+          });
         }, 1500);
       },
       (err) => {
         const errorMessage = err.error?.message || 'An error occurred during login.';
+        console.log(err);
         this.messageService.add({
           severity: 'error',
           summary: 'Login Failed',
@@ -81,9 +75,11 @@ export class LoginEmployee {
   }
 
   forgotPassword() {}
+
   onRegisterMember() {
     this.router.navigate(['/Registermember']);
   }
+
   onRegisterEmployee() {
     this.router.navigate(['/Registeremployee']);
   }

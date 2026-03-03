@@ -19,7 +19,7 @@ export class LoginMember {
     private authService: AuthService,
     private http: HttpClient,
     private messageService: MessageService,
-    private router: Router
+    private router: Router,
   ) {}
 
   password: string = '';
@@ -34,7 +34,8 @@ export class LoginMember {
       (res) => {
         if (this.rememberMe) {
           localStorage.setItem('token', res.token);
-        } else {
+        }
+        if (!this.rememberMe) {
           sessionStorage.setItem('token', res.token);
         }
         console.log('Login successful:', res);
@@ -55,7 +56,7 @@ export class LoginMember {
           summary: 'Login Failed',
           detail: errorMessage,
         });
-      }
+      },
     );
   }
 

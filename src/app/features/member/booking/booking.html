@@ -19,12 +19,9 @@
           (click)="toggleTableSelection(table)"
         >
           <span>{{ table.table_Number }}</span>
-
-          <span class="tooltip-text" *ngIf="table.table_Status === 'ติดจอง'"> ติดจอง </span>
-          <span class="tooltip-text" *ngIf="table.table_Status === 'ไม่ว่าง'">
-            กำลังให้บริการ
-          </span>
-          <span class="tooltip-text" *ngIf="table.table_Status === 'ว่าง'"> ว่าง </span>
+          <span class="tooltip-text" *ngIf="table.table_Status === 'ติดจอง'">ติดจอง</span>
+          <span class="tooltip-text" *ngIf="table.table_Status === 'ไม่ว่าง'">กำลังให้บริการ</span>
+          <span class="tooltip-text" *ngIf="table.table_Status === 'ว่าง'">ว่าง</span>
         </div>
       </div>
     </div>
@@ -37,13 +34,13 @@
       <button class="action-btn" (click)="openBookingModal()">ดำเนินการจอง</button>
     </div>
 
+    <!-- Modal จองโต๊ะ -->
     <div class="modal-overlay" *ngIf="showBookingModal">
       <div class="modal-content form-modal">
         <div class="modal-header">
           <h3>การจองโต๊ะ</h3>
           <button class="close-btn" (click)="closeBookingModal()">×</button>
         </div>
-
         <div class="modal-body">
           <div class="warning-box">
             <div class="warning-icon">⚠️</div>
@@ -61,44 +58,80 @@
           <div class="form-row">
             <div class="form-group half">
               <label>จำนวนเด็ก /คน</label>
-              <input type="number" [(ngModel)]="bookingForm.NumChildren" placeholder="0" />
+              <input type="number" [(ngModel)]="bookingForm.NumChildren" placeholder="0" min="0" />
             </div>
             <div class="form-group half">
               <label>จำนวนผู้ใหญ่ /คน</label>
-              <input type="number" [(ngModel)]="bookingForm.NumAdults" placeholder="0" />
+              <input type="number" [(ngModel)]="bookingForm.NumAdults" placeholder="0" min="0" />
             </div>
           </div>
 
+          <!-- วันที่จอง — กัน past date ด้วย [min] -->
           <div class="form-group">
             <label>เลือกวันที่จอง <span class="required">*</span></label>
-            <input type="date" [(ngModel)]="bookingForm.BookingDate" />
+            <input
+              type="date"
+              [(ngModel)]="bookingForm.BookingDate"
+              [min]="minDate"
+              (change)="onDateChange()"
+            />
           </div>
 
+          <!-- เวลาจอง — Hybrid: ปุ่ม slot + พิมพ์เองได้ -->
           <div class="form-group">
             <label>เลือกเวลาจอง <span class="required">*</span></label>
-            <input type="time" [(ngModel)]="bookingForm.BookingTime" />
+
+            <!-- ปุ่ม slot -->
+            <div class="time-grid">
+              <button
+                *ngFor="let slot of timeSlots"
+                type="button"
+                class="time-slot-btn"
+                [class.active]="bookingForm.BookingTime === slot"
+                [class.disabled]="isSlotDisabled(slot)"
+                (click)="selectSlot(slot)"
+              >
+                {{ slot }}
+              </button>
+            </div>
+
+            <!-- หรือพิมพ์เองได้ -->
+            <div class="time-manual">
+              <span class="or-divider">หรือพิมพ์เวลาเอง</span>
+              <input
+                type="time"
+                [(ngModel)]="bookingForm.BookingTime"
+                [min]="currentMinTime"
+                class="time-input-manual"
+              />
+            </div>
+
+            <small *ngIf="bookingForm.BookingDate" class="time-hint">
+              ร้านเปิด 10:00 – 22:00
+              <span *ngIf="bookingForm.BookingDate === minDate">
+                &nbsp;| เร็วที่สุด {{ minTime }} น.
+              </span>
+            </small>
           </div>
         </div>
-
         <div class="modal-footer">
           <button class="confirm-btn" (click)="proceedToPayment()">จอง/ชำระค่ามัดจำ</button>
         </div>
       </div>
     </div>
 
+    <!-- Modal ชำระเงิน -->
     <div class="modal-overlay" *ngIf="showPaymentModal">
       <div class="modal-content payment-modal">
         <div class="modal-header">
           <h3 class="blue-text">ชำระเงินค่ามัดจำเพื่อจองโต๊ะ</h3>
           <button class="close-btn" (click)="closePaymentModal()">×</button>
         </div>
-
         <div class="modal-body text-center">
           <div class="qr-scan-box">
             <span>📷 สแกน คิวอาร์โค้ด</span>
             <span class="check-circle">✔</span>
           </div>
-
           <div class="qr-image-container">
             <div class="thai-qr-header">THAI QR PAYMENT</div>
             <div class="prompt-pay">PromptPay</div>
@@ -111,50 +144,88 @@
             <div class="ref-name">ชื่อบัญชีร้านค้า</div>
           </div>
         </div>
-
         <div class="modal-footer">
           <button class="confirm-btn" (click)="confirmPayment()">ยืนยันการชำระเงิน</button>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- QR Check-in Modal -->
-  <div class="modal-overlay" *ngIf="showQrModal">
-    <div class="modal-content form-modal">
-      <div class="modal-header">
-        <h3>คิวอาร์โค้ดเช็คอินโต๊ะ</h3>
-        <button class="close-btn" (click)="closeQrModal()">×</button>
-      </div>
+    <!-- Modal รอยืนยัน / จองสำเร็จ -->
+    <div class="modal-overlay" *ngIf="showWaitingModal">
+      <div class="modal-content form-modal">
+        <ng-container *ngIf="!paymentSuccess">
+          <div class="modal-header">
+            <h3>⏳ รอการยืนยันชำระเงิน</h3>
+          </div>
+          <div class="modal-body text-center">
+            <p style="color: #f39c12; font-size: 15px; margin-bottom: 8px; font-weight: bold">
+              Booking #{{ pendingBookingId }} — สถานะ: Pending
+            </p>
+            <p style="color: #ccc; font-size: 14px; margin-bottom: 16px">
+              โต๊ะที่จอง: <strong style="color: #ff8c00">{{ bookedTableNames.join(', ') }}</strong>
+            </p>
+            <div
+              style="
+                background: #1e1e1e;
+                border-radius: 8px;
+                padding: 16px;
+                margin-bottom: 20px;
+                font-size: 13px;
+                color: #aaa;
+                text-align: left;
+              "
+            >
+              <p>📅 วันที่: {{ bookingForm.BookingDate }}</p>
+              <p>⏰ เวลา: {{ bookingForm.BookingTime }}</p>
+              <p>👤 ผู้ใหญ่: {{ bookingForm.NumAdults }} คน</p>
+              <p>🧒 เด็ก: {{ bookingForm.NumChildren }} คน</p>
+            </div>
+            <p style="color: #e74c3c; font-size: 13px">
+              ⚠️ กรุณาชำระเงินภายใน 30 นาที มิฉะนั้นระบบจะยกเลิกการจองอัตโนมัติ
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button class="confirm-btn" (click)="completeMockPayment()">
+              ✅ ชำระเงินเสร็จแล้ว (Mock)
+            </button>
+          </div>
+        </ng-container>
 
-      <div class="modal-body text-center">
-        <p style="color: #4caf50; font-weight: bold; font-size: 16px; margin-bottom: 8px">
-          ✅ จองสำเร็จ! (Booking #{{ bookingId }})
-        </p>
-        <p style="color: #aaa; font-size: 13px; margin-bottom: 20px">
-          สแกน QR เพื่อเช็คอินเมื่อมาถึงร้าน
-        </p>
-
-        <div *ngFor="let qr of qrList" style="margin-bottom: 24px">
-          <p style="color: #ff8c00; font-weight: bold; margin-bottom: 8px">
-            โต๊ะ ID: {{ qr.tableId }}
-          </p>
-          <img
-            [src]="qr.qrImageUrl"
-            alt="QR Code Check-in"
-            style="width: 200px; height: 200px; border: 2px solid #555; border-radius: 8px"
-          />
-        </div>
-      </div>
-
-      <div class="modal-footer">
-        <button class="confirm-btn" style="background: #c0392b" (click)="closeQrModal()">
-          ปิด
-        </button>
+        <ng-container *ngIf="paymentSuccess">
+          <div class="modal-header">
+            <h3>🎉 จองสำเร็จ!</h3>
+            <button class="close-btn" (click)="closeWaitingModal()">×</button>
+          </div>
+          <div class="modal-body text-center">
+            <p style="color: #4caf50; font-weight: bold; font-size: 16px; margin-bottom: 4px">
+              ✅ ชำระเงินเรียบร้อย
+            </p>
+            <p style="color: #ccc; font-size: 14px; margin-bottom: 4px">Booking #{{ bookingId }}</p>
+            <p style="color: #ff8c00; font-size: 14px; margin-bottom: 20px">
+              โต๊ะ: <strong>{{ bookedTableNames.join(', ') }}</strong>
+            </p>
+            <p style="color: #aaa; font-size: 13px; margin-bottom: 16px">
+              📲 สแกน QR เพื่อเช็คอินเมื่อมาถึงร้าน
+            </p>
+            <div *ngFor="let qr of qrList" style="margin-bottom: 24px">
+              <img
+                [src]="qr.qrImageUrl"
+                alt="QR Code Check-in"
+                style="width: 200px; height: 200px; border: 2px solid #555; border-radius: 8px"
+              />
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="confirm-btn" style="background: #c0392b" (click)="closeWaitingModal()">
+              ปิด
+            </button>
+          </div>
+        </ng-container>
       </div>
     </div>
   </div>
 
+  <!-- Loading overlay -->
   <div
     *ngIf="isLoading"
     style="
