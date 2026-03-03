@@ -19,7 +19,58 @@ $color-occupied: #c62828;
     padding: 10px;
   }
 }
+.page-header {
+  display: flex;
+  justify-content: space-between; /* ✅ ดันหัวข้อไปซ้าย ปุ่มไปขวา */
+  align-items: center;
+  padding: 1rem 0;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #333;
 
+  h3 {
+    margin: 0;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 500;
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 10px;
+  }
+
+  /* ตกแต่งปุ่มพิมพ์ทั้งหมดให้ดูพรีเมียม */
+  .btn-print-all {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #916400; /* สีทองตามธีม */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(145, 100, 0, 0.2);
+
+    mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+
+    &:hover {
+      background: #b07a00;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(145, 100, 0, 0.3);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+}
 .tables-grid-wrapper {
   background-color: $card-dark;
   border-radius: 12px;
@@ -265,5 +316,148 @@ $color-occupied: #c62828;
     font-size: 35px;
     width: 35px;
     height: 35px;
+  }
+}
+::ng-deep .custom-dark-dialog {
+  &.p-dialog {
+    background: #111111 !important;
+    border-radius: 30px !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  .p-dialog-header {
+    background: transparent !important;
+    padding: 1.5rem 1.5rem 0.5rem 1.5rem !important;
+    border: none !important;
+
+    .p-dialog-title {
+      color: white !important;
+      font-size: 1.4rem;
+      font-weight: bold;
+    }
+
+    .p-dialog-header-close-icon {
+      color: white !important;
+      font-size: 1.2rem;
+      color: white !important;
+    }
+  }
+
+  .p-dialog-content {
+    background: transparent !important;
+    color: white !important;
+    border: none !important;
+  }
+}
+
+.qr-display-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+
+  .qr-wrapper {
+    background: #ffffff; /* สำคัญมาก: พื้นหลังขาวเพื่อให้สแกนติดง่าย */
+    padding: 5px;
+    border-radius: 10px;
+    box-shadow: 0 0 30px rgba(145, 100, 0, 0.2); /* เรืองแสงสีทองอ่อนๆ */
+    transition: transform 0.3s ease;
+
+    .qr-image {
+      width: 280px;
+      height: 280px;
+      display: block;
+      object-fit: contain;
+    }
+  }
+}
+.print-template {
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+  background: white; /* พื้นหลังต้องขาวเพื่อให้สแกนติด */
+}
+
+/* กำหนดขนาดบล็อก 10x10 cm */
+.qr-print-block {
+  width: 10cm;
+  height: 10cm;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  padding: 0.2cm;
+  box-sizing: border-box;
+
+  .table-number-print {
+    font-size: 48px; /* ปรับขนาดตัวอักษรเลขโต๊ะตามตัวอย่าง */
+    margin: 0 0 10px 0;
+    color: black;
+    font-family: sans-serif;
+    font-weight: bold;
+  }
+
+  .qr-image-print {
+    width: 7cm; /* ปรับขนาด QR ให้พอดีภายในบล็อก 10cm */
+    height: 7cm;
+    object-fit: contain;
+  }
+}
+.print-only {
+  display: none; /* ซ่อนไว้ไม่ให้เห็นในหน้าจอปกติ */
+}
+
+/* --- CSS สำหรับการพิมพ์ (@media print) --- */
+@media print {
+  /* ซ่อนทุกอย่างในแอป ยกเว้นส่วนที่จะพิมพ์ */
+  body * {
+    visibility: hidden;
+  }
+  .fab-add-button {
+    visibility: hidden;
+  }
+  .menu {
+    visibility: hidden;
+  }
+  .print-only,
+  .print-only * {
+    visibility: visible;
+  }
+
+  .print-only {
+    display: grid !important;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 210mm; /* A4 */
+    grid-template-columns: 1fr 1fr; /* 2 คอลัมน์ */
+    gap: 0;
+    visibility: visible;
+  }
+
+  .qr-print-block {
+    width: 105mm; /* แบ่งครึ่ง A4 พอดี */
+    height: 148.5mm; /* แบ่งครึ่งความสูง A4 (หรือปรับเป็น 100mm ตามต้องการ) */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* เลขโต๊ะอยู่กลาง */
+    justify-content: flex-start;
+    padding-top: 20mm;
+    page-break-inside: avoid; /* ✅ ห้ามตัดกลางรูป */
+    border: 0.1mm dashed #ccc; /* เส้นประจางๆ สำหรับตัดกระดาษ */
+
+    .table-number-print {
+      font-size: 48pt;
+      font-weight: bold;
+      color: black;
+      margin-bottom: 0.5mm;
+    }
+
+    .qr-image-print {
+      width: 80mm; /* ประมาณ 8cm */
+      height: 80mm;
+    }
   }
 }

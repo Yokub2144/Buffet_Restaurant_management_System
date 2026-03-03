@@ -1,3 +1,4 @@
+<p-toast [breakpoints]="{ '120px': { width: '50%' } }" />
 <app-menu-manager>
   <div class="page-container" *ngIf="employee; else loading">
     <header class="top-bar">
@@ -115,6 +116,171 @@
   </div>
 
   <ng-template #loading>
-    <div class="loading-state">Loading...</div>
+    <div class="loading-state">กำลังโหลด...</div>
   </ng-template>
 </app-menu-manager>
+
+<p-dialog
+  header="แก้ไข"
+  [(visible)]="displayEditRevenue"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  styleClass="custom-dark-dialog"
+  [breakpoints]="{ '960px': '75vw', '640px': '90vw' }"
+  [style]="{ width: '400px' }"
+  appendTo="body"
+>
+  <div class="edit-revenue-container">
+    <div class="field">
+      <label>ค่าจ้างรายวัน</label>
+      <div class="input-with-icon">
+        <input
+          type="number"
+          [(ngModel)]="editFormRevenue.wage"
+          min="0"
+          oninput="this.value = Math.abs(this.value)"
+        />
+        <mat-icon>payments</mat-icon>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>เวลาเริ่มทำงาน</label>
+      <div class="input-with-icon">
+        <p-datepicker
+          [(ngModel)]="editFormRevenue.start_time"
+          [timeOnly]="true"
+          [hourFormat]="'24'"
+          dataType="string"
+          placeholder="00:00"
+          appendTo="body"
+          styleClass="custom-timepicker"
+        >
+        </p-datepicker>
+        <mat-icon>schedule</mat-icon>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>เวลาเลิกทำงาน</label>
+      <div class="input-with-icon">
+        <p-datepicker
+          [(ngModel)]="editFormRevenue.end_time"
+          [timeOnly]="true"
+          [hourFormat]="'24'"
+          dataType="string"
+          placeholder="00:00"
+          appendTo="body"
+          styleClass="custom-timepicker"
+        >
+        </p-datepicker>
+        <mat-icon>history</mat-icon>
+      </div>
+    </div>
+
+    <div class="dialog-footer">
+      <button class="btn-cancel" (click)="displayEditRevenue = false">ยกเลิก</button>
+      <button class="btn-save" (click)="saveRevenue()">แก้ไขค่าจ้าง</button>
+    </div>
+  </div>
+</p-dialog>
+
+<p-dialog
+  header="แก้ไขแผนก"
+  [(visible)]="displayEditDepartment"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  styleClass="custom-dark-dialog"
+  [breakpoints]="{ '960px': '75vw', '640px': '90vw' }"
+  [style]="{ width: '400px' }"
+  appendTo="body"
+>
+  <div class="edit-revenue-container">
+    <div class="field">
+      <label>เลือกแผนก</label>
+      <div class="input-with-icon">
+        <p-select
+          [(ngModel)]="department"
+          [options]="departments"
+          optionLabel="label"
+          optionValue="value"
+          placeholder="เลือกแผนก"
+          appendTo="body"
+          styleClass="w-full custom-dark-select"
+        >
+        </p-select>
+      </div>
+    </div>
+    <div class="dialog-footer">
+      <button class="btn-save" (click)="saveDepartment()">แก้ไขแผนก</button>
+    </div>
+  </div>
+</p-dialog>
+
+<p-dialog
+  header="แก้ไขสถานะทำงาน"
+  [(visible)]="displayEditStatus"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  styleClass="custom-dark-dialog"
+  [breakpoints]="{ '960px': '75vw', '640px': '90vw' }"
+  [style]="{ width: '400px' }"
+  appendTo="body"
+>
+  <div class="edit-revenue-container">
+    <div class="field">
+      <label>เลือกสถานะ</label>
+      <div class="input-with-icon">
+        <p-select
+          [(ngModel)]="statusEmp"
+          [options]="statusEmps"
+          optionLabel="label"
+          optionValue="value"
+          placeholder="เลือกสถานะ"
+          appendTo="body"
+          styleClass="w-full custom-dark-select"
+        >
+        </p-select>
+      </div>
+    </div>
+    <div class="dialog-footer">
+      <button class="btn-save" (click)="saveStatus()">แก้ไขสถานะ</button>
+    </div>
+  </div>
+</p-dialog>
+
+<p-dialog
+  header="แก้ไขประเภทพนักงาน"
+  [(visible)]="displayEditType"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  styleClass="custom-dark-dialog"
+  [breakpoints]="{ '960px': '75vw', '640px': '90vw' }"
+  [style]="{ width: '400px' }"
+  appendTo="body"
+>
+  <div class="edit-revenue-container">
+    <div class="field">
+      <label>เลือกประเภท</label>
+      <div class="input-with-icon">
+        <p-select
+          [(ngModel)]="typeEmp"
+          [options]="typeEmps"
+          optionLabel="label"
+          optionValue="value"
+          placeholder="เลือกประเภท"
+          appendTo="body"
+          styleClass="w-full custom-dark-select"
+        >
+        </p-select>
+      </div>
+    </div>
+    <div class="dialog-footer">
+      <button class="btn-save" (click)="saveType()">แก้ไขประเภท</button>
+    </div>
+  </div>
+</p-dialog>

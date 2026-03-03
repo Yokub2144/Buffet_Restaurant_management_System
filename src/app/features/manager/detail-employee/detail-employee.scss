@@ -178,6 +178,10 @@ $primary-blue: #3b82f6;
         background: #14532d;
         color: #4ade80;
       }
+      &.red {
+        background: #4e0101;
+        color: #ff0000;
+      }
     }
   }
 }
@@ -263,4 +267,200 @@ $primary-blue: #3b82f6;
   color: white;
   text-align: center;
   padding: 2rem;
+}
+::ng-deep .custom-dark-dialog {
+  &.p-dialog {
+    background: #111111 !important;
+    border-radius: 30px !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  .p-dialog-header {
+    background: transparent !important;
+    padding: 1.5rem 1.5rem 0.5rem 1.5rem !important;
+    border: none !important;
+
+    .p-dialog-title {
+      color: white !important;
+      font-size: 1.4rem;
+      font-weight: bold;
+    }
+
+    .p-dialog-header-close-icon {
+      color: white !important;
+      font-size: 1.2rem;
+      color: white !important;
+      &:hover {
+        background: rgba(255, 255, 255, 0.1) !important;
+      }
+    }
+  }
+
+  .p-dialog-content {
+    background: transparent !important;
+    color: white !important;
+    border: none !important;
+  }
+}
+
+.edit-revenue-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    label {
+      font-size: 0.95rem;
+      color: #e0e0e0;
+    }
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    input[type='number'] {
+      -moz-appearance: textfield;
+    }
+    input[type='time']::-webkit-calendar-picker-indicator {
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      cursor: pointer;
+      opacity: 0;
+      -webkit-appearance: none;
+    }
+    .input-with-icon {
+      position: relative;
+      display: flex;
+      align-items: center;
+
+      ::ng-deep .p-datepicker,
+      ::ng-deep .p-inputtext,
+      input {
+        width: 100% !important;
+        background: #1a1a1a !important;
+        border: 1px solid #444 !important;
+        border-radius: 12px !important;
+        padding: 12px 45px 12px 15px !important;
+        color: white !important;
+        font-size: 1.1rem;
+        outline: none;
+        transition: border-color 0.2s;
+
+        &:focus {
+          border-color: #916400 !important;
+        }
+      }
+
+      mat-icon {
+        position: absolute;
+        right: 15px;
+        color: #fff;
+        pointer-events: none;
+        z-index: 1;
+        font-size: 22px;
+        opacity: 0.8;
+      }
+    }
+
+    /* ลบไอคอนนาฬิกาเดิมของเบราว์เซอร์ออกให้หมด */
+    ::ng-deep input[type='time']::-webkit-calendar-picker-indicator {
+      display: none !important;
+    }
+  }
+}
+
+.dialog-footer {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+
+  button {
+    flex: 1;
+    padding: 14px;
+    border-radius: 12px;
+    border: none;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: filter 0.2s;
+
+    &:active {
+      filter: brightness(0.8);
+    }
+  }
+
+  .btn-cancel {
+    background: #7a0000 !important;
+    color: white !important;
+    &:hover {
+      background: #ab0303 !important;
+    }
+  }
+
+  .btn-save {
+    background: #916400 !important;
+    color: white !important;
+    &:hover {
+      background: #c58701 !important;
+    }
+  }
+}
+::ng-deep .custom-dark-select {
+  width: 100%;
+  background: #1a1a1a !important;
+  border: 1px solid #444 !important;
+  border-radius: 12px !important;
+
+  .p-select-label {
+    color: white !important;
+    padding-right: 15px !important;
+  }
+
+  .p-select-dropdown {
+    color: white !important;
+  }
+}
+
+/* แก้ปัญหาพื้นหลังรายการเลือกเป็นสีขาว (Overlay) */
+::ng-deep .p-select-overlay {
+  background: #1a1a1a !important; /* พื้นหลังเข้ม */
+  border: 1px solid #444 !important;
+
+  .p-select-list-container {
+    .p-select-option {
+      color: white !important;
+      background: transparent !important;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.1) !important;
+      }
+
+      &.p-select-option-selected {
+        background: #634401 !important; /* สีทองเมื่อถูกเลือก */
+        color: white !important;
+      }
+    }
+  }
+}
+
+.input-with-icon {
+  position: relative;
+  mat-icon {
+    position: absolute;
+    right: 35px;
+    z-index: 10;
+    pointer-events: none;
+    color: white;
+  }
 }

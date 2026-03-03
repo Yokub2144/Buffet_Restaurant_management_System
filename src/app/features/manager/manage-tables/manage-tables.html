@@ -1,8 +1,14 @@
 <p-toast [breakpoints]="{ '120px': { width: '50%' } }" />
-<app-menu-manager>
+<app-menu-manager class="menu">
   <div class="booking-container">
     <header class="page-header">
       <h3>จัดการข้อมูลโต๊ะ</h3>
+      <div class="header-actions">
+        <button class="btn-print-all" (click)="downloadAllTablesPDF()">
+          <mat-icon>print</mat-icon>
+          <span>พิมพ์ QR ทั้งหมด (A4)</span>
+        </button>
+      </div>
     </header>
 
     <div class="tables-grid-wrapper">
@@ -22,6 +28,7 @@
         <div
           *ngFor="let table of tables"
           class="table-item"
+          (click)="showQr(table.table_id)"
           [ngClass]="{
             'status-free': table.table_Status === 'ว่าง',
             'status-reserved': table.table_Status === 'ติดจอง',
@@ -65,3 +72,69 @@
     <mat-icon>add</mat-icon>
   </button>
 </app-menu-manager>
+
+<p-dialog
+  header="โต๊ะ{{ selectedTable?.table_Number }}"
+  [(visible)]="displayShowQr"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  styleClass="custom-dark-dialog"
+  [breakpoints]="{ '960px': '75vw', '640px': '90vw' }"
+  [style]="{ width: '400px' }"
+  appendTo="body"
+>
+  <div class="qr-display-container">
+    <div class="qr-wrapper" *ngIf="selectedTable?.table_QR_Code">
+      <img
+        [src]="selectedTable.table_QR_Code"
+        alt="QR Code Table {{ selectedTable.table_Number }}"
+        class="qr-image"
+      />
+    </div>
+    <div style="margin-top: 2rem; width: 100%; display: flex; gap: 10px">
+      <button
+        style="
+          flex: 1;
+          padding: 12px;
+          border-radius: 12px;
+          background: #916400;
+          color: white;
+          border: none;
+          font-weight: bold;
+          cursor: pointer;
+        "
+        (click)="downloadTablePDF()"
+      >
+        บันทึกรูป
+      </button>
+      <button
+        style="
+          padding: 12px;
+          border-radius: 12px;
+          background: #333;
+          color: white;
+          border: none;
+          cursor: pointer;
+        "
+        (click)="displayShowQr = false"
+      >
+        ปิด
+      </button>
+    </div>
+  </div>
+</p-dialog>
+
+<div id="print-section" class="print-template">
+  <div class="qr-print-block">
+    <h1 class="table-number-print">{{ selectedTable?.table_Number }}</h1>
+    <img [src]="selectedTable?.table_QR_Code" class="qr-image-print" />
+  </div>
+</div>
+
+<div id="print-area" class="print-only">
+  <div *ngFor="let table of tables" class="qr-print-block">
+    <h1 class="table-number-print">{{ table.table_Number }}</h1>
+    <img [src]="table.table_QR_Code" class="qr-image-print" />
+  </div>
+</div>

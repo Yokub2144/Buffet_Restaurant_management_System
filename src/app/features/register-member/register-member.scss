@@ -67,10 +67,9 @@ $border-color: #4b5563;
             border-color: $primary-teal;
           }
 
-          // แก้ไขปัญหา Date ล้นใน Safari
           &[type='date'] {
             min-height: 43px;
-            -webkit-appearance: none; // ล้าง default UI ของ Safari
+            -webkit-appearance: none;
             display: flex;
             align-items: center;
             &::-webkit-date-and-time-value {

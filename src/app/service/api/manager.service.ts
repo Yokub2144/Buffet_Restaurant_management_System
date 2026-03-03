@@ -1,10 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Constants } from '../../config/contants';
+import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
 export class ManagerService {
+  add(arg0: { severity: string; summary: string; detail: string }) {
+    throw new Error('Method not implemented.');
+  }
   constructor(
     private http: HttpClient,
     private constants: Constants,
@@ -58,6 +62,27 @@ export class ManagerService {
       }),
     };
     const response = this.http.post<any>(url, {}, httpOptions);
+    return response;
+  }
+
+  public updateWageStartTimeEndTimeEmp(payload: any): Observable<any> {
+    const url = this.constants.API_ENDPOINT + '/Manager/updateWageStartTimeEndTimeEmp';
+    const response = this.http.put(url, payload);
+    return response;
+  }
+  public updateDepartmentEmp(payload: any): Observable<any> {
+    const url = this.constants.API_ENDPOINT + '/Manager/updateDepartmentEmp';
+    const response = this.http.put(url, payload);
+    return response;
+  }
+  public updateStatusEmp(payload: any): Observable<any> {
+    const url = this.constants.API_ENDPOINT + '/Manager/updateStatusEmp';
+    const response = this.http.put(url, payload);
+    return response;
+  }
+  public updateTypeEmp(payload: any): Observable<any> {
+    const url = this.constants.API_ENDPOINT + '/Manager/updateTypeEmp';
+    const response = this.http.put(url, payload);
     return response;
   }
 }

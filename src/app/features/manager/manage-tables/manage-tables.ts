@@ -11,9 +11,12 @@ import { MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
 import { Toast } from 'primeng/toast';
 import { Table } from '../../../models/table.model';
+import { DialogModule } from 'primeng/dialog';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 @Component({
   selector: 'app-manage-tables',
-  imports: [MenuManager, CommonModule, MatIcon, MatIconModule, FormsModule, Toast],
+  imports: [MenuManager, CommonModule, MatIcon, MatIconModule, FormsModule, Toast, DialogModule],
   templateUrl: './manage-tables.html',
   styleUrl: './manage-tables.scss',
 })
@@ -21,7 +24,9 @@ export class ManageTables implements OnInit {
   tables: Table[] = [];
   totalTable: number = 0;
   showAddTableModal: boolean = false;
+  displayShowQr: boolean = false;
   tableNumber: string = '';
+  selectedTable: any;
   constructor(
     private tableService: TableService,
     private signalrService: SignalrService,
@@ -87,5 +92,40 @@ export class ManageTables implements OnInit {
   }
   addTable() {
     this.toggleAddTableModal(true);
+  }
+  showQr(table_id: number) {
+    this.selectedTable = this.tables.find((t) => t.table_id === table_id);
+    if (this.selectedTable) {
+      this.displayShowQr = true;
+    }
+  }
+
+  downloadTablePDF() {
+    const element = document.getElementById('print-section');
+    if (element) {
+      html2canvas(element, {
+        scale: 3,
+        useCORS: true,
+        allowTaint: true,
+        logging: true,
+      }).then((canvas) => {
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF('p', 'mm', 'a4');
+
+        // กำหนดขนาด 100mm x 100mm (คือ 10x10 cm)
+        const width = 100;
+        const height = 100;
+
+        const x = 5;
+        const y = 5;
+
+        pdf.addImage(imgData, 'PNG', x, y, width, height);
+        pdf.save(`Table_${this.selectedTable?.table_Number}.pdf`);
+      });
+    }
+  }
+
+  downloadAllTablesPDF() {
+    window.print();
   }
 }
