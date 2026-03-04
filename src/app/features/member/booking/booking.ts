@@ -121,8 +121,9 @@ export class Booking implements OnInit, OnDestroy {
 
   isSlotDisabled(slot: string): boolean {
     const today = new Date().toISOString().split('T')[0];
-    if (!this.bookingForm.BookingDate || this.bookingForm.BookingDate !== today) return false;
-    return slot < this.minTime;
+    if (!this.bookingForm.BookingDate || this.bookingForm.BookingDate > today) return false;
+    if (this.bookingForm.BookingDate === today) return slot < this.minTime;
+    return true;
   }
 
   selectSlot(slot: string) {
@@ -201,7 +202,7 @@ export class Booking implements OnInit, OnDestroy {
 
     const adults = Number(this.bookingForm.NumAdults) || 0;
     const children = Number(this.bookingForm.NumChildren) || 0;
-    if (adults <= 0 && children <= 0) {
+    if (adults + children <= 0) {
       alert('กรุณาระบุจำนวนผู้เข้าใช้บริการอย่างน้อย 1 คน');
       return;
     }
@@ -239,7 +240,7 @@ export class Booking implements OnInit, OnDestroy {
             this.isLoading = false;
             const qrData = typeof payRes.qr === 'string' ? JSON.parse(payRes.qr) : payRes.qr;
             this.promptPayQrUrl = qrData?.data?.qr_url || '';
-            this.transactionId = qrData?.data?.transactionId || '';
+            this.transactionId = (qrData?.data?.transactionId || '').trim();
             this.showBookingModal = false;
             this.showPaymentModal = true;
           },
