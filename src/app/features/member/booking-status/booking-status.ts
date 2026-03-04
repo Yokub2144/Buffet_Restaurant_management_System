@@ -114,7 +114,7 @@ export class BookingStatus implements OnInit {
 
         const activeBookings = resArray.filter((b: any) => {
           const status = (b.booking_Status || '').toLowerCase();
-          return status === 'pending' || status === 'confirmed';
+          return status === 'confirmed';
         });
 
         if (activeBookings.length === 0) {
