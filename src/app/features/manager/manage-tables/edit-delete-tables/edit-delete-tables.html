@@ -1,0 +1,64 @@
+<p-toast [breakpoints]="{ '120px': { width: '50%' } }" />
+<app-menu-manager>
+  <div class="booking-management-container">
+    <header class="header-section">
+      <div class="header-title">
+        <button class="back-btn" (click)="goBack()"><i class="pi pi-angle-left"></i> Back</button>
+        <h3>จัดการข้อมูลโต๊ะ</h3>
+      </div>
+    </header>
+
+    <div class="summary-card">
+      <div class="table-count">
+        <span>จำนวนโต๊ะ</span>
+        <span class="count-val">{{ totalTable }}</span>
+      </div>
+      <button class="btn-add" (click)="addTable()">เพิ่ม</button>
+    </div>
+
+    <div class="list-label">โต๊ะที่มีอยู่ปัจจุบัน</div>
+
+    <div class="table-list">
+      <div *ngFor="let table of tables" class="table-row">
+        <div class="table-name">{{ table.table_Number }}</div>
+
+        <div class="action-buttons">
+          <button class="btn-edit" (click)="editTable(table.table_id)">
+            <mat-icon>edit</mat-icon>
+            <span>แก้ไข</span>
+          </button>
+          <button class="btn-delete" (click)="confirm(table.table_id)">
+            <mat-icon>delete</mat-icon>
+            <span>ลบ</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</app-menu-manager>
+
+<p-dialog
+  header="ยืนยันการลบ"
+  [(visible)]="displayconfirm"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  styleClass="custom-dark-dialog"
+  [breakpoints]="{ '960px': '75vw', '640px': '90vw' }"
+  [style]="{ width: '400px' }"
+  appendTo="body"
+  ><div class="confirm-container">
+    <div class="confirm-content">
+      <mat-icon class="warning-icon">report_problem</mat-icon>
+      <h3>คุณแน่ใจหรือไม่?</h3>
+      <p>
+        ต้องการลบข้อมูล <strong>โต๊ะ {{ selectedTable?.table_Number }}</strong> ใช่หรือไม่?
+      </p>
+      <span>การดำเนินการนี้ไม่สามารถย้อนกลับได้</span>
+    </div>
+    <div class="dialog-footer">
+      <button class="btn-cancel" (click)="displayconfirm = false">ยกเลิก</button>
+      <button class="btn-save" (click)="deleteTable(selectedTable?.table_id)">ยืนยัน</button>
+    </div>
+  </div>
+</p-dialog>

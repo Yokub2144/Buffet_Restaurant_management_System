@@ -19,6 +19,7 @@ import { ManageTables } from './features/manager/manage-tables/manage-tables';
 import { DetailEmployee } from './features/manager/detail-employee/detail-employee';
 import { ManageMenu } from './features/manager/manage-menu/manage-menu';
 import { CheckinScanner } from './features/checkin-scanner/checkin-scanner';
+import { EditDeleteTables } from './features/manager/manage-tables/edit-delete-tables/edit-delete-tables';
 
 export const routes: Routes = [
   { path: '', component: Index },
@@ -54,6 +55,12 @@ export const routes: Routes = [
   {
     path: 'ManageTable',
     component: ManageTables,
+    canActivate: [employeeGuard],
+    data: { route: ['เจ้าของร้าน'] },
+  },
+  {
+    path: 'EditDeleteTable',
+    component: EditDeleteTables,
     canActivate: [employeeGuard],
     data: { route: ['เจ้าของร้าน'] },
   },

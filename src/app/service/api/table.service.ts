@@ -50,4 +50,16 @@ export class TableService {
     const response = this.http.put<any>(url, payload);
     return response;
   }
+  public deleteTable(table_id: number) {
+    const url = this.constants.API_ENDPOINT + `/Manager/deleteTable?tableId=${table_id}`;
+    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+    console.log(url);
+    const httpOptions = {
+      headers: new HttpHeaders({
+        Authorization: `Bearer ${token}`,
+      }),
+    };
+    const response = this.http.delete<any>(url, httpOptions);
+    return response;
+  }
 }

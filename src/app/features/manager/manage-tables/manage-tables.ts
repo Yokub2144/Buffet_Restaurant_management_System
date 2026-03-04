@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { MenuManager } from '../../../components/menu-bar/menu-manager/menu-manager';
 import { TableService } from '../../../service/api/table.service';
 import { SignalrService } from '../../../service/api/signalr.service';
-import { MatIcon } from '@angular/material/icon';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { lastValueFrom } from 'rxjs';
@@ -16,7 +15,7 @@ import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 @Component({
   selector: 'app-manage-tables',
-  imports: [MenuManager, CommonModule, MatIcon, MatIconModule, FormsModule, Toast, DialogModule],
+  imports: [MenuManager, CommonModule, MatIconModule, FormsModule, Toast, DialogModule],
   templateUrl: './manage-tables.html',
   styleUrl: './manage-tables.scss',
 })
@@ -89,6 +88,9 @@ export class ManageTables implements OnInit {
         detail: errorMessage,
       });
     }
+  }
+  gotoEditDleteTable() {
+    this.router.navigate(['/EditDeleteTable']);
   }
   addTable() {
     this.toggleAddTableModal(true);
