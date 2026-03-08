@@ -1,0 +1,257 @@
+$primary-orange: #d97706;
+.booking-management-container {
+  background-color: #000; /* พื้นหลังดำสนิทตามรูป */
+  min-height: 100vh;
+  padding: 1.5rem;
+  color: #fff;
+  font-family: 'Kanit', sans-serif;
+
+  .header-section {
+    margin-bottom: 1.5rem;
+    .header-title {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+
+      .back-btn {
+        background: transparent;
+        border: 1px solid $primary-orange;
+        color: $primary-orange;
+        padding: 0.4rem 1rem;
+        border-radius: 4px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.9rem;
+        &:hover {
+          background: rgba($primary-orange, 0.1);
+        }
+      }
+
+      h3 {
+        margin: 0;
+        font-size: 1.4rem;
+        font-weight: 400;
+      }
+    }
+  }
+
+  .summary-card {
+    background-color: #0a0a0a;
+    border-radius: 12px;
+    padding: 1.2rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+
+    .table-count {
+      display: flex;
+      gap: 1rem;
+      font-size: 1.2rem;
+      .count-val {
+        font-weight: bold;
+      }
+    }
+
+    .btn-add {
+      background-color: #1a5d1a; /* สีเขียวตามรูป */
+      color: white;
+      border: none;
+      padding: 8px 40px;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      &:hover {
+        opacity: 0.9;
+      }
+    }
+  }
+
+  .list-label {
+    color: #888;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+  }
+
+  .table-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+
+    .table-row {
+      background-color: #0a0a0a; /* แถบรายการสีเทาเข้ม */
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: transform 0.2s;
+
+      &:hover {
+        background-color: #111;
+      }
+
+      .table-name {
+        font-size: 1.3rem;
+        font-weight: 400;
+      }
+
+      .action-buttons {
+        display: flex;
+        gap: 0.8rem;
+
+        button {
+          display: flex;
+          align-items: center;
+          gap: 5px;
+          padding: 6px 14px;
+          border-radius: 8px;
+          border: none;
+          cursor: pointer;
+          font-size: 0.9rem;
+          mat-icon {
+            font-size: 18px;
+            width: 18px;
+            height: 18px;
+          }
+        }
+
+        .btn-edit {
+          background-color: #444; /* สีเทาปุ่มแก้ไข */
+          color: #fff;
+        }
+
+        .btn-delete {
+          background-color: #7a1a1a; /* สีแดงปุ่มลบ */
+          color: #fff;
+        }
+      }
+    }
+  }
+}
+
+::ng-deep .custom-dark-dialog {
+  &.p-dialog {
+    background: #111111 !important;
+    border-radius: 30px !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  .p-dialog-header {
+    background: transparent !important;
+    padding: 1rem 1rem 0.5rem 1rem !important;
+    border: none !important;
+
+    .p-dialog-title {
+      color: white !important;
+      font-size: 1.4rem;
+      font-weight: bold;
+    }
+
+    .p-dialog-header-close-icon {
+      color: white !important;
+      font-size: 1.2rem;
+      color: white !important;
+      &:hover {
+        background: rgba(255, 255, 255, 0.1) !important;
+      }
+    }
+  }
+
+  .p-dialog-content {
+    background: transparent !important;
+    color: white !important;
+    border: none !important;
+  }
+}
+.confirm-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .confirm-content {
+    text-align: center;
+    margin-bottom: 2rem;
+
+    .warning-icon {
+      font-size: 60px;
+      width: 60px;
+      height: 60px;
+      color: #ff4d4d; /* สีแดงแจ้งเตือน */
+      margin-bottom: 1rem;
+    }
+
+    h3 {
+      color: white;
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      color: #ccc;
+      font-size: 1.1rem;
+      margin-bottom: 0.2rem;
+
+      strong {
+        color: #916400; /* เน้นเลขโต๊ะด้วยสีทอง */
+      }
+    }
+
+    span {
+      color: #777;
+      font-size: 0.85rem;
+    }
+  }
+}
+.dialog-footer {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+
+  button {
+    flex: 1;
+    padding: 14px;
+    border-radius: 12px;
+    border: none;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: filter 0.2s;
+
+    &:active {
+      filter: brightness(0.8);
+    }
+  }
+
+  .btn-cancel {
+    background: #333333 !important;
+    color: white !important;
+    &:hover {
+      background: #505050 !important;
+    }
+  }
+
+  .btn-save {
+    background: #5a0000 !important;
+    color: white !important;
+    &:hover {
+      background: #cb0000 !important;
+    }
+  }
+}
+@media (max-width: 600px) {
+  .table-row {
+    flex-direction: row;
+    padding: 0.8rem 1rem !important;
+
+    .action-buttons span {
+      display: none;
+    } /* ซ่อนตัวอักษร เหลือแค่ icon ในมือถือ */
+    .table-name {
+      font-size: 1.1rem !important;
+    }
+  }
+}

@@ -18,7 +18,7 @@
           <span class="count-number">{{ totalTable }}</span>
         </div>
 
-        <button class="status-btn" routerLink="/BookingStatus">
+        <button class="status-btn" (click)="gotoEditDleteTable()">
           <mat-icon>edit</mat-icon>
           <span>จัดการโต๊ะ</span>
         </button>
@@ -107,19 +107,6 @@
         (click)="downloadTablePDF()"
       >
         บันทึกรูป
-      </button>
-      <button
-        style="
-          padding: 12px;
-          border-radius: 12px;
-          background: #333;
-          color: white;
-          border: none;
-          cursor: pointer;
-        "
-        (click)="displayShowQr = false"
-      >
-        ปิด
       </button>
     </div>
   </div>
