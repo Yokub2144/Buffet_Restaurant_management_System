@@ -14,10 +14,6 @@ export class BookingService {
     return this.http.post(`${this.constants.API_ENDPOINT}/Booking/create`, payload);
   }
 
-  mockPayment(bookingId: number): Observable<any> {
-    return this.http.post(`${this.constants.API_ENDPOINT}/Booking/mock-payment/${bookingId}`, {});
-  }
-
   getBooking(id: number): Observable<any> {
     return this.http.get(`${this.constants.API_ENDPOINT}/Booking/${id}`);
   }
@@ -31,5 +27,10 @@ export class BookingService {
   }
   updateBooking(bookingId: number, data: any) {
     return this.http.put(`${this.constants.API_ENDPOINT}/Booking/update/${bookingId}`, data);
+  }
+  updateBookingStatus(bookingId: number, status: string): Observable<any> {
+    return this.http.patch(`${this.constants.API_ENDPOINT}/Booking/${bookingId}/status`, {
+      booking_Status: status,
+    });
   }
 }
