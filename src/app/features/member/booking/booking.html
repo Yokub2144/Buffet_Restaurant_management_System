@@ -147,54 +147,47 @@
           <div class="pay-qr-inner">
             <ng-container *ngIf="promptPayQrUrl; else qrLoading">
               <img [src]="promptPayQrUrl" alt="QR PromptPay" class="pay-qr-img" />
+
+              <div class="auto-check-badge">
+                <div class="dot-pulse"></div>
+                <span>กำลังรอการชำระเงิน...</span>
+              </div>
             </ng-container>
 
             <ng-template #qrLoading>
               <div class="pay-qr-skeleton">
+                <div class="skeleton-spinner"></div>
                 <span>กำลังสร้าง QR...</span>
               </div>
             </ng-template>
           </div>
-          <p class="pay-scan-label">สแกนด้วยแอปธนาคารของท่าน</p>
-        </div>
 
-        <!-- Steps -->
-        <div class="pay-steps">
-          <div class="pay-step">
-            <div class="step-circle">1</div>
-            <span>เปิดแอปธนาคาร</span>
-          </div>
-          <div class="step-line"></div>
-          <div class="pay-step">
-            <div class="step-circle">2</div>
-            <span>สแกน QR</span>
-          </div>
-          <div class="step-line"></div>
-          <div class="pay-step">
-            <div class="step-circle">3</div>
-            <span>กดยืนยัน</span>
+          <div class="pay-status-toast">
+            <div class="loader-line"></div>
+            <p class="pay-scan-label">กรุณาสแกน QR และรอระบบยืนยันสักครู่</p>
           </div>
         </div>
 
-        <!-- Confirm button -->
         <div class="pay-action">
+          <div class="auto-verify-info">
+            <svg viewBox="0 0 24 24" class="info-icon">
+              <path
+                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
+                fill="currentColor"
+              />
+            </svg>
+            <span>ระบบจะพาคุณไปยังหน้าถัดไปอัตโนมัติเมื่อโอนสำเร็จ</span>
+          </div>
+
           <button
-            class="pay-btn"
+            class="pay-btn secondary"
             [class.pay-btn--loading]="isVerifying"
             [disabled]="isVerifying"
             (click)="confirmPayment()"
           >
-            <ng-container *ngIf="!isVerifying">
-              <span class="pay-btn-icon">✓</span>
-              <span>ชำระเงินแล้ว กดยืนยัน</span>
-            </ng-container>
-
-            <ng-container *ngIf="isVerifying">
-              <span class="pay-btn-spinner"></span>
-              <span>กำลังตรวจสอบ...</span>
-            </ng-container>
+            <span *ngIf="!isVerifying">ตรวจสอบยอดเงินด้วยตนเอง</span>
+            <span *ngIf="isVerifying" class="pay-btn-spinner"></span>
           </button>
-          <p class="pay-note">กดหลังโอนเงินสำเร็จแล้วเท่านั้น • QR หมดอายุใน 10 นาที</p>
         </div>
       </div>
     </div>
