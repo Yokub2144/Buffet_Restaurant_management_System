@@ -351,7 +351,6 @@ export class Booking implements OnInit, OnDestroy {
         if (result.status === 'pending') {
           alert('ยังไม่ได้ชำระเงิน กรุณาชำระเงินก่อน');
         } else if (result.status === 'success') {
-<<<<<<< HEAD
           // this.bookingId = this.pendingBookingId;
           this.stopPolling();
           this.handlePaymentSuccess();
@@ -378,21 +377,6 @@ export class Booking implements OnInit, OnDestroy {
               });
             },
           });
-=======
-          this.bookingId = this.pendingBookingId;
-          this.qrUrl = res.checkin_qr_url || '';
-          this.showPaymentModal = false;
-          this.paymentSuccess = true;
-          this.showWaitingModal = true;
-          this.pendingBookingId = null;
-          this.promptPayQrUrl = '';
-          this.transactionId = '';
-          this.selectedTables = [];
-          this.bookingForm = { NumAdults: 0, NumChildren: 0, BookingDate: '', BookingTime: '' };
-          this.loadTables();
-        } else {
-          alert('❌ ยังไม่พบการชำระเงิน\nกรุณาสแกนจ่ายก่อนกดยืนยันครับ');
->>>>>>> cace473e025fefa22553dba39a50522397f16ee7
         }
       },
       error: (err) => {
