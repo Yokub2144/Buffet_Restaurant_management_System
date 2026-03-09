@@ -11,7 +11,7 @@
           *ngFor="let table of tables"
           class="table-item"
           [ngClass]="{
-            selected: isSelected(table),
+            selected: isSelected(table) && table.table_Status === 'ว่าง',
             'status-free': table.table_Status === 'ว่าง' && !isSelected(table),
             'status-reserved': table.table_Status === 'ติดจอง',
             'status-occupied': table.table_Status === 'ไม่ว่าง',
@@ -148,9 +148,9 @@
             <ng-container *ngIf="promptPayQrUrl; else qrLoading">
               <img [src]="promptPayQrUrl" alt="QR PromptPay" class="pay-qr-img" />
             </ng-container>
+
             <ng-template #qrLoading>
               <div class="pay-qr-skeleton">
-                <div class="pay-qr-spin"></div>
                 <span>กำลังสร้าง QR...</span>
               </div>
             </ng-template>
@@ -182,12 +182,13 @@
             class="pay-btn"
             [class.pay-btn--loading]="isVerifying"
             [disabled]="isVerifying"
-            (click)="confirmPaymentManual()"
+            (click)="confirmPayment()"
           >
             <ng-container *ngIf="!isVerifying">
               <span class="pay-btn-icon">✓</span>
               <span>ชำระเงินแล้ว กดยืนยัน</span>
             </ng-container>
+
             <ng-container *ngIf="isVerifying">
               <span class="pay-btn-spinner"></span>
               <span>กำลังตรวจสอบ...</span>

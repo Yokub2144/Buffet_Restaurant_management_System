@@ -12,13 +12,14 @@ export class PaymentService {
     private constants: Constants,
   ) {}
 
-  initiatePayment(bookingId: number): Observable<any> {
-    const url = `${this.constants.API_ENDPOINT}/Payment/initiate/${bookingId}`;
-    return this.http.post(url, {});
+  CreateQr(bookingId: number): Observable<any> {
+    const url = `${this.constants.API_ENDPOINT}/Payment/generate-qr`;
+    return this.http.post(url, { bookingId: bookingId });
   }
-
-  confirmPayment(bookingId: number, transactionId: string): Observable<any> {
-    const url = `${this.constants.API_ENDPOINT}/Payment/confirm/${bookingId}`;
-    return this.http.post(url, { transactionId });
+  checkPaymentStatus(transactionId: string): Observable<any> {
+    const url = `${this.constants.API_ENDPOINT}/Payment/check-status`;
+    return this.http.post(url, JSON.stringify(transactionId), {
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
 }

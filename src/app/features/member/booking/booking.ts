@@ -199,10 +199,9 @@ export class Booking implements OnInit, OnDestroy {
       alert('กรุณาระบุวันและเวลาจอง');
       return;
     }
-
     const adults = Number(this.bookingForm.NumAdults) || 0;
     const children = Number(this.bookingForm.NumChildren) || 0;
-    if (adults + children <= 0) {
+    if (adults <= 0 && children <= 0) {
       alert('กรุณาระบุจำนวนผู้เข้าใช้บริการอย่างน้อย 1 คน');
       return;
     }
@@ -229,48 +228,66 @@ export class Booking implements OnInit, OnDestroy {
       child_count: children,
     };
 
+    //  สร้างการจองก่อน
     this.bookingService.createBooking(createPayload).subscribe({
       next: (res: any) => {
         this.pendingBookingId = res.booking_id;
-        this.bookedTableNames = res.tables;
+        this.bookedTableNames = res.tables || this.selectedTables.map((t) => t.table_Number);
         this.depositAmount = res.deposit_amount;
 
-        this.paymentService.initiatePayment(res.booking_id).subscribe({
-          next: (payRes: any) => {
+        //  เมื่อจองเร็จ เรียกเจน QR Pay ทันที
+        this.generatePaymentQr(res.booking_id);
+      },
+      error: (err) => {
+        this.isLoading = false;
+        alert('การจองล้มเหลว: ' + (err.error?.message || 'โปรดลองอีกครั้ง'));
+      },
+    });
+  }
+  // ฟังก์ชันสำหรับเจน QR
+  generatePaymentQr(bookingId: number) {
+    this.paymentService.CreateQr(bookingId).subscribe({
+      next: (res: any) => {
+        // ตรวจสอบว่ามีข้อมูลส่งมาไหม
+        if (res && res.qr_data) {
+          try {
+            //  แปลง String ใน qr_data ให้เป็น Object
+            const parsedData = JSON.parse(res.qr_data);
+            this.promptPayQrUrl = parsedData.data?.qr_url || '';
+            this.transactionId = res.transaction_id;
+            this.depositAmount = res.amount;
             this.isLoading = false;
-            const qrData = typeof payRes.qr === 'string' ? JSON.parse(payRes.qr) : payRes.qr;
-            this.promptPayQrUrl = qrData?.data?.qr_url || '';
-            this.transactionId = (qrData?.data?.transactionId || '').trim();
             this.showBookingModal = false;
             this.showPaymentModal = true;
-          },
-          error: (err: any) => {
+          } catch (e) {
+            console.error('Parsing error:', e);
+            alert('ข้อมูล QR Code ผิดพลาด');
             this.isLoading = false;
-            alert('ขอ QR ไม่สำเร็จ: ' + (err.error?.message || 'กรุณาลองใหม่'));
-          },
-        });
-      },
-      error: (err: any) => {
-        this.isLoading = false;
-        if (err.status === 409) {
-          alert('โต๊ะที่เลือกไม่ว่างแล้ว กรุณาเลือกใหม่');
-          this.showBookingModal = false;
-          this.loadTables();
-        } else {
-          alert('สร้างการจองไม่สำเร็จ: ' + (err.error?.message || 'กรุณาลองใหม่'));
+          }
         }
+      },
+      error: (err) => {
+        this.isLoading = false;
+        alert('ไม่สามารถสร้าง QR Code ได้');
       },
     });
   }
 
-  confirmPaymentManual() {
-    if (!this.pendingBookingId || !this.transactionId) return;
+  confirmPayment() {
+    if (!this.transactionId) {
+      alert('ไม่พบข้อมูล Transaction');
+      return;
+    }
+
     this.isVerifying = true;
 
-    this.paymentService.confirmPayment(this.pendingBookingId, this.transactionId).subscribe({
-      next: (res: any) => {
+    this.paymentService.checkPaymentStatus(this.transactionId).subscribe({
+      next: (result: any) => {
         this.isVerifying = false;
-        if (res.paid === true) {
+
+        if (result.status === 'pending') {
+          alert('ยังไม่ได้ชำระเงิน กรุณาชำระเงินก่อน');
+        } else if (result.status === 'success') {
           this.bookingId = this.pendingBookingId;
           this.qrUrl = res.checkin_qr_url || '';
           this.showPaymentModal = false;
@@ -283,13 +300,13 @@ export class Booking implements OnInit, OnDestroy {
           this.bookingForm = { NumAdults: 0, NumChildren: 0, BookingDate: '', BookingTime: '' };
           this.loadTables();
         } else {
-          console.log('res.paid', res.paid);
           alert('❌ ยังไม่พบการชำระเงิน\nกรุณาสแกนจ่ายก่อนกดยืนยันครับ');
         }
       },
-      error: (err: any) => {
+      error: (err) => {
         this.isVerifying = false;
-        alert('เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง');
+        console.error(err);
+        alert('เกิดข้อผิดพลาดในการตรวจสอบสถานะ');
       },
     });
   }
