@@ -47,8 +47,8 @@
   [breakpoints]="{ '960px': '75vw', '640px': '90vw' }"
   [style]="{ width: '400px' }"
   appendTo="body"
-  ><div class="confirm-container">
-    <div class="confirm-content">
+  ><div class="container">
+    <div class="content">
       <mat-icon class="warning-icon">report_problem</mat-icon>
       <h3>คุณแน่ใจหรือไม่?</h3>
       <p>
@@ -59,6 +59,35 @@
     <div class="dialog-footer">
       <button class="btn-cancel" (click)="displayconfirm = false">ยกเลิก</button>
       <button class="btn-save" (click)="deleteTable(selectedTable?.table_id)">ยืนยัน</button>
+    </div>
+  </div>
+</p-dialog>
+
+<p-dialog
+  header="แก้ไขเลขโต๊ะ"
+  [(visible)]="displayEditTable"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  styleClass="custom-dark-dialog edit-table-dialog"
+  [breakpoints]="{ '960px': '75vw', '640px': '85vw' }"
+  [style]="{ width: '350px' }"
+  appendTo="body"
+>
+  <div class="edit-container">
+    <div class="content-body">
+      <label class="input-label">ระบุเลขโต๊ะใหม่</label>
+      <div class="input-wrapper">
+        <mat-icon>table_restaurant</mat-icon>
+        <input type="text" placeholder="ตัวอย่าง: A10" [(ngModel)]="tableNumber" autofocus />
+      </div>
+      <small class="helper-text">ระบุตัวอักษรหรือตัวเลขเพื่อระบุตัวตนของโต๊ะ</small>
+    </div>
+
+    <div class="dialog-footer">
+      <button class="btn-save" (click)="saveTableChanges(selectedTable?.table_id)">
+        บันทึกการแก้ไข
+      </button>
     </div>
   </div>
 </p-dialog>

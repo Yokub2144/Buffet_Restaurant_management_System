@@ -1,16 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { MenuManager } from '../../../../components/menu-bar/menu-manager/menu-manager';
 import { MatIconModule } from '@angular/material/icon';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Table } from '../../../../models/table.model';
 import { MessageService } from 'primeng/api';
 import { Toast } from 'primeng/toast';
 import { TableService } from '../../../../service/api/table.service';
 import { Router } from '@angular/router';
 import { DialogModule } from 'primeng/dialog';
+import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-edit-delete-tables',
-  imports: [MenuManager, MatIconModule, CommonModule, Toast, DialogModule],
+  imports: [MenuManager, MatIconModule, CommonModule, Toast, DialogModule, FormsModule],
   templateUrl: './edit-delete-tables.html',
   styleUrl: './edit-delete-tables.scss',
 })
@@ -18,15 +19,19 @@ export class EditDeleteTables implements OnInit {
   tables: Table[] = [];
   totalTable: number = 0;
   displayconfirm: boolean = false;
+  displayEditTable: boolean = false;
+  tableNumber: string = '';
   selectedTable: any;
   constructor(
     private tableService: TableService,
     private route: Router,
     private messageService: MessageService,
+    private location: Location,
   ) {}
   ngOnInit(): void {
     this.loadTables();
   }
+  // โหลดข้อมูลโต๊ะทั
   loadTables() {
     console.log('โต๊ะทั้งหมด' + this.totalTable);
     this.tableService.getAlltables().subscribe({
@@ -41,32 +46,66 @@ export class EditDeleteTables implements OnInit {
       },
     });
   }
-  goBack() {}
+  goBack() {
+    this.location.back();
+  }
   addTable() {}
-
-  editTable(table_id: number) {}
-
+  // แก้ไขโต๊ะ
+  editTable(table_id: number) {
+    this.selectedTable = this.tables.find((t) => t.table_id === table_id);
+    if (this.selectedTable) {
+      this.displayEditTable = true;
+    }
+  }
+  // ยืนยันการลบโต๊ะ
   confirm(table_id: number) {
     this.selectedTable = this.tables.find((t) => t.table_id === table_id);
     if (this.selectedTable) {
       this.displayconfirm = true;
     }
   }
+
+  //ลบโต๊ะ
   deleteTable(table_id: number) {
     this.tableService.deleteTable(table_id).subscribe({
       next: (res) => {
         if (res) {
           this.messageService.add({
             severity: 'success',
-            summary: 'Deleted Successfully', // หัวข้อ
-            detail: 'ลบข้อมูลโต๊ะเรียบร้อยแล้ว', // รายละเอียด
-            life: 3000, // ให้หายไปเองใน 3 วินาที
+            summary: 'Deleted Successfully',
+            detail: 'ลบข้อมูลโต๊ะเรียบร้อยแล้ว',
+            life: 3000,
           });
           this.ngOnInit();
         }
       },
       error: (err) => {
         const errorMessage = err?.error?.message || 'เกิดข้อผิดพลาดในการสมัครสมาชิก';
+        this.messageService.add({
+          severity: 'error',
+          summary: 'เกิดข้อผิดพลาด',
+          detail: errorMessage,
+        });
+      },
+    });
+  }
+  //บันทึกการแก้ไขโต๊ะ
+  saveTableChanges(table_id: number) {
+    this.tableService.updateTable(table_id, this.tableNumber).subscribe({
+      next: (res) => {
+        if (res) {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Updated Successfully',
+            detail: 'อัปเดตข้อมูลโต๊ะเรียบร้อยแล้ว',
+            life: 3000,
+          });
+          this.ngOnInit();
+          this.displayEditTable = false;
+        }
+      },
+      error: (err) => {
+        const errorMessage = err?.error?.message || 'เกิดข้อผิดพลาดในการอัปเดตข้อมูล';
         this.messageService.add({
           severity: 'error',
           summary: 'เกิดข้อผิดพลาด',

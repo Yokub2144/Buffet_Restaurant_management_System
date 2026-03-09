@@ -283,6 +283,7 @@ export class Booking implements OnInit, OnDestroy {
           this.bookingForm = { NumAdults: 0, NumChildren: 0, BookingDate: '', BookingTime: '' };
           this.loadTables();
         } else {
+          console.log('res.paid', res.paid);
           alert('❌ ยังไม่พบการชำระเงิน\nกรุณาสแกนจ่ายก่อนกดยืนยันครับ');
         }
       },
