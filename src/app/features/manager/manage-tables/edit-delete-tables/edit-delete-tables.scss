@@ -167,12 +167,12 @@ $primary-orange: #d97706;
     border: none !important;
   }
 }
-.confirm-container {
+.container {
   display: flex;
   flex-direction: column;
   align-items: center;
 
-  .confirm-content {
+  .content {
     text-align: center;
     margin-bottom: 2rem;
 
@@ -239,6 +239,110 @@ $primary-orange: #d97706;
     color: white !important;
     &:hover {
       background: #cb0000 !important;
+    }
+  }
+}
+::ng-deep .edit-table-dialog {
+  .p-dialog-header {
+    padding: 1.5rem 1.5rem 0.5rem 1.5rem !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+
+    .p-dialog-title {
+      font-size: 1.2rem !important;
+      color: #c9c9c9 !important; /* สีทองตามธีมหลัก */
+    }
+  }
+
+  .edit-container {
+    padding-top: 1rem;
+
+    .content-body {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+
+      .input-label {
+        color: #888;
+        font-size: 0.9rem;
+        margin-left: 4px;
+      }
+
+      .input-wrapper {
+        display: flex;
+        align-items: center;
+        background: #1a1a1a; /* พื้นหลัง Input ให้ต่างจากพื้น Dialog */
+        border: 1px solid #333;
+        border-radius: 12px;
+        padding: 8px 15px;
+        transition: border-color 0.3s;
+
+        mat-icon {
+          color: #916400;
+          margin-right: 10px;
+          font-size: 20px;
+          width: 20px;
+          height: 20px;
+        }
+
+        input {
+          background: transparent;
+          border: none;
+          color: white;
+          width: 100%;
+          font-size: 1.1rem;
+          outline: none;
+
+          &::placeholder {
+            color: #444;
+          }
+        }
+
+        &:focus-within {
+          border-color: #916400; /* เรืองแสงสีทองเมื่อคลิก */
+          box-shadow: 0 0 8px rgba(145, 100, 0, 0.2);
+        }
+      }
+
+      .helper-text {
+        color: #555;
+        font-size: 0.75rem;
+        margin-top: 4px;
+        margin-left: 4px;
+      }
+    }
+
+    .dialog-footer {
+      display: flex;
+      gap: 10px;
+      margin-top: 2rem;
+
+      button {
+        flex: 1;
+        padding: 12px;
+        border-radius: 10px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        border: none;
+      }
+
+      .btn-cancel {
+        background: #222;
+        color: #888;
+        &:hover {
+          background: #333;
+          color: white;
+        }
+      }
+
+      .btn-save {
+        background: #916400; /* สีทองเข้ม */
+        color: white;
+        &:hover {
+          background: #a37100;
+          transform: translateY(-1px);
+        }
+      }
     }
   }
 }

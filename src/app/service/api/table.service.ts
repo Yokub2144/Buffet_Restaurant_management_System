@@ -62,4 +62,20 @@ export class TableService {
     const response = this.http.delete<any>(url, httpOptions);
     return response;
   }
+  public updateTable(table_id: number, tableNumber: string) {
+    const url = this.constants.API_ENDPOINT + '/Manager/updateTables';
+    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+    console.log(url);
+    const httpOptions = {
+      headers: new HttpHeaders({
+        Authorization: `Bearer ${token}`,
+      }),
+    };
+    const payload = {
+      table_id: table_id,
+      table_Number: tableNumber,
+    };
+    const response = this.http.put<any>(url, payload, httpOptions);
+    return response;
+  }
 }
