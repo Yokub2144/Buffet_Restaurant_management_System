@@ -218,11 +218,7 @@ export class Booking implements OnInit, OnDestroy {
       return;
     }
 
-    const today = new Date().toISOString().split('T')[0];
-    if (this.bookingForm.BookingDate === today && this.bookingForm.BookingTime < this.minTime) {
-      alert('กรุณาเลือกเวลาที่ยังไม่ผ่านมาแล้ว');
-      return;
-    }
+    const combinedDateTime = `${this.bookingForm.BookingDate}T${this.bookingForm.BookingTime}:00`;
 
     const member = this.authService.getMember();
     if (!member) {
@@ -234,8 +230,7 @@ export class Booking implements OnInit, OnDestroy {
     const createPayload = {
       member_id: Number(member.id),
       table_ids: this.selectedTables.map((t) => t.table_id),
-      booking_date: this.bookingForm.BookingDate,
-      booking_time: this.bookingForm.BookingTime,
+      booking_datetime: combinedDateTime,
       adult_count: adults,
       child_count: children,
     };
