@@ -349,29 +349,6 @@ export class Booking implements OnInit, OnDestroy {
           // this.bookingId = this.pendingBookingId;
           this.stopPolling();
           this.handlePaymentSuccess();
-          // 1. อัพเดตสถานะ Booking เป็น Confirmed + ปรับโต๊ะเป็นติดจอง
-          this.bookingService.updateBookingStatus(this.pendingBookingId!, 'Confirmed').subscribe({
-            next: (res: any) => {
-              // 2. ดึง QR เช็คอิน
-              this.bookingService.getBooking(this.pendingBookingId!).subscribe({
-                next: (booking: any) => {
-                  this.qrUrl = res.qr_url || '';
-                  this.paymentSuccess = true;
-                  this.showPaymentModal = false;
-                  this.showWaitingModal = true;
-                  this.bookingId = this.pendingBookingId;
-                  this.selectedTables = [];
-                  this.bookingForm = {
-                    NumAdults: 0,
-                    NumChildren: 0,
-                    BookingDate: '',
-                    BookingTime: '',
-                  };
-                  this.loadTables();
-                },
-              });
-            },
-          });
         }
       },
       error: (err) => {
