@@ -289,7 +289,7 @@ export class Booking implements OnInit, OnDestroy {
           alert('ยังไม่ได้ชำระเงิน กรุณาชำระเงินก่อน');
         } else if (result.status === 'success') {
           this.bookingId = this.pendingBookingId;
-          this.qrUrl = res.checkin_qr_url || '';
+          this.qrUrl = result.checkin_qr_url || '';
           this.showPaymentModal = false;
           this.paymentSuccess = true;
           this.showWaitingModal = true;
