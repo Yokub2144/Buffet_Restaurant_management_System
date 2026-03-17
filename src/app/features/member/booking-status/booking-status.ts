@@ -12,6 +12,7 @@ interface BookingDetail {
   tableNumbers: string[];
   childCount: number;
   adultCount: number;
+
   date: string;
   time: string;
   status: string;
@@ -129,8 +130,8 @@ export class BookingStatus implements OnInit {
           tableNumbers: b.tables_Booked || [],
           childCount: b.child_Count || 0,
           adultCount: b.adult_Count || 0,
-          date: this.formatDate(b.booking_Date),
-          time: this.formatTime(b.booking_Time),
+          date: this.formatDate(b.booking_DateTime),
+          time: this.formatTime(b.booking_DateTime),
           status: this.mapStatus(b.booking_Status),
           qrUrl: b.qR_Url || b.qr_Url || b.QR_Url || this.loadQrFromStorage(b.booking_id),
           ConsoleLog: `Booking ID: ${b.booking_id}, QR URL: ${b.qR_Url || b.qr_Url || b.QR_Url}`,
@@ -160,19 +161,35 @@ export class BookingStatus implements OnInit {
     }
   }
 
-  formatDate(dateStr: string): string {
-    if (!dateStr) return '-';
-    const date = new Date(dateStr);
-    return date.toLocaleDateString('th-TH', {
-      year: 'numeric',
-      month: 'long',
+  formatDate(dateTimeStr: string): string {
+    if (!dateTimeStr || dateTimeStr.startsWith('0001')) return '-';
+
+    // สร้าง Object Date จาก String ที่ Backend ส่งมา
+    const dateObj = new Date(dateTimeStr);
+
+    // ตรวจสอบความถูกต้องของวันที่
+    if (isNaN(dateObj.getTime())) return '-';
+
+    return dateObj.toLocaleDateString('th-TH', {
       day: 'numeric',
+      month: 'long',
+      year: 'numeric',
     });
   }
+  formatTime(dateTimeStr: string): string {
+    if (!dateTimeStr || dateTimeStr.startsWith('0001')) return '-';
 
-  formatTime(timeStr: string): string {
-    if (!timeStr) return '-';
-    return timeStr.substring(0, 5);
+    const dateObj = new Date(dateTimeStr);
+
+    if (isNaN(dateObj.getTime())) return '-';
+
+    return (
+      dateObj.toLocaleTimeString('th-TH', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+      }) + ' น.'
+    );
   }
 
   mapStatus(status: string): string {

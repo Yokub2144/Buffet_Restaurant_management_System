@@ -55,6 +55,9 @@ export class Booking implements OnInit, OnDestroy {
   currentMinTime: string = '';
   timeSlots: string[] = [];
 
+  private pollingTimer: any;
+  private isPolling = false;
+
   constructor(
     private signalrService: SignalrService,
     private tableService: TableService,
@@ -75,7 +78,16 @@ export class Booking implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy() {}
+  ngOnDestroy() {
+    this.stopPolling();
+  }
+  stopPolling() {
+    if (this.pollingTimer) {
+      clearInterval(this.pollingTimer);
+      this.pollingTimer = null;
+    }
+    this.isPolling = false;
+  }
 
   setMinDate() {
     const now = new Date();
@@ -206,11 +218,7 @@ export class Booking implements OnInit, OnDestroy {
       return;
     }
 
-    const today = new Date().toISOString().split('T')[0];
-    if (this.bookingForm.BookingDate === today && this.bookingForm.BookingTime < this.minTime) {
-      alert('กรุณาเลือกเวลาที่ยังไม่ผ่านมาแล้ว');
-      return;
-    }
+    const combinedDateTime = `${this.bookingForm.BookingDate}T${this.bookingForm.BookingTime}:00`;
 
     const member = this.authService.getMember();
     if (!member) {
@@ -222,8 +230,7 @@ export class Booking implements OnInit, OnDestroy {
     const createPayload = {
       member_id: Number(member.id),
       table_ids: this.selectedTables.map((t) => t.table_id),
-      booking_date: this.bookingForm.BookingDate,
-      booking_time: this.bookingForm.BookingTime,
+      booking_datetime: combinedDateTime,
       adult_count: adults,
       child_count: children,
     };
@@ -233,7 +240,7 @@ export class Booking implements OnInit, OnDestroy {
       next: (res: any) => {
         this.pendingBookingId = res.booking_id;
         this.bookedTableNames = res.tables || this.selectedTables.map((t) => t.table_Number);
-        this.depositAmount = res.deposit_amount;
+        this.depositAmount = res.amount_pay;
 
         //  เมื่อจองเร็จ เรียกเจน QR Pay ทันที
         this.generatePaymentQr(res.booking_id);
@@ -255,10 +262,12 @@ export class Booking implements OnInit, OnDestroy {
             const parsedData = JSON.parse(res.qr_data);
             this.promptPayQrUrl = parsedData.data?.qr_url || '';
             this.transactionId = res.transaction_id;
-            this.depositAmount = res.amount;
+            this.depositAmount = res.amount_pay;
             this.isLoading = false;
             this.showBookingModal = false;
             this.showPaymentModal = true;
+
+            this.startAutoCheckStatus();
           } catch (e) {
             console.error('Parsing error:', e);
             alert('ข้อมูล QR Code ผิดพลาด');
@@ -269,6 +278,55 @@ export class Booking implements OnInit, OnDestroy {
       error: (err) => {
         this.isLoading = false;
         alert('ไม่สามารถสร้าง QR Code ได้');
+      },
+    });
+  }
+
+  startAutoCheckStatus() {
+    if (this.isPolling) return;
+    this.isPolling = true;
+
+    // ตั้งให้เช็คทุก 3 วินาที
+    this.pollingTimer = setInterval(() => {
+      if (!this.transactionId) return;
+
+      this.paymentService.checkPaymentStatus(this.transactionId).subscribe({
+        next: (result: any) => {
+          if (result.status === 'success') {
+            this.stopPolling();
+            this.handlePaymentSuccess();
+          }
+        },
+        error: (err) => {
+          console.error('Polling error:', err);
+        },
+      });
+    }, 3000);
+  }
+
+  handlePaymentSuccess() {
+    this.bookingId = this.pendingBookingId;
+
+    // อัพเดตสถานะ Booking เป็น Confirmed
+    this.bookingService.updateBookingStatus(this.pendingBookingId!, 'Confirmed').subscribe({
+      next: (res: any) => {
+        this.bookingService.getBooking(this.pendingBookingId!).subscribe({
+          next: (booking: any) => {
+            this.qrUrl = res.qr_url || '';
+            this.paymentSuccess = true;
+            this.showPaymentModal = false;
+            this.showWaitingModal = true;
+            this.bookingId = this.pendingBookingId;
+            this.selectedTables = [];
+            this.bookingForm = {
+              NumAdults: 0,
+              NumChildren: 0,
+              BookingDate: '',
+              BookingTime: '',
+            };
+            this.loadTables();
+          },
+        });
       },
     });
   }
@@ -288,19 +346,9 @@ export class Booking implements OnInit, OnDestroy {
         if (result.status === 'pending') {
           alert('ยังไม่ได้ชำระเงิน กรุณาชำระเงินก่อน');
         } else if (result.status === 'success') {
-          this.bookingId = this.pendingBookingId;
-          this.qrUrl = result.checkin_qr_url || '';
-          this.showPaymentModal = false;
-          this.paymentSuccess = true;
-          this.showWaitingModal = true;
-          this.pendingBookingId = null;
-          this.promptPayQrUrl = '';
-          this.transactionId = '';
-          this.selectedTables = [];
-          this.bookingForm = { NumAdults: 0, NumChildren: 0, BookingDate: '', BookingTime: '' };
-          this.loadTables();
-        } else {
-          alert('❌ ยังไม่พบการชำระเงิน\nกรุณาสแกนจ่ายก่อนกดยืนยันครับ');
+          // this.bookingId = this.pendingBookingId;
+          this.stopPolling();
+          this.handlePaymentSuccess();
         }
       },
       error: (err) => {
