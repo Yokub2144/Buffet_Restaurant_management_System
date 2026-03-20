@@ -198,13 +198,4 @@ export class ManageMenu implements OnInit {
       menu_Type: '',
     } as Menu;
   }
-
-  getImageUrl(imagePath: any): string {
-    if (!imagePath) return 'assets/Images/default-food.png';
-    const path = String(imagePath);
-    if (path.startsWith('http') || path.startsWith('https') || path.startsWith('data:image')) {
-      return path;
-    }
-    return 'assets/Images/product/' + path;
-  }
 }
