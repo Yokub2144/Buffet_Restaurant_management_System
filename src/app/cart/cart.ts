@@ -1,16 +1,16 @@
 import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
-import { HttpClientModule } from '@angular/common/http';
+import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
 import { ToastModule } from 'primeng/toast';
-import { MessageService } from 'primeng/api';
 import { CustomerNavbar } from '../components/menu-bar/customer-navbar/customer-navbar';
 import { CartService } from '../service/api/cart.service';
-
+import { TableService } from '../service/api/table.service';
 interface CartItem {
   id: number;
   menuId: number;
@@ -42,20 +42,31 @@ interface CartItem {
 export class Cart implements OnInit {
   cartItems: CartItem[] = [];
   currentCartId: number = 0;
-  tableId: number = 5; // โต๊ะ 5
-
+  tableNumber: string | null = null;
+  tableid: number = 0;
   constructor(
     private cartService: CartService,
     private messageService: MessageService,
+    private tableService: TableService,
   ) {}
 
   ngOnInit() {
     this.loadCart();
+    this.tableNumber = this.tableService.getTable();
   }
-
+  gettableid(tableNumber: string) {
+  this.tableService.getTableid(tableNumber).subscribe({
+    next: (id: number) => {
+      this.tableid = id;
+      console.log('ได้รหัสโต๊ะแล้ว:', this.tableid);
+    },
+    error: (err) => {
+      console.error('หา ID โต๊ะไม่เจอ:', err);
+    }
+  })}
   // 1. โหลดข้อมูลตะกร้าจาก DB
   loadCart() {
-    this.cartService.getCartItems(this.tableId).subscribe({
+    this.cartService.getCartItems(this.tableid).subscribe({
       next: (res: any) => {
         this.currentCartId = res.cartId;
 
@@ -112,7 +123,7 @@ export class Cart implements OnInit {
   // ฟังก์ชันกลางสำหรับยิง API บวก/ลบ
   updateCartQuantity(item: CartItem, change: number) {
     const payload = {
-      tableId: this.tableId,
+      tableId: this.tableid,
       menuId: item.menuId,
       quantity: change,
       booking_id: null,
