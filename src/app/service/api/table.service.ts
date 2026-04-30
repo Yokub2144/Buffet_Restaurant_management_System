@@ -1,6 +1,6 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Constants } from '../../config/contants';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Table } from '../../models/table.model';
 @Injectable({
   providedIn: 'root',
@@ -76,6 +76,11 @@ export class TableService {
       table_Number: tableNumber,
     };
     const response = this.http.put<any>(url, payload, httpOptions);
+    return response;
+  }
+  public getTableid(tableName: string){
+    const url = this.constants.API_ENDPOINT +`/Manager/getTableId?tableName=${tableName}`
+    const response = this.http.get<any>(url);
     return response;
   }
 }

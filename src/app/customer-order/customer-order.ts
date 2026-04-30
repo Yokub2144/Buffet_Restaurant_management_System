@@ -1,17 +1,17 @@
-import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { CarouselModule } from 'primeng/carousel';
-import { ButtonModule } from 'primeng/button';
-import { RippleModule } from 'primeng/ripple';
-import { DialogModule } from 'primeng/dialog';
-import { BadgeModule } from 'primeng/badge';
-import { ToastModule } from 'primeng/toast';
-import { MessageService } from 'primeng/api';
-import { CustomerNavbar } from '../components/menu-bar/customer-navbar/customer-navbar';
-import { Menu, MenuService } from '../service/api/menu.service';
-import { CartService } from '../service/api/cart.service';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { MessageService } from 'primeng/api';
+import { BadgeModule } from 'primeng/badge';
+import { ButtonModule } from 'primeng/button';
+import { CarouselModule } from 'primeng/carousel';
+import { DialogModule } from 'primeng/dialog';
+import { RippleModule } from 'primeng/ripple';
+import { ToastModule } from 'primeng/toast';
+import { CustomerNavbar } from '../components/menu-bar/customer-navbar/customer-navbar';
+import { CartService } from '../service/api/cart.service';
+import { Menu, MenuService } from '../service/api/menu.service';
 import { TableService } from '../service/api/table.service';
 
 interface CartItem extends Menu {
@@ -58,6 +58,8 @@ export class CustomerOrder implements OnInit {
 
   cart: CartItem[] = [];
 
+  tableid: number = 0;
+
   constructor(
     private messageService: MessageService,
     private menuService: MenuService,
@@ -98,6 +100,17 @@ export class CustomerOrder implements OnInit {
       },
     });
   }
+  gettableid(tableNumber: string) {
+  this.tableService.getTableid(tableNumber).subscribe({
+    next: (id: number) => {
+      this.tableid = id;
+      console.log('ได้รหัสโต๊ะแล้ว:', this.tableid);
+    },
+    error: (err) => {
+      console.error('หา ID โต๊ะไม่เจอ:', err);
+    }
+  });
+}
 
   onClicksmailPictures(index: number) {
     if (this.slideTimer) {
@@ -122,10 +135,10 @@ export class CustomerOrder implements OnInit {
 
   addToCart(item: Menu) {
     const payload = {
-      tableId: this.tableNumber,
-      booking_id: null,
-      menuId: item.menu_id,
-      quantity: 1,
+      TableId: this.tableid,
+      Booking_id: null,
+      MenuId: item.menu_id,
+      Quantity: 1,
     };
 
     this.cartService.addToCart(payload).subscribe({

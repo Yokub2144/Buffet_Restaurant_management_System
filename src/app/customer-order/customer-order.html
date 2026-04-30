@@ -68,9 +68,10 @@
               <button class="add-cart-btn" (click)="addToCart(item)" pRipple>
                 <i class="pi pi-shopping-cart"></i> เพิ่มไปยังรถเข็น
               </button>
-              <span class="price">
-                {{ item.price === 0 ? '0 ฿' : (item.price | number) + ' ฿' }}
+              <span class="price" *ngIf="item.menu_Type !== 'อยู่ในบุฟเฟ่ต์'">
+                {{ (item.price | number) + ' ฿' }}
               </span>
+
             </div>
           </div>
         </div>
