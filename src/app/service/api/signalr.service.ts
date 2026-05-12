@@ -11,6 +11,7 @@ export class SignalrService {
   }
   private hubConnection!: signalR.HubConnection;
   public tableStatus$ = new Subject<any>();
+  public resConfig$ = new Subject<any>();
   constructor(private constants: Constants) {
     this.initConnection();
   }
@@ -28,6 +29,11 @@ export class SignalrService {
     this.hubConnection.on('UpdateTable', (data) => {
       console.log('ข้อมูลที่ได้รับจาก Server:', data);
       this.tableStatus$.next(data);
+    });
+
+    this.hubConnection.on('UpdateResConfig', (data) => {
+      console.log('ข้อมูลที่ได้รับจาก Server:', data);
+      this.resConfig$.next(data);
     });
   }
 
