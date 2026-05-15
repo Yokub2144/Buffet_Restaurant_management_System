@@ -66,7 +66,7 @@ export class CustomerOrder implements OnInit {
     private cartService: CartService,
     private route: ActivatedRoute,
     private tableService: TableService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loadMenus();
@@ -76,6 +76,11 @@ export class CustomerOrder implements OnInit {
       this.tableNumber = urlTable;
     } else {
       this.tableNumber = this.tableService.getTable();
+    }
+
+    // 2. ถ้ามี tableNumber ให้เรียก gettableid ทันทีเพื่อให้ได้ tableid จริงๆ
+    if (this.tableNumber) {
+      this.gettableid(this.tableNumber);
     }
   }
 
@@ -101,16 +106,16 @@ export class CustomerOrder implements OnInit {
     });
   }
   gettableid(tableNumber: string) {
-  this.tableService.getTableid(tableNumber).subscribe({
-    next: (id: number) => {
-      this.tableid = id;
-      console.log('ได้รหัสโต๊ะแล้ว:', this.tableid);
-    },
-    error: (err) => {
-      console.error('หา ID โต๊ะไม่เจอ:', err);
-    }
-  });
-}
+    this.tableService.getTableid(tableNumber).subscribe({
+      next: (id: number) => {
+        this.tableid = id;
+        console.log('ได้รหัสโต๊ะแล้ว:', this.tableid);
+      },
+      error: (err) => {
+        console.error('หา ID โต๊ะไม่เจอ:', err);
+      }
+    });
+  }
 
   onClicksmailPictures(index: number) {
     if (this.slideTimer) {

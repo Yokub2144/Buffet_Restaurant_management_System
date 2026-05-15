@@ -36,7 +36,7 @@ interface CartItem {
     ToastModule,
     CustomerNavbar,
     DialogModule
-],
+  ],
   providers: [MessageService],
   templateUrl: './cart.html',
   styleUrl: './cart.scss',
@@ -56,14 +56,20 @@ export class Cart implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.loadCart();
     this.tableNumber = this.tableService.getTable();
+    if (this.tableNumber) {
+      this.gettableid(this.tableNumber);
+    } else {
+      console.warn('ไม่พบข้อมูลโต๊ะ');
+    }
+    
   }
   gettableid(tableNumber: string) {
     this.tableService.getTableid(tableNumber).subscribe({
       next: (id: number) => {
         this.tableid = id;
         console.log('ได้รหัสโต๊ะแล้ว:', this.tableid);
+        this.loadCart();
       },
       error: (err) => {
         console.error('หา ID โต๊ะไม่เจอ:', err);
@@ -72,6 +78,8 @@ export class Cart implements OnInit {
   }
   // 1. โหลดข้อมูลตะกร้าจาก DB
   loadCart() {
+    console.log(this.tableid)
+    if (this.tableid === 0) return;
     this.cartService.getCartItems(this.tableid).subscribe({
       next: (res: any) => {
         this.currentCartId = res.cartId;
@@ -132,13 +140,13 @@ export class Cart implements OnInit {
     // กรณีที่ลดจำนวนจนเป็น 0 หรือน้อยกว่า ให้แสดง Dialog ยืนยันก่อน
     if (newQuantity <= 0) {
       if (newQuantity <= 0) {
-    this.itemToDelete = item;
-    this.pendingChange = change;
-    this.displayConfirm = true; // เปิด p-dialog
-  } else {
-    // กรณีเพิ่มจำนวนปกติ หรือลดแต่ยังไม่ถึง 0
-    this.processUpdate(item, change);
-  }
+        this.itemToDelete = item;
+        this.pendingChange = change;
+        this.displayConfirm = true; // เปิด p-dialog
+      } else {
+        // กรณีเพิ่มจำนวนปกติ หรือลดแต่ยังไม่ถึง 0
+        this.processUpdate(item, change);
+      }
     } else {
       // กรณีเพิ่มจำนวนปกติ หรือลดแต่ยังไม่ถึง 0
       this.processUpdate(item, change);
@@ -146,11 +154,11 @@ export class Cart implements OnInit {
   }
 
   confirmDelete() {
-  if (this.itemToDelete) {
-    this.processUpdate(this.itemToDelete, this.pendingChange);
-    this.displayConfirm = false; // ปิด dialog
-    this.itemToDelete = null;
-  }
+    if (this.itemToDelete) {
+      this.processUpdate(this.itemToDelete, this.pendingChange);
+      this.displayConfirm = false; // ปิด dialog
+      this.itemToDelete = null;
+    }
   }
   private processUpdate(item: CartItem, change: number) {
     const previousQuantity = item.quantity;
