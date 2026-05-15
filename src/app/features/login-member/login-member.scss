@@ -144,3 +144,30 @@ $input-bg: #000000;
     padding: 25px 20px;
   }
 }
+:host ::ng-deep {
+  @media (max-width: 768px) {
+    .p-toast {
+      width: 90vw !important; /* บังคับให้กว้าง 90% ของหน้าจอ */
+      left: 5vw !important;  /* จัดให้อยู่กลาง (100 - 90 / 2) */
+      right: 5vw !important;
+      
+      .p-toast-message {
+        margin: 0 0 10px 0 !important; /* ลด Margin ของแต่ละกล่อง */
+        width: 100% !important;
+      }
+
+      .p-toast-message-content {
+        padding: 10px !important; /* ลด padding ข้างในลง */
+        font-size: 0.85rem !important; /* ลดขนาดตัวอักษรให้เล็กลง */
+        
+        .p-toast-icon {
+          font-size: 1.2rem !important; /* ลดขนาดไอคอน */
+        }
+        
+        .p-toast-summary {
+          font-weight: 600; /* ทำให้หัวข้อชัดขึ้น */
+        }
+      }
+    }
+  }
+}

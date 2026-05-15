@@ -1,5 +1,5 @@
+<p-toast [breakpoints]="{ '120px': { width: '50%' } }" />
 <app-customer-navbar>
-  <p-toast position="top-center"></p-toast>
   <div class="cart-page">
     <div class="background-wrapper">
       <img src="assets/Images/bg.png" alt="background" class="bg-img" />
@@ -16,67 +16,88 @@
         <div class="box-header">รายการเมนูอาหารที่สั่ง</div>
 
         <div class="cart-table">
-          <div class="table-head">
-            <div class="col-check center">
-              <div class="custom-checkbox-dummy checked">
-                <mat-icon>check</mat-icon>
+          <ng-container *ngIf="cartItems && cartItems.length > 0; else emptyCart">
+
+            <div class="table-head">
+              <div class="col-num center">#</div>
+              <div class="col-name">สินค้า</div>
+              <div class="col-price center">ราคาต่อชิ้น</div>
+              <div class="col-qty center">จำนวน</div>
+            </div>
+
+            <div class="table-row" *ngFor="let item of cartItems; let i = index">
+              <div class="col-num center">{{ i + 1 }}</div>
+              <div class="col-name">{{ item.name }}</div>
+
+              <div class="col-price center">
+                <ng-container *ngIf="item.price > 0; else noPrice">
+                  {{ item.price }} ฿
+                </ng-container>
+                <ng-template #noPrice>-</ng-template>
               </div>
-            </div>
-            <div class="col-name">สินค้า</div>
-            <div class="col-price center">ราคาต่อชิ้น</div>
-            <div class="col-qty center">จำนวน</div>
-            <div class="col-action center">แอคชั่น</div>
-          </div>
 
-          <div class="table-row" *ngFor="let item of cartItems">
-            <div class="col-check center">
-              <label class="custom-checkbox-container">
-                <input type="checkbox" [(ngModel)]="item.selected" />
-                <span class="checkmark">
-                  <mat-icon>check</mat-icon>
-                </span>
-              </label>
-            </div>
-            <div class="col-name">{{ item.name }}</div>
-            <div class="col-price center">{{ item.price }} ฿</div>
-
-            <div class="col-qty center">
-              <div class="qty-control">
-                <button class="qty-btn" (click)="decreaseQty(item)">
-                  <mat-icon>remove_circle</mat-icon>
-                </button>
-                <span class="qty-value">{{ item.quantity }}</span>
-                <button class="qty-btn" (click)="increaseQty(item)">
-                  <mat-icon>add_circle</mat-icon>
-                </button>
+              <div class="col-qty center">
+                <div class="qty-control">
+                  <button class="qty-btn" (click)="decreaseQty(item)">
+                    <mat-icon>remove_circle</mat-icon>
+                  </button>
+                  <span class="qty-value">{{ item.quantity }}</span>
+                  <button class="qty-btn" (click)="increaseQty(item)">
+                    <mat-icon>add_circle</mat-icon>
+                  </button>
+                </div>
               </div>
             </div>
 
-            <div class="col-action center">
-              <button class="delete-btn" (click)="removeItem(item.id)">ลบ</button>
-            </div>
-          </div>
-
-          <div class="table-footer">
-            <div class="footer-left">
-              <label class="custom-checkbox-container select-all">
-                <input type="checkbox" [(ngModel)]="isAllSelected" />
-                <span class="checkmark">
-                  <mat-icon>check</mat-icon>
+            <div class="table-footer">
+              <div class="footer-left">
+                <span class="summary-text">
+                  รวม ({{ totalSelectedItems }} รายการ)
+                  <span class="price" *ngIf="totalPrice > 0">{{ totalPrice }} ฿</span>
                 </span>
-                <span class="label-text">เลือกทั้งหมด ({{ cartItems.length }})</span>
-              </label>
+              </div>
+              <div class="footer-right">
+                <button class="order-btn" pRipple (click)="placeOrder()">สั่งอาหาร</button>
+              </div>
             </div>
-            <div class="footer-right">
-              <span class="summary-text">
-                รวม ({{ totalSelectedItems }} รายการ):
-                <span class="price">{{ totalPrice }} ฿</span>
-              </span>
-              <button class="order-btn" pRipple (click)="placeOrder()">สั่งอาหาร</button>
+          </ng-container>
+
+          <ng-template #emptyCart>
+            <div class="empty-cart-container">
+              <mat-icon>shopping_basket</mat-icon>
+              <p>ยังไม่มีรายการอาหารในตะกร้า</p>
+              <span class="sub-text">กรุณาเลือกอาหารที่หน้าเมนู</span>
             </div>
-          </div>
+          </ng-template>
+
         </div>
       </div>
     </div>
   </div>
 </app-customer-navbar>
+<p-dialog
+  header="ยืนยันการลบรายการ"
+  [(visible)]="displayConfirm"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  styleClass="custom-dark-dialog"
+  [breakpoints]="{ '960px': '75vw', '640px': '90vw' }"
+  [style]="{ width: '400px' }"
+  appendTo="body"
+>
+  <div class="dialog-container">
+    <div class="dialog-content">
+      <mat-icon class="warning-icon">delete_forever</mat-icon>
+      <h3>คุณแน่ใจหรือไม่?</h3>
+      <p>
+        ต้องการลบ <strong>{{ itemToDelete?.name }}</strong> ออกจากตะกร้าใช่หรือไม่?
+      </p>
+      <span class="sub-text">รายการนี้จะหายไปจากรายการที่คุณเลือก</span>
+    </div>
+    <div class="dialog-footer">
+      <button class="btn-cancel" (click)="displayConfirm = false">ยกเลิก</button>
+      <button class="btn-confirm" (click)="confirmDelete()">ยืนยันการลบ</button>
+    </div>
+  </div>
+</p-dialog>
