@@ -31,7 +31,7 @@ export class MenuManager {
     { label: 'จัดการข้อมูลพนักงาน', icon: 'groups', route: '/ManageEmployee', active: false },
     { label: 'จัดการข้อมูลโต๊ะ', icon: 'table_restaurant', route: '/ManageTable', active: false }, // หรือ grid_view
     { label: 'รายการบิล', icon: 'receipt_long', route: '/BillingList', active: false },
-    { label: 'การตั้งค่าร้าน', icon: 'settings', route: '/SettingsRestaurant', active: false },
+    { label: 'การตั้งค่าร้าน', icon: 'settings', route: '/ManageShop', active: false },
     {
       label: 'การตั้งค่าราคาอาหาร',
       route: '/ManageMenu',

@@ -1,0 +1,140 @@
+<p-toast position="bottom-center"></p-toast>
+<p-confirmDialog></p-confirmDialog>
+
+<app-menu-manager>
+  <div class="page-container">
+    <div class="content-wrapper">
+      <div class="header-action">
+        <h2 class="section-header">ตั้งค่าร้านค้า (Admin)</h2>
+        <div class="action-right">
+          <button
+            pButton
+            pRipple
+            label="บันทึกการตั้งค่าทั้งหมด"
+            icon="pi pi-save"
+            class="p-button-success add-btn"
+            [loading]="isLoading"
+            (click)="saveAllSettings()"
+          ></button>
+        </div>
+      </div>
+
+      <div class="table-card mb-4">
+        <div class="card-header-flex">
+          <h3 class="card-title text-gold">
+            <i class="pi pi-eye mr-2"></i>รูปภาพที่กำลังใช้งานบนหน้าเว็บ
+          </h3>
+        </div>
+        <div class="current-display-grid mt-3">
+          <div class="display-section">
+            <span class="badge-label">Banner ปัจจุบัน ({{ currentBanners.length }})</span>
+            <div class="mini-gallery">
+              <div class="mini-item" *ngFor="let img of currentBanners">
+                <img [src]="img.image_Url" />
+              </div>
+            </div>
+          </div>
+          <div class="display-section">
+            <span class="badge-label">Poster ปัจจุบัน (1 รูป)</span>
+            <div class="mini-gallery poster-view">
+              <div class="mini-item" *ngIf="currentPoster">
+                <img [src]="currentPoster.image_Url" />
+              </div>
+              <span class="text-muted" *ngIf="!currentPoster" style="font-size: 0.8rem; color: #888"
+                >ยังไม่มี Poster</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="section-divider" />
+
+      <div class="table-card mb-4">
+        <div class="card-header-flex">
+          <h3 class="card-title"><i class="pi pi-images mr-2"></i>อัปโหลด Banner ใหม่</h3>
+          <span class="size-hint">1920 x 600 px</span>
+        </div>
+
+        <div *ngIf="currentBanners.length > 0" class="mt-3 mb-2">
+          <small style="color: #888">Banner (คลิก 🗑 เพื่อลบ)</small>
+          <div class="banner-manage-list mt-2">
+            <div class="image-item-preview" *ngFor="let banner of currentBanners">
+              <img [src]="banner.image_Url" />
+              <button
+                class="btn-remove-img"
+                (click)="deleteExistingBanner(banner)"
+                title="ลบออกจาก DB"
+              >
+                <i class="pi pi-trash"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="banner-manage-list mt-3">
+          <div class="image-item-preview" *ngFor="let banner of newBanners; let i = index">
+            <img [src]="banner.url" />
+            <div class="new-badge">ใหม่</div>
+            <button class="btn-remove-img" (click)="removeNewBanner(i)">
+              <i class="pi pi-times"></i>
+            </button>
+          </div>
+          <div class="upload-placeholder" (click)="bannerInput.click()">
+            <input
+              #bannerInput
+              type="file"
+              (change)="onBannerUpload($event)"
+              hidden
+              accept="image/*"
+            />
+            <i class="pi pi-plus upload-icon"></i>
+            <span>เพิ่มรูป Banner</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-card">
+        <div class="card-header-flex">
+          <h3 class="card-title">
+            <i class="pi pi-megaphone mr-2"></i>จัดการรูปโปรโมชั่น (Poster)
+          </h3>
+          <span class="size-hint">แสดง 1 รูป (อัปโหลดใหม่เพื่อเปลี่ยนทับ)</span>
+        </div>
+        <div class="poster-single-manage mt-3">
+          <div class="poster-container">
+            <div class="poster-preview-box" (click)="posterInput.click()">
+              <img
+                [src]="newPoster?.url || currentPoster?.image_Url || 'assets/images/no-image.png'"
+                class="main-poster-img"
+              />
+              <div class="poster-overlay">
+                <i class="pi pi-camera"></i>
+                <span>เปลี่ยนรูปภาพ</span>
+              </div>
+            </div>
+            <input
+              #posterInput
+              type="file"
+              (change)="onPosterUpload($event)"
+              hidden
+              accept="image/*"
+            />
+
+            <div class="poster-info" *ngIf="newPoster">
+              <p class="text-gold">
+                <i class="pi pi-info-circle"></i> เลือกรูปใหม่แล้ว อย่าลืมกดบันทึก
+              </p>
+              <button
+                pButton
+                label="ยกเลิกรูปใหม่"
+                class="p-button-text p-button-danger p-button-sm"
+                (click)="cancelNewPoster()"
+              ></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</app-menu-manager>

@@ -20,6 +20,7 @@ import { DetailEmployee } from './features/manager/detail-employee/detail-employ
 import { ManageMenu } from './features/manager/manage-menu/manage-menu';
 import { CheckinScanner } from './features/checkin-scanner/checkin-scanner';
 import { EditDeleteTables } from './features/manager/manage-tables/edit-delete-tables/edit-delete-tables';
+import { ManageShop } from './features/manager/manage-shop/manage-shop';
 
 export const routes: Routes = [
   { path: '', component: Index },
@@ -74,6 +75,12 @@ export const routes: Routes = [
   {
     path: 'ManageMenu',
     component: ManageMenu,
+    canActivate: [employeeGuard],
+    data: { roles: ['เจ้าของร้าน'] },
+  },
+  {
+    path: 'ManageShop',
+    component: ManageShop,
     canActivate: [employeeGuard],
     data: { roles: ['เจ้าของร้าน'] },
   },

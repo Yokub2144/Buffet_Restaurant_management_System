@@ -43,7 +43,8 @@
         <section class="info-card">
           <div class="poster-col">
             <div class="poster-frame">
-              <img src="assets/Images/shop-info.png" alt="Shop Info" />
+              <!-- Poster จาก API ถ้าไม่มีใช้รูป fallback -->
+              <img [src]="posterUrl || 'assets/Images/shop-info.png'" alt="Shop Info" />
             </div>
           </div>
 
@@ -87,31 +88,19 @@
               </thead>
               <tbody>
                 <tr>
-                  <td>
-                    <div class="promo-name">โปรวันเกิด (สำหรับคนที่เกิด เดือนสิงหาคม)</div>
-                  </td>
+                  <td><div class="promo-name">โปรวันเกิด (สำหรับคนที่เกิด เดือนสิงหาคม)</div></td>
                   <td class="text-center highlight-text">10%</td>
-                  <td class="text-center">
-                    <button class="btn-outline">Show</button>
-                  </td>
+                  <td class="text-center"><button class="btn-outline">Show</button></td>
                 </tr>
                 <tr>
-                  <td>
-                    <div class="promo-name">โปรเช็คอินร้าน (ใน facebook)</div>
-                  </td>
+                  <td><div class="promo-name">โปรเช็คอินร้าน (ใน facebook)</div></td>
                   <td class="text-center highlight-text">30%</td>
-                  <td class="text-center">
-                    <button class="btn-outline">Show</button>
-                  </td>
+                  <td class="text-center"><button class="btn-outline">Show</button></td>
                 </tr>
                 <tr>
-                  <td>
-                    <div class="promo-name">โปรรีวิวร้านใน tiktok ของวิงยอะที่สุด</div>
-                  </td>
+                  <td><div class="promo-name">โปรรีวิวร้านใน tiktok ของวิงยอะที่สุด</div></td>
                   <td class="text-center highlight-text">40%</td>
-                  <td class="text-center">
-                    <button class="btn-outline">Show</button>
-                  </td>
+                  <td class="text-center"><button class="btn-outline">Show</button></td>
                 </tr>
               </tbody>
             </table>

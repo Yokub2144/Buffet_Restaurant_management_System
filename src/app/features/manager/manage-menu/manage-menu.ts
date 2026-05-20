@@ -88,34 +88,6 @@ export class ManageMenu implements OnInit {
     }
   }
 
-  deleteMenu(menu: Menu) {
-    this.confirmationService.confirm({
-      message: `คุณแน่ใจหรือไม่ที่จะลบเมนู "${menu.menu_Name}"?`,
-      header: 'ยืนยันการลบ',
-      icon: 'pi pi-exclamation-triangle',
-      accept: () => {
-        this.menuService.deleteMenu(menu.menu_id).subscribe({
-          next: () => {
-            this.loadMenus();
-            this.messageService.add({
-              severity: 'success',
-              summary: 'สำเร็จ',
-              detail: 'ลบเมนูเรียบร้อยแล้ว',
-            });
-          },
-          error: (err) => {
-            console.error(err);
-            this.messageService.add({
-              severity: 'error',
-              summary: 'ผิดพลาด',
-              detail: 'ไม่สามารถลบเมนูได้',
-            });
-          },
-        });
-      },
-    });
-  }
-
   hideDialog() {
     this.menuDialog = false;
   }

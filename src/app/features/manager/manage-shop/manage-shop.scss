@@ -1,0 +1,301 @@
+// นำตัวแปรเดิมมาใช้
+$theme-bg: #000000;
+$card-bg: #141414;
+$primary-gold: #ffca28;
+$text-white: #ffffff;
+$text-muted: #cccccc;
+$border-color: #333333;
+
+.page-container {
+  min-height: 100vh;
+  background-color: $theme-bg;
+  color: $text-white;
+  padding: 20px;
+  font-family: 'Kanit', sans-serif;
+}
+
+.content-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header-action {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid $border-color;
+
+  .section-header {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: $primary-gold;
+    margin: 0;
+  }
+}
+
+// ใช้สไตล์ Card เดียวกับหน้าเมนู
+.table-card {
+  background: $card-bg;
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  border: 1px solid #2a2a2a;
+  margin-bottom: 2rem;
+
+  .card-header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-left: 4px solid $primary-gold;
+    padding-left: 15px;
+  }
+
+  .card-title {
+    margin: 0;
+    color: $text-white;
+    font-size: 1.25rem;
+    font-weight: 500;
+  }
+
+  .size-hint {
+    color: $text-muted;
+    font-size: 0.85rem;
+    background: #222;
+    padding: 4px 10px;
+    border-radius: 4px;
+  }
+}
+
+// การจัดการรูปภาพแบบ Grid
+.banner-manage-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.image-item-preview {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 2px solid #333;
+  transition: transform 0.2s;
+
+  &:hover {
+    transform: translateY(-5px);
+    border-color: $primary-gold;
+  }
+
+  img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    display: block;
+  }
+
+  &.poster-style {
+    width: 100%;
+    max-width: 200px;
+    height: 280px;
+    img { height: 100%; }
+  }
+
+  .btn-remove-img {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(220, 53, 69, 0.9);
+    color: white;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s;
+
+    &:hover { background: #ff0000; }
+  }
+}
+
+// ช่องอัปโหลด
+.upload-placeholder {
+  border: 2px dashed #444;
+  border-radius: 10px;
+  height: 160px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  color: #888;
+  transition: 0.3s;
+  background: rgba(255, 255, 255, 0.02);
+
+  &:hover {
+    border-color: $primary-gold;
+    color: $primary-gold;
+    background: rgba(255, 202, 40, 0.05);
+  }
+
+  &.poster-style {
+    max-width: 200px;
+    height: 280px;
+  }
+
+  .upload-icon {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+  }
+}
+
+// ปุ่ม Save
+.add-btn {
+  font-family: 'Kanit', sans-serif;
+  font-weight: 500;
+  padding: 0.6rem 1.5rem;
+}
+
+@media screen and (max-width: 768px) {
+  .header-action {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+  .card-header-flex {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}/* เพิ่มเติมจาก SCSS เดิม */
+
+.text-gold { color: #ffca28 !important; }
+
+.section-divider {
+  border: 0;
+  border-top: 1px dashed #333;
+  margin: 2rem 0;
+}
+
+.current-display-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  .display-section {
+    background: #0a0a0a;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #222;
+
+    .badge-label {
+      display: inline-block;
+      background: #333;
+      color: #ffca28;
+      padding: 4px 12px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      margin-bottom: 15px;
+      border-left: 3px solid #ffca28;
+    }
+  }
+}
+
+.mini-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+
+  .mini-item {
+    width: 120px;
+    height: 60px;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid #444;
+    opacity: 0.8;
+    transition: 0.3s;
+
+    &:hover { opacity: 1; border-color: #ffca28; }
+
+    img { width: 100%; height: 100%; object-fit: cover; }
+  }
+
+  &.poster-view .mini-item {
+    width: 60px;
+    height: 85px;
+  }
+}/* ส่วน Poster แบบรูปเดียว */
+.poster-single-manage {
+  display: flex;
+  justify-content: center;
+  padding: 20px 0;
+
+  .poster-container {
+    text-align: center;
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .poster-preview-box {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 2px solid #333;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      border-color: #ffca28;
+      .poster-overlay { opacity: 1; }
+    }
+
+    .main-poster-img {
+      width: 100%;
+      height: 400px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .poster-overlay {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: #ffca28;
+      opacity: 0;
+      transition: 0.3s;
+      
+      i { font-size: 2.5rem; margin-bottom: 10px; }
+      span { font-weight: bold; }
+    }
+  }
+
+  .poster-info {
+    margin-top: 15px;
+    font-size: 0.9rem;
+  }
+}
+// Fix: ปุ่ม loading ให้ content กลาง — PrimeNG เพิ่ม spinner icon ทำให้เบี้ยว
+.add-btn {
+  min-width: 200px; // กันปุ่มยืดหด
+
+  // จัด icon + label ให้กึ่งกลางเสมอ ทั้งตอนปกติและตอน loading
+  &.p-button {
+    justify-content: center;
+
+    .p-button-icon {
+      position: static !important;
+      margin-right: 0.5rem;
+    }
+
+    .p-button-label {
+      flex: unset;
+    }
+  }
+}

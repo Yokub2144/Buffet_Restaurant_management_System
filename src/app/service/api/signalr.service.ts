@@ -24,7 +24,7 @@ export class SignalrService {
     this.registerOnEvents();
     this.start();
   }
-
+  public resImageUpdate$ = new Subject<void>();
   private registerOnEvents() {
     this.hubConnection.on('UpdateTable', (data) => {
       console.log('ข้อมูลที่ได้รับจาก Server:', data);
@@ -34,6 +34,10 @@ export class SignalrService {
     this.hubConnection.on('UpdateResConfig', (data) => {
       console.log('ข้อมูลที่ได้รับจาก Server:', data);
       this.resConfig$.next(data);
+    });
+    this.hubConnection.on('UpdateResImage', () => {
+      console.log('SignalR: รูปภาพเปลี่ยนแปลง');
+      this.resImageUpdate$.next();
     });
   }
 

@@ -7,6 +7,8 @@ import { RippleModule } from 'primeng/ripple';
 import { MenuMember } from '../components/menu-bar/menu-member/menu-member';
 import { ConfigService } from '../service/api/config.service';
 import { SignalrService } from '../service/api/signalr.service';
+import { ImageService } from '../service/api/image.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-index',
@@ -21,35 +23,68 @@ export class Index implements OnInit, OnDestroy {
   slideTimer: any;
   isLoggedIn: boolean = false;
   resData: any;
-  private resConfigSub: any;
+
+  banners: { image: string }[] = [];
+  posterUrl: string | null = null;
+
+  private resConfigSub!: Subscription;
+  private resImageSub!: Subscription;
+
   constructor(
     private ConfigService: ConfigService,
     private signalRService: SignalrService,
+    private imageService: ImageService,
   ) {}
 
   ngOnInit() {
     const token = localStorage.getItem('token') || sessionStorage.getItem('token');
     this.isLoggedIn = !!token;
 
+    // ราคา / config
     this.ConfigService.getConfig().subscribe((res) => {
       this.resData = res[0];
     });
+
+    // realtime: ราคาเปลี่ยน
     this.resConfigSub = this.signalRService.resConfig$.subscribe((updatedConfig) => {
       this.resData = updatedConfig;
     });
+
+    // realtime: รูปภาพเปลี่ยน — โหลดใหม่อัตโนมัติ
+    this.resImageSub = this.signalRService.resImageUpdate$.subscribe(() => {
+      this.loadImages();
+    });
+
+    this.loadImages();
   }
-  banners = [
-    { image: 'assets/Images/Banner.png' },
-    { image: 'assets/Images/Banner2.png' },
-    { image: 'assets/Images/Banner3.png' },
-  ];
+
+  loadImages(): void {
+    this.imageService.getImages().subscribe({
+      next: (images: any[]) => {
+        this.banners = images
+          .filter((img) => img.image_Type === 'Banner')
+          .map((img) => ({ image: img.image_Url }));
+
+        const poster = images.find((img) => img.image_Type === 'Poster');
+        this.posterUrl = poster ? poster.image_Url : null;
+      },
+      error: () => {
+        this.banners = [
+          { image: 'assets/Images/Banner.png' },
+          { image: 'assets/Images/Banner2.png' },
+          { image: 'assets/Images/Banner3.png' },
+        ];
+      },
+    });
+  }
+
   ngOnDestroy() {
     this.resConfigSub?.unsubscribe();
+    this.resImageSub?.unsubscribe();
   }
+
   onClicksmailPictures(index: number) {
-    if (this.slideTimer) {
-      clearInterval(this.slideTimer);
-    }
+    if (this.slideTimer) clearInterval(this.slideTimer);
     this.currentBannerIndex = index;
     this.slideInterval = 0;
   }
@@ -59,10 +94,6 @@ export class Index implements OnInit, OnDestroy {
   }
 
   scrollToSection(element: HTMLElement): void {
-    element.scrollIntoView({
-      behavior: 'smooth',
-      block: 'start',
-      inline: 'nearest',
-    });
+    element.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
   }
 }

@@ -35,9 +35,4 @@ export class MenuService {
     const url = `${this.constants.API_ENDPOINT}/Menu/${id}`;
     return this.http.put(url, formData);
   }
-
-  public deleteMenu(menuId: number): Observable<any> {
-    const url = `${this.constants.API_ENDPOINT}/Menu/${menuId}`;
-    return this.http.delete(url);
-  }
 }
