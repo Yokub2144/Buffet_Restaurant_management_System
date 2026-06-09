@@ -1,0 +1,77 @@
+<app-menu-server>
+  <div class="createbill-container">
+    <header class="page-header">
+      <h3>จำนวนโต๊ะ{{totaltable}}</h3>
+    </header>
+    <div class="tables-grid-wrapper">
+
+      <div class="tables-scroll-container">
+        <div class="tables-grid">
+          <div *ngFor="let table of tables" class="table-item" [ngClass]="{
+            selected: isSelected(table) && table.table_Status === 'ว่าง',
+            'status-free': table.table_Status === 'ว่าง' && !isSelected(table),
+            'status-reserved': table.table_Status === 'ติดจอง',
+            'status-occupied': table.table_Status === 'ไม่ว่าง',
+          }" (click)="toggleTableSelection(table)">
+            <span>{{ table.table_Number }}</span>
+            <span class="tooltip-text" *ngIf="table.table_Status === 'ติดจอง'">ติดจอง</span>
+            <span class="tooltip-text" *ngIf="table.table_Status === 'ไม่ว่าง'">กำลังให้บริการ</span>
+            <span class="tooltip-text" *ngIf="table.table_Status === 'ว่าง'">ว่าง</span>
+          </div>
+        </div>
+      </div>
+      <div class="btn-confirm">
+        <button (click)="togglerecordModal(true)">บันทึก</button>
+      </div>
+
+      <div class="modal-overlay" *ngIf="showrecordModal">
+        <div class="modal-content add-table-modal">
+          <div class="modal-header">
+            <h3>บันทึกลูกค้าที่เข้าใหม่</h3>
+            <button class="close-icon-btn" (click)="togglerecordModal(false)">✕</button>
+          </div>
+
+          <div class="modal-body">
+            <div class="form-group">
+              <label>เลขโต๊ะ</label>
+              <div class="input-wrapper">
+                <input type="text" [value]="getSelectedTableString()" readonly />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>จำนวนผู้ใหญ่</label>
+                <div class="input-wrapper">
+                  <input type="number" [(ngModel)]="adultCount" min="0" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label>จำนวนเด็ก</label>
+                <div class="input-wrapper">
+                  <input type="number" [(ngModel)]="childCount" min="0" />
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>ส่วนลด</label>
+              <div class="input-wrapper">
+                <select [(ngModel)]="selectedDiscount">
+                  <option value="0">ไม่มีส่วนลด</option>
+                  <option value="10">ส่วนลด 10%</option>
+                  <option value="20">ส่วนลด 20%</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button class="btn-save-confirm" (click)="confirmRecord()">บันทึก</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</app-menu-server>

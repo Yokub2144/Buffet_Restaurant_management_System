@@ -1,26 +1,26 @@
-import { Component } from '@angular/core';
 import { Routes } from '@angular/router';
+import { Cart } from './cart/cart';
+import { CustomerOrder } from './customer-order/customer-order';
+import { CheckinScanner } from './features/checkin-scanner/checkin-scanner';
+import { LoginEmployee } from './features/login-employee/login-employee';
+import { LoginMember } from './features/login-member/login-member';
 import { Dashboard } from './features/manager/dashboard/dashboard';
-import { Index } from './index';
+import { DetailEmployee } from './features/manager/detail-employee/detail-employee';
+import { ApproveEmployee } from './features/manager/manage-employee/approve-employee/approve-employee';
+import { ManageEmployee } from './features/manager/manage-employee/manage-employee';
+import { ManageMenu } from './features/manager/manage-menu/manage-menu';
+import { ManageShop } from './features/manager/manage-shop/manage-shop';
+import { EditDeleteTables } from './features/manager/manage-tables/edit-delete-tables/edit-delete-tables';
+import { ManageTables } from './features/manager/manage-tables/manage-tables';
+import { BookingStatus } from './features/member/booking-status/booking-status';
 import { Booking } from './features/member/booking/booking';
 import { RegisterEmployee } from './features/register-employee/register-employee';
 import { RegisterMember } from './features/register-member/register-member';
-import { LoginMember } from './features/login-member/login-member';
-import { LoginEmployee } from './features/login-employee/login-employee';
-import { memberGuard } from './guards/member-guard';
+import { CreateBill } from './features/server-employee/create-bill/create-bill';
 import { employeeGuard } from './guards/employee-guard';
-import { CustomerOrder } from './customer-order/customer-order';
-import { ManageEmployee } from './features/manager/manage-employee/manage-employee';
-import { ApproveEmployee } from './features/manager/manage-employee/approve-employee/approve-employee';
-import { Cart } from './cart/cart';
+import { memberGuard } from './guards/member-guard';
+import { Index } from './index';
 import { StatusCustomerOrder } from './status/status-customer-order/status-customer-order';
-import { BookingStatus } from './features/member/booking-status/booking-status';
-import { ManageTables } from './features/manager/manage-tables/manage-tables';
-import { DetailEmployee } from './features/manager/detail-employee/detail-employee';
-import { ManageMenu } from './features/manager/manage-menu/manage-menu';
-import { CheckinScanner } from './features/checkin-scanner/checkin-scanner';
-import { EditDeleteTables } from './features/manager/manage-tables/edit-delete-tables/edit-delete-tables';
-import { ManageShop } from './features/manager/manage-shop/manage-shop';
 
 export const routes: Routes = [
   { path: '', component: Index },
@@ -85,5 +85,9 @@ export const routes: Routes = [
     data: { roles: ['เจ้าของร้าน'] },
   },
   { path: 'Checkin', component: CheckinScanner },
+ 
+  {path: 'CreateBill', component: CreateBill,    canActivate: [employeeGuard],
+    data: { roles: ['พนักงานเสิร์ฟ'] },},
+
   { path: '**', redirectTo: '' },
 ];
