@@ -4,6 +4,7 @@
 <app-menu-manager>
   <div class="page-container">
     <div class="content-wrapper">
+      <!-- Header -->
       <div class="header-action">
         <h2 class="section-header">ตั้งค่าร้านค้า (Admin)</h2>
         <div class="action-right">
@@ -19,6 +20,99 @@
         </div>
       </div>
 
+      <!-- =====  ตั้งค่าร้าน ===== -->
+      <div class="table-card mb-4">
+        <div class="card-header-flex">
+          <h3 class="card-title"><i class="pi pi-cog mr-2"></i>ข้อมูลร้านค้า</h3>
+        </div>
+
+        <div class="config-form mt-4">
+          <!-- ชื่อร้าน + เบอร์โทร -->
+          <div class="info-row">
+            <div class="form-row">
+              <label class="form-label"><i class="pi pi-shop mr-1"></i>ชื่อร้าน</label>
+              <span class="p-input-icon-left w-full">
+                <i class="pi pi-pencil"></i>
+                <input
+                  pInputText
+                  [(ngModel)]="configForm.res_name"
+                  placeholder="ชื่อร้านค้า"
+                  class="dark-input w-full"
+                />
+              </span>
+            </div>
+            <div class="form-row">
+              <label class="form-label"><i class="pi pi-phone mr-1"></i>เบอร์โทรศัพท์</label>
+              <span class="p-input-icon-left w-full">
+                <i class="pi pi-mobile"></i>
+                <input
+                  pInputText
+                  [(ngModel)]="configForm.res_phone"
+                  placeholder="เบอร์โทรศัพท์"
+                  class="dark-input w-full"
+                />
+              </span>
+            </div>
+          </div>
+
+          <!-- ราคา Grid -->
+          <div class="price-row">
+            <div class="form-row">
+              <label class="form-label"><i class="pi pi-user mr-1"></i>ราคาผู้ใหญ่ (บาท/คน)</label>
+              <p-inputNumber
+                [(ngModel)]="configForm.price_Adult"
+                [min]="0"
+                [showButtons]="true"
+                buttonLayout="horizontal"
+                decrementButtonClass="p-button-secondary"
+                incrementButtonClass="p-button-secondary"
+                incrementButtonIcon="pi pi-plus"
+                decrementButtonIcon="pi pi-minus"
+                inputStyleClass="dark-input text-center"
+                styleClass="w-full"
+              ></p-inputNumber>
+            </div>
+
+            <div class="form-row">
+              <label class="form-label"><i class="pi pi-users mr-1"></i>ราคาเด็ก (บาท/คน)</label>
+              <p-inputNumber
+                [(ngModel)]="configForm.price_Child"
+                [min]="0"
+                [showButtons]="true"
+                buttonLayout="horizontal"
+                decrementButtonClass="p-button-secondary"
+                incrementButtonClass="p-button-secondary"
+                incrementButtonIcon="pi pi-plus"
+                decrementButtonIcon="pi pi-minus"
+                inputStyleClass="dark-input text-center"
+                styleClass="w-full"
+              ></p-inputNumber>
+            </div>
+
+            <div class="form-row">
+              <label class="form-label"
+                ><i class="pi pi-exclamation-circle mr-1"></i>ค่าปรับ (บาท)</label
+              >
+              <p-inputNumber
+                [(ngModel)]="configForm.fine"
+                [min]="0"
+                [showButtons]="true"
+                buttonLayout="horizontal"
+                decrementButtonClass="p-button-secondary"
+                incrementButtonClass="p-button-secondary"
+                incrementButtonIcon="pi pi-plus"
+                decrementButtonIcon="pi pi-minus"
+                inputStyleClass="dark-input text-center"
+                styleClass="w-full"
+              ></p-inputNumber>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="section-divider" />
+
+      <!-- =====  รูปภาพที่ใช้งาน ===== -->
       <div class="table-card mb-4">
         <div class="card-header-flex">
           <h3 class="card-title text-gold">
@@ -40,7 +134,7 @@
               <div class="mini-item" *ngIf="currentPoster">
                 <img [src]="currentPoster.image_Url" />
               </div>
-              <span class="text-muted" *ngIf="!currentPoster" style="font-size: 0.8rem; color: #888"
+              <span *ngIf="!currentPoster" style="font-size: 0.8rem; color: #888"
                 >ยังไม่มี Poster</span
               >
             </div>
@@ -50,6 +144,7 @@
 
       <hr class="section-divider" />
 
+      <!-- =====  Banner ===== -->
       <div class="table-card mb-4">
         <div class="card-header-flex">
           <h3 class="card-title"><i class="pi pi-images mr-2"></i>อัปโหลด Banner ใหม่</h3>
@@ -94,6 +189,7 @@
         </div>
       </div>
 
+      <!-- =====  Poster ===== -->
       <div class="table-card">
         <div class="card-header-flex">
           <h3 class="card-title">
@@ -120,7 +216,6 @@
               hidden
               accept="image/*"
             />
-
             <div class="poster-info" *ngIf="newPoster">
               <p class="text-gold">
                 <i class="pi pi-info-circle"></i> เลือกรูปใหม่แล้ว อย่าลืมกดบันทึก

@@ -2,11 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { MenuManager } from '../../../components/menu-bar/menu-manager/menu-manager';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ToastModule } from 'primeng/toast';
 import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { InputTextModule } from 'primeng/inputtext';
+import { InputNumberModule } from 'primeng/inputnumber';
 import { ImageService } from '../../../service/api/image.service';
+import { ConfigService } from '../../../service/api/config.service';
 
 interface ImageItem {
   url: string | ArrayBuffer | null;
@@ -19,36 +23,90 @@ interface ResImage {
   image_Type: string;
 }
 
+interface ConfigForm {
+  config_id: number;
+  res_name: string;
+  res_phone: string;
+  price_Adult: number;
+  price_Child: number;
+  fine: number;
+}
+
 @Component({
   selector: 'app-manage-shop',
   standalone: true,
   imports: [
     MenuManager,
     CommonModule,
+    FormsModule,
     ToastModule,
     ButtonModule,
     RippleModule,
     ConfirmDialogModule,
+    InputTextModule,
+    InputNumberModule,
   ],
   templateUrl: './manage-shop.html',
   styleUrl: './manage-shop.scss',
   providers: [ConfirmationService],
 })
 export class ManageShop implements OnInit {
+  // ---- Config ----
+  configForm: ConfigForm = {
+    config_id: 0,
+    res_name: '',
+    res_phone: '',
+    price_Adult: 0,
+    price_Child: 0,
+    fine: 0,
+  };
+
+  // ---- รูปจาก DB ----
   currentBanners: ResImage[] = [];
   currentPoster: ResImage | null = null;
+
+  // ---- รูปใหม่รอ Upload ----
   newBanners: ImageItem[] = [];
   newPoster: ImageItem | null = null;
+
   isLoading = false;
 
   constructor(
     private messageService: MessageService,
     private imageService: ImageService,
+    private configService: ConfigService,
     private confirmationService: ConfirmationService,
   ) {}
 
   ngOnInit(): void {
+    this.loadConfig();
     this.loadImages();
+  }
+
+  // ดึง config จาก API แล้วโหลดลง form
+  loadConfig(): void {
+    this.configService.getConfig().subscribe({
+      next: (data: any[]) => {
+        if (data?.length > 0) {
+          const c = data[0];
+          this.configForm = {
+            config_id: c.config_id,
+            res_name: c.res_name ?? '',
+            res_phone: c.res_phone ?? '',
+            price_Adult: c.price_Adult ?? 0,
+            price_Child: c.price_Child ?? 0,
+            fine: c.fine ?? 0,
+          };
+        }
+      },
+      error: () => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'ผิดพลาด',
+          detail: 'โหลดข้อมูลร้านไม่สำเร็จ',
+        });
+      },
+    });
   }
 
   loadImages(): void {
@@ -71,9 +129,7 @@ export class ManageShop implements OnInit {
     const file: File = event.target.files[0];
     if (!file) return;
     const reader = new FileReader();
-    reader.onload = () => {
-      this.newBanners.push({ url: reader.result, file });
-    };
+    reader.onload = () => this.newBanners.push({ url: reader.result, file });
     reader.readAsDataURL(file);
     event.target.value = '';
   }
@@ -82,9 +138,7 @@ export class ManageShop implements OnInit {
     const file: File = event.target.files[0];
     if (!file) return;
     const reader = new FileReader();
-    reader.onload = () => {
-      this.newPoster = { url: reader.result, file };
-    };
+    reader.onload = () => (this.newPoster = { url: reader.result, file });
     reader.readAsDataURL(file);
     event.target.value = '';
   }
@@ -128,60 +182,65 @@ export class ManageShop implements OnInit {
     this.newPoster = null;
   }
 
+  // บันทึกทั้งหมด: config + banner + poster พร้อมกัน
   saveAllSettings(): void {
-    if (this.newBanners.length === 0 && !this.newPoster) {
-      this.messageService.add({
-        severity: 'warn',
-        summary: 'ไม่มีการเปลี่ยนแปลง',
-        detail: 'กรุณาเพิ่มรูปภาพก่อนกดบันทึก',
-      });
-      return;
-    }
-
     this.isLoading = true;
-    const uploadTasks: Promise<void>[] = [];
+    const tasks: Promise<void>[] = [];
 
+    // อัปเดต Config
+    const configPayload = {
+      Config_id: this.configForm.config_id,
+      Res_name: this.configForm.res_name,
+      Res_phone: this.configForm.res_phone,
+      Price_Adult: this.configForm.price_Adult,
+      Price_Child: this.configForm.price_Child,
+      Fine: this.configForm.fine,
+    };
+    tasks.push(
+      new Promise((resolve, reject) => {
+        this.configService
+          .updateConfig(configPayload)
+          .subscribe({ next: () => resolve(), error: reject });
+      }),
+    );
+
+    //  Upload Banner ใหม่
     for (const banner of this.newBanners) {
       if (banner.file) {
-        const formData = new FormData();
-        formData.append('ImageFile', banner.file);
-        formData.append('Image_Type', 'Banner');
-        uploadTasks.push(
+        const fd = new FormData();
+        fd.append('ImageFile', banner.file);
+        fd.append('Image_Type', 'Banner');
+        tasks.push(
           new Promise((resolve, reject) => {
-            this.imageService
-              .uploadImage(formData)
-              .subscribe({ next: () => resolve(), error: reject });
+            this.imageService.uploadImage(fd).subscribe({ next: () => resolve(), error: reject });
           }),
         );
       }
     }
 
+    //  Poster ใหม่
     if (this.newPoster?.file) {
-      const formData = new FormData();
-      formData.append('ImageFile', this.newPoster.file);
-      formData.append('Image_Type', 'Poster');
-
+      const fd = new FormData();
+      fd.append('ImageFile', this.newPoster.file);
+      fd.append('Image_Type', 'Poster');
       if (this.currentPoster) {
-        uploadTasks.push(
+        tasks.push(
           new Promise((resolve, reject) => {
-            this.imageService.updateImage(this.currentPoster!.image_id, formData).subscribe({
-              next: () => resolve(),
-              error: reject,
-            });
+            this.imageService
+              .updateImage(this.currentPoster!.image_id, fd)
+              .subscribe({ next: () => resolve(), error: reject });
           }),
         );
       } else {
-        uploadTasks.push(
+        tasks.push(
           new Promise((resolve, reject) => {
-            this.imageService
-              .uploadImage(formData)
-              .subscribe({ next: () => resolve(), error: reject });
+            this.imageService.uploadImage(fd).subscribe({ next: () => resolve(), error: reject });
           }),
         );
       }
     }
 
-    Promise.all(uploadTasks)
+    Promise.all(tasks)
       .then(() => {
         this.messageService.add({
           severity: 'success',
@@ -197,11 +256,9 @@ export class ManageShop implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'ผิดพลาด',
-          detail: 'บันทึกไม่สำเร็จ กรุณาลองใหม่อีกครั้ง',
+          detail: 'บันทึกไม่สำเร็จ กรุณาลองใหม่',
         });
       })
-      .finally(() => {
-        this.isLoading = false;
-      });
+      .finally(() => (this.isLoading = false));
   }
 }
