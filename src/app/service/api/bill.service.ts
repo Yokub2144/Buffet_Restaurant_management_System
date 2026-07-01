@@ -1,0 +1,29 @@
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { Constants } from '../../config/contants';
+import { Bill } from '../../models/bill.model';
+@Injectable({
+  providedIn: 'root',
+})
+export class BillService {
+  constructor(
+    private http: HttpClient,
+    private constants: Constants,
+  ){}
+  public createWalkInBill(payload: any): Observable<any> {
+      return this.http.post(`${this.constants.API_ENDPOINT}/Bill/walk-in`, payload);
+    }
+  public getBill(){
+    const url = `${this.constants.API_ENDPOINT}/Bill/getBill`;
+    return this.http.get<Bill[]>(url)
+  }
+  public updateBill(billId: number, payload: any): Observable<any> {
+    const url = `${this.constants.API_ENDPOINT}/Bill/update/${billId}`;
+    return this.http.put(url, payload);
+  }
+  public deleteBill(billId: number): Observable<any> {
+    const url = `${this.constants.API_ENDPOINT}/Bill/delete/${billId}`;
+    return this.http.delete(url);
+  }
+}

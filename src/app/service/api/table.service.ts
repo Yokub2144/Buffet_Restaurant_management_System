@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Constants } from '../../config/contants';
-import { Table } from '../../models/table.model';
+import { Table, TableWithGroup } from '../../models/table.model';
 @Injectable({
   providedIn: 'root',
 })
@@ -81,6 +81,16 @@ export class TableService {
   public getTableid(tableName: string){
     const url = this.constants.API_ENDPOINT +`/Manager/getTableId?tableName=${tableName}`
     const response = this.http.get<any>(url);
+    return response;
+  }
+  public getTableByBillId(billId: number) {
+    const url = this.constants.API_ENDPOINT + `/Manager/by-bill/${billId}`;
+    const response = this.http.get< TableWithGroup[]>(url);
+    return response;
+  }
+  public ChangeTable(billId: number, payload: any) {
+    const url = this.constants.API_ENDPOINT + `/Manager/change-table/${billId}`;
+    const response = this.http.put<any>(url, payload);
     return response;
   }
 }

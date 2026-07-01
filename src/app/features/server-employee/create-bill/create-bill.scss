@@ -39,7 +39,7 @@ $color-selected-text: #000000;
 
 .createbill-container {
   background-color: $bg-dark;
-  min-height: calc(100vh - 60px);
+  min-height: auto;
   padding: 20px;
   color: $text-white;
   font-family: 'Sarabun', sans-serif;
@@ -53,7 +53,7 @@ $color-selected-text: #000000;
   background-color: $card-dark;
   padding: 30px;
   border-radius: 12px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   display: flex;
   flex-direction: column;
   min-height: 400px;
@@ -64,20 +64,28 @@ $color-selected-text: #000000;
     padding: 15px;
     max-height: 480px;
   }
+
   .modal-overlay {
-    position: absolute; 
+    position: fixed;
+    /* 🎯 เปลี่ยนจาก absolute เป็น fixed เพื่อให้อยู่กึ่งกลางหน้าจอทีวีหรือคอมพิวเตอร์เสมอ */
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.1); 
+    width: 100vw;
+    /* ใช้เต็มความกว้างจอ */
+    height: 100vh;
+    /* ใช้เต็มความสูงจอ */
+    background: rgba(0, 0, 0, 0.6);
+    /* 🎯 ปรับให้ฉากหลังมืดลงเล็กน้อยเพื่อให้ตัว Modal เด่นชัดขึ้น */
     display: flex;
-    align-items: center; 
+    align-items: center;
+    /* จัดแกนตั้งให้อยู่กึ่งกลาง */
     justify-content: center;
-    z-index: 100;
-    backdrop-filter: blur(2px);
-    -webkit-backdrop-filter: blur(2px);
-    border-radius: 12px;
+    /* จัดแกนนอนให้อยู่กึ่งกลาง */
+    z-index: 1000;
+    /* 🎯 ดัน z-index ให้สูงขึ้นเพื่อให้ลอยเหนืองานทุกชิ้นในเว็บ */
+    backdrop-filter: blur(4px);
+    /* เพิ่มความเบลอให้ฉากหลังเนียนตาขึ้น */
+    -webkit-backdrop-filter: blur(4px);
   }
 }
 
@@ -88,65 +96,66 @@ $color-selected-text: #000000;
   max-width: 380px;
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); 
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
   border: 1px solid #222;
 
- .modal-header {
-  display: flex;
-  justify-content: flex-start; 
-  align-items: center;
-  padding: 15px 25px;         
-  background-color: #006000;   
-  position: relative;
-  box-sizing: border-box;
+  .modal-header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 15px 25px;
+    background-color: #006000;
+    position: relative;
+    box-sizing: border-box;
 
-  h3 {
-    margin: 0;
-    color: #ffffff;           
-    font-size: 1.25rem;
-    font-weight: 500;         
-    letter-spacing: 0.5px;
-  }
+    h3 {
+      margin: 0;
+      color: #ffffff;
+      font-size: 1.25rem;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+    }
 
-  .close-icon-btn {
-    position: absolute;
-    right: 20px;            
-    top: 50%;
-    transform: translateY(-50%); 
-    background: none;
-    border: none;
-    color: #ffffff;          
-    font-size: 1.3rem;
-    cursor: pointer;
-    transition: opacity 0.2s ease-in-out;
+    .close-icon-btn {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: #ffffff;
+      font-size: 1.3rem;
+      cursor: pointer;
+      transition: opacity 0.2s ease-in-out;
 
-    &:hover {
-      opacity: 0.7;           
-      color: #ff0000;          
+      &:hover {
+        opacity: 0.7;
+        color: #ff0000;
+      }
     }
   }
-}
 
   .modal-body {
-    padding: 20px 30px; 
+    padding: 20px 30px;
+
     .form-group {
-      margin-bottom: 20px; 
-      
+      margin-bottom: 20px;
+
       label {
         display: block;
         margin-bottom: 8px;
-        color: #aaa; 
+        color: #aaa;
         font-size: 0.95rem;
       }
     }
 
-    
+
     .form-row {
       display: flex;
-      gap: 15px; 
+      gap: 15px;
 
       .form-group {
-        flex: 1; 
+        flex: 1;
       }
     }
 
@@ -154,7 +163,7 @@ $color-selected-text: #000000;
       position: relative;
       width: 100%;
 
-   
+
       input[type="text"],
       input[type="number"] {
         width: 100%;
@@ -172,7 +181,7 @@ $color-selected-text: #000000;
           border-color: #555;
         }
 
-   
+
         &[readonly] {
           background: #151515;
           color: #888;
@@ -226,7 +235,7 @@ $color-selected-text: #000000;
 
     .btn-save-confirm {
       width: 100%;
-      background-color: #2e7d32; 
+      background-color: #2e7d32;
       color: white;
       border: none;
       padding: 14px;
@@ -237,16 +246,17 @@ $color-selected-text: #000000;
       transition: all 0.2s ease-in-out;
 
       &:hover {
-        background-color: #215c25; 
+        background-color: #215c25;
         box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
       }
 
       &:active {
         background-color: #1b491e;
-        transform: scale(0.98); 
+        transform: scale(0.98);
       }
     }
   }
+
 }
 
 
@@ -259,12 +269,13 @@ $color-selected-text: #000000;
   margin-bottom: 15px;
 
   &::-webkit-scrollbar {
-    display: none; 
+    display: none;
     width: 0;
     height: 0;
   }
-  scrollbar-width: none; 
-  -ms-overflow-style: none; 
+
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 
@@ -405,3 +416,364 @@ $color-selected-text: #000000;
   }
 }
 
+.customer-management-wrapper {
+  margin-top: 0;
+  background-color: #1a1a1a;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+
+  .management-header {
+    background-color: #2b0080;
+    padding: 12px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    h3 {
+      color: #ffffff;
+      margin: 0;
+      font-size: 1.2rem;
+      font-weight: 500;
+    }
+
+    ::ng-deep .header-search-placeholder {
+      display: flex;
+      align-items: center;
+
+      .search-table-input {
+        width: 210px !important;
+        height: 34px !important;
+        padding: 0 14px !important;
+        background-color: #b3b3b3 !important;
+        border: none !important;
+        outline: none !important;
+        border-radius: 10px !important;
+        color: #000000 !important;
+        font-size: 0.95rem !important;
+        box-sizing: border-box !important;
+
+        &::placeholder {
+          color: #555555 !important;
+        }
+      }
+    }
+  }
+
+
+
+  .table-responsive {
+    overflow-x: auto;
+  }
+
+  .customer-table {
+    width: 100%;
+    border-collapse: collapse;
+    color: #ffffff;
+    text-align: center;
+
+    thead {
+      background-color: #000000;
+
+      th {
+        padding: 12px 8px;
+        font-weight: normal;
+        font-size: 0.95rem;
+        border-bottom: 2px solid #2d2d2d;
+      }
+    }
+
+    tbody {
+      tr {
+        background-color: #242424;
+        border-bottom: 1px solid #1a1a1a;
+
+        &:nth-child(even) {
+          background-color: #1e1e1e;
+          /* สีสลับแถวเข้ม-อ่อน */
+        }
+
+        td {
+          padding: 14px 8px;
+          font-size: 1rem;
+          vertical-align: middle;
+
+          &.promo-text {
+            max-width: 150px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            /* ตัดข้อความเป็น .. เมื่อยาวเกินไป */
+          }
+        }
+      }
+
+      .no-data {
+        color: #888888;
+        padding: 30px;
+      }
+    }
+  }
+
+  .action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+
+    button {
+      border: none;
+      padding: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        color: #ffffff;
+      }
+    }
+
+    .btn-edit {
+      background-color: #fca311;
+      /* สีส้ม/เหลืองสำหรับแก้ไข */
+      border-top-left-radius: 4px;
+      border-bottom-left-radius: 4px;
+
+      &:hover {
+        background-color: #e5930b;
+      }
+    }
+
+    .btn-delete {
+      background-color: #d90429;
+      /* สีแดงสำหรับลบ */
+      border-top-right-radius: 4px;
+      border-bottom-right-radius: 4px;
+
+      &:hover {
+        background-color: #b30322;
+      }
+    }
+  }
+}
+
+.input-inline-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+
+.input-inline-group .input-wrapper {
+  flex: 1;
+}
+
+
+.btn-change-table {
+  white-space: nowrap;
+  padding: 8px 16px;
+  background-color: #002D8F;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  height: 100%;
+}
+
+
+.btn-change-table:hover {
+  background-color: rgb(10, 31, 192);
+}
+
+.change-table-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 15px;
+}
+
+/* ปุ่มยืนยันเปลี่ยนโต๊ะ */
+.change-table-actions {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px; // เว้นช่องไฟระหว่างปุ่มเปลี่ยนโต๊ะกับปุ่ม ✕
+  padding-bottom: 5px;
+
+  .btn-submit-change {
+    flex: 1; // ยืดปุ่มเปลี่ยนโต๊ะให้เต็มพื้นที่ที่เหลือ
+    background-color: #b36500; // สีส้ม/น้ำตาลหลัก
+    color: #ffffff;
+    font-size: 1.1rem;
+    font-weight: 500;
+    padding: 14px 24px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+
+    &:hover {
+      background-color: #8c4f00; // สีเข้มขึ้นตอนเมาส์ชี้
+      box-shadow: 0 4px 12px rgba(179, 101, 0, 0.3); // แก้เงาให้เป็นสีส้มเข้ากัน
+    }
+
+    &:active {
+      background-color: #663900; // สีเข้มขึ้นอีกตอนกดคลิก
+      transform: scale(0.98); // เอฟเฟกต์ยุบตัวลงเล็กน้อยเหมือนปุ่มบันทึก
+    }
+  }
+}
+
+/* ปุ่ม X ยกเลิกโหมด */
+.btn-cancel-change {
+  background-color: #f70000;
+  color: #ffffff;
+  border: none;
+  width: 40px;
+  height: 40px;
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-cancel-change:hover {
+  background-color: #d5d5d5;
+  color: #000;
+}
+
+
+::ng-deep .custom-dark-dialog {
+  &.p-dialog {
+    background: #111111 !important;
+    border-radius: 30px !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  .p-dialog-header {
+    background: transparent !important;
+    padding: 1rem 1rem 0.5rem 1rem !important;
+    border: none !important;
+
+    .p-dialog-title {
+      color: white !important;
+      font-size: 1.4rem;
+      font-weight: bold;
+    }
+
+    .p-dialog-header-close-icon {
+      color: white !important;
+      font-size: 1.2rem;
+      color: white !important;
+      &:hover {
+        background: rgba(255, 255, 255, 0.1) !important;
+      }
+    }
+  }
+
+  .p-dialog-content {
+    background: transparent !important;
+    color: white !important;
+    border: none !important;
+  }
+}
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .content {
+    text-align: center;
+    margin-bottom: 2rem;
+
+    .warning-icon {
+      font-size: 60px;
+      width: 60px;
+      height: 60px;
+      color: #ff4d4d; /* สีแดงแจ้งเตือน */
+      margin-bottom: 1rem;
+    }
+
+    h3 {
+      color: white;
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      color: #ccc;
+      font-size: 1.1rem;
+      margin-bottom: 0.2rem;
+
+      strong {
+        color: #916400; /* เน้นเลขโต๊ะด้วยสีทอง */
+      }
+    }
+
+    span {
+      color: #777;
+      font-size: 0.85rem;
+    }
+  }
+}
+.dialog-footer {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+
+  button {
+    flex: 1;
+    padding: 14px;
+    border-radius: 12px;
+    border: none;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: filter 0.2s;
+
+    &:active {
+      filter: brightness(0.8);
+    }
+  }
+
+  .btn-cancel {
+    background: #333333 !important;
+    color: white !important;
+    &:hover {
+      background: #505050 !important;
+    }
+  }
+
+  .btn-save {
+    background: #5a0000 !important;
+    color: white !important;
+    &:hover {
+      background: #cb0000 !important;
+    }
+  }
+}
+@media (max-width: 600px) {
+  .table-row {
+    flex-direction: row;
+    padding: 0.8rem 1rem !important;
+
+    .action-buttons span {
+      display: none;
+    } /* ซ่อนตัวอักษร เหลือแค่ icon ในมือถือ */
+    .table-name {
+      font-size: 1.1rem !important;
+    }
+  }
+}
