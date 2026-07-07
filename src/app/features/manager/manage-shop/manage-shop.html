@@ -11,6 +11,14 @@
           <button
             pButton
             pRipple
+            label="ตั้งค่าส่วนลด"
+            icon="pi pi-percentage"
+            class="p-button-outlined add-btn"
+            (click)="goToDiscountSettings()"
+          ></button>
+          <button
+            pButton
+            pRipple
             label="บันทึกการตั้งค่าทั้งหมด"
             icon="pi pi-save"
             class="p-button-success add-btn"
@@ -20,7 +28,7 @@
         </div>
       </div>
 
-      <!-- =====  ตั้งค่าร้าน ===== -->
+      <!-- ===== ตั้งค่าร้าน ===== -->
       <div class="table-card mb-4">
         <div class="card-header-flex">
           <h3 class="card-title"><i class="pi pi-cog mr-2"></i>ข้อมูลร้านค้า</h3>
@@ -112,7 +120,7 @@
 
       <hr class="section-divider" />
 
-      <!-- =====  รูปภาพที่ใช้งาน ===== -->
+      <!-- ===== รูปภาพที่ใช้งาน ===== -->
       <div class="table-card mb-4">
         <div class="card-header-flex">
           <h3 class="card-title text-gold">
@@ -144,7 +152,7 @@
 
       <hr class="section-divider" />
 
-      <!-- =====  Banner ===== -->
+      <!-- ===== Banner ===== -->
       <div class="table-card mb-4">
         <div class="card-header-flex">
           <h3 class="card-title"><i class="pi pi-images mr-2"></i>อัปโหลด Banner ใหม่</h3>
@@ -189,7 +197,7 @@
         </div>
       </div>
 
-      <!-- =====  Poster ===== -->
+      <!-- ===== Poster ===== -->
       <div class="table-card">
         <div class="card-header-flex">
           <h3 class="card-title">

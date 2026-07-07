@@ -21,6 +21,7 @@ import { employeeGuard } from './guards/employee-guard';
 import { memberGuard } from './guards/member-guard';
 import { Index } from './index';
 import { StatusCustomerOrder } from './status/status-customer-order/status-customer-order';
+import { ManageDiscount } from './features/manager/manage-shop/manage-discount/manage-discount';
 
 export const routes: Routes = [
   { path: '', component: Index },
@@ -84,10 +85,20 @@ export const routes: Routes = [
     canActivate: [employeeGuard],
     data: { roles: ['เจ้าของร้าน'] },
   },
+  {
+    path: 'ManageDiscount',
+    component: ManageDiscount,
+    canActivate: [employeeGuard],
+    data: { roles: ['เจ้าของร้าน'] },
+  },
   { path: 'Checkin', component: CheckinScanner },
- 
-  {path: 'CreateBill', component: CreateBill,    canActivate: [employeeGuard],
-    data: { roles: ['พนักงานเสิร์ฟ'] },},
+
+  {
+    path: 'CreateBill',
+    component: CreateBill,
+    canActivate: [employeeGuard],
+    data: { roles: ['พนักงานเสิร์ฟ'] },
+  },
 
   { path: '**', redirectTo: '' },
 ];

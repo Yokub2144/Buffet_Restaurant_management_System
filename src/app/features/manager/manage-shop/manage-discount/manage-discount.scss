@@ -1,0 +1,255 @@
+// ===== Variables =====
+$theme-bg:      #000000;
+$card-bg:       #141414;
+$card-inner-bg: #0d0d0d;
+$primary-gold:  #ffca28;
+$text-white:    #ffffff;
+$text-muted:    #aaaaaa;
+$border-color:  #2a2a2a;
+$border-light:  #333333;
+
+// ===== Base =====
+.page-container {
+  min-height: 100vh;
+  background-color: $theme-bg;
+  color: $text-white;
+  padding: clamp(12px, 3vw, 28px);
+  font-family: 'Kanit', sans-serif;
+}
+
+.content-wrapper {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+// ===== Header =====
+.header-action {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 28px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid $border-color;
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .back-btn {
+    color: $text-muted !important;
+    &:hover { color: $primary-gold !important; background: #1a1a1a !important; }
+  }
+
+  .section-header {
+    font-size: clamp(1.3rem, 3vw, 1.9rem);
+    font-weight: 700;
+    color: $primary-gold;
+    margin: 0;
+  }
+}
+
+.add-btn {
+  font-family: 'Kanit', sans-serif;
+  font-weight: 500;
+  min-width: 170px;
+  white-space: nowrap;
+
+  &.p-button {
+    justify-content: center;
+    .p-button-icon  { position: static !important; margin-right: 0.5rem; }
+    .p-button-label { flex: unset; }
+  }
+}
+
+// ===== Card =====
+.table-card {
+  background: $card-bg;
+  border-radius: 14px;
+  padding: clamp(16px, 3vw, 28px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+  border: 1px solid $border-color;
+
+  .card-header-flex {
+    border-left: 4px solid $primary-gold;
+    padding-left: 14px;
+  }
+
+  .card-title {
+    margin: 0;
+    color: $text-white;
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    font-weight: 500;
+  }
+}
+
+.highlight-text { color: $primary-gold; font-weight: 600; }
+.text-center { text-align: center; }
+
+.empty-row {
+  text-align: center;
+  padding: 30px;
+  color: $text-muted;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+}
+
+// ===== Dark Table =====
+::ng-deep .dark-table {
+  .p-datatable-thead > tr > th {
+    background: #1a1a1a !important;
+    color: $primary-gold !important;
+    border-color: $border-color !important;
+    font-family: 'Kanit', sans-serif;
+    font-weight: 500;
+    font-size: 0.9rem;
+  }
+
+  .p-datatable-tbody > tr {
+    background: $card-inner-bg !important;
+    color: $text-white !important;
+
+    > td { border-color: $border-color !important; }
+
+    &:hover { background: #1c1c1c !important; }
+  }
+
+  .p-paginator {
+    background: transparent !important;
+    color: $text-white !important;
+    border-color: $border-color !important;
+  }
+
+  .p-datatable-loading-overlay {
+    background: rgba(0, 0, 0, 0.7) !important;
+  }
+}
+
+// ===== Dialog =====
+::ng-deep .dark-dialog {
+  .p-dialog-header,
+  .p-dialog-content,
+  .p-dialog-footer {
+    background: $card-bg !important;
+    color: $text-white !important;
+    font-family: 'Kanit', sans-serif;
+  }
+
+  .p-dialog-header { border-bottom: 1px solid $border-color; }
+
+  .p-dialog-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    border-top: 1px solid $border-color;
+  }
+
+  .p-dialog-header-icon {
+    color: $text-muted !important;
+    &:hover { color: $primary-gold !important; background: #222 !important; }
+  }
+}
+
+.dialog-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  padding-top: 6px;
+}
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  .form-label {
+    color: $text-muted;
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+}
+
+.date-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+
+  @media (max-width: 420px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// ===== Inputs dark theme =====
+.dark-input,
+.p-inputtext.dark-input {
+  background: #111 !important;
+  border: 1px solid $border-light !important;
+  color: #fff !important;
+  border-radius: 8px;
+  height: 42px;
+  padding: 0 12px;
+  width: 100%;
+  transition: border-color 0.2s, box-shadow 0.2s;
+
+  &:focus {
+    border-color: $primary-gold !important;
+    box-shadow: 0 0 0 1px rgba(255, 202, 40, 0.35) !important;
+    outline: none;
+  }
+  &::placeholder { color: #555 !important; }
+}
+
+::ng-deep .p-dropdown-panel,
+::ng-deep .p-datepicker {
+  background: #181818 !important;
+  border: 1px solid $border-light !important;
+  color: #fff !important;
+  font-family: 'Kanit', sans-serif;
+}
+
+::ng-deep .p-dropdown-items .p-dropdown-item {
+  color: #ddd !important;
+
+  &:hover { background: #222 !important; color: $primary-gold !important; }
+  &.p-highlight { background: #2a2a2a !important; color: $primary-gold !important; }
+}
+
+::ng-deep .p-datepicker {
+  .p-datepicker-header {
+    background: #181818 !important;
+    color: $primary-gold !important;
+    border-color: $border-light !important;
+  }
+  table td > span {
+    color: #ddd !important;
+    &:hover { background: #2a2a2a !important; }
+    &.p-highlight { background: $primary-gold !important; color: #000 !important; }
+  }
+  .p-datepicker-prev, .p-datepicker-next { color: $text-muted !important; }
+}
+
+// ===== Native select / date input dark theme =====
+select.dark-input {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath fill='%23ffca28' d='M0 0l6 8 6-8z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  cursor: pointer;
+
+  option {
+    background: #181818;
+    color: #fff;
+  }
+}
+
+input[type='date'].dark-input {
+  color-scheme: dark; // ทำให้ icon ปฏิทินของ browser เป็นสีขาวให้เข้ากับธีม
+  cursor: pointer;
+}

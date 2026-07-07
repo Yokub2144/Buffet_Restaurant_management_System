@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { MenuManager } from '../../../components/menu-bar/menu-manager/menu-manager';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { CommonModule } from '@angular/common';
@@ -76,6 +77,7 @@ export class ManageShop implements OnInit {
     private imageService: ImageService,
     private configService: ConfigService,
     private confirmationService: ConfirmationService,
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -83,7 +85,11 @@ export class ManageShop implements OnInit {
     this.loadImages();
   }
 
-  // ดึง config จาก API แล้วโหลดลง form
+  // ไปหน้าตั้งค่าส่วนลด
+  goToDiscountSettings(): void {
+    this.router.navigate(['/ManageDiscount']);
+  }
+
   loadConfig(): void {
     this.configService.getConfig().subscribe({
       next: (data: any[]) => {
@@ -182,12 +188,10 @@ export class ManageShop implements OnInit {
     this.newPoster = null;
   }
 
-  // บันทึกทั้งหมด: config + banner + poster พร้อมกัน
   saveAllSettings(): void {
     this.isLoading = true;
     const tasks: Promise<void>[] = [];
 
-    // อัปเดต Config
     const configPayload = {
       Config_id: this.configForm.config_id,
       Res_name: this.configForm.res_name,
@@ -204,7 +208,6 @@ export class ManageShop implements OnInit {
       }),
     );
 
-    //  Upload Banner ใหม่
     for (const banner of this.newBanners) {
       if (banner.file) {
         const fd = new FormData();
@@ -218,7 +221,6 @@ export class ManageShop implements OnInit {
       }
     }
 
-    //  Poster ใหม่
     if (this.newPoster?.file) {
       const fd = new FormData();
       fd.append('ImageFile', this.newPoster.file);
