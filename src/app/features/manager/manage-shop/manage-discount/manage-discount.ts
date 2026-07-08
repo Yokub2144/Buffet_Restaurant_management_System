@@ -10,9 +10,9 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TableModule } from 'primeng/table';
 import { DialogModule } from 'primeng/dialog';
 import { TagModule } from 'primeng/tag';
-import { Discount, DiscountService } from '../../../../service/api/discount.service';
 import { MenuManager } from '../../../../components/menu-bar/menu-manager/menu-manager';
-
+import { Discount } from '../../../../models/discount.model';
+import { DiscountService } from '../../../../service/api/discount.service';
 
 interface DiscountForm {
   discount_id: number | null;
@@ -89,7 +89,7 @@ export class ManageDiscount implements OnInit {
 
   loadDiscounts(): void {
     this.isLoading = true;
-    this.discountService.getDiscounts().subscribe({
+    this.discountService.getDiscount().subscribe({
       next: (data) => {
         this.discounts = data;
         this.isLoading = false;
