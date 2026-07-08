@@ -1,3 +1,4 @@
+<p-toast [breakpoints]="{ '120px': { width: '50%' } }" />
 <app-menu-server>
   <div class="createbill-container">
     <header class="page-header">
@@ -8,11 +9,12 @@
       <div class="tables-scroll-container">
         <div class="tables-grid">
           <div *ngFor="let table of tables" class="table-item" [ngClass]="{
-            selected: isSelected(table) && table.table_Status === 'ว่าง',
-            'status-free': table.table_Status === 'ว่าง' && !isSelected(table),
-            'status-reserved': table.table_Status === 'ติดจอง',
-            'status-occupied': table.table_Status === 'ไม่ว่าง',
-          }" (click)="toggleTableSelection(table)">
+      'selected': isSelected(table) && isTableSelectable(table),
+      'status-free': table.table_Status === 'ว่าง' && !isSelected(table),
+      'status-reserved': table.table_Status === 'ติดจอง',
+      'status-occupied': table.table_Status === 'ไม่ว่าง' && !isSelected(table)
+    }" (click)="isTableSelectable(table) ? toggleTableSelection(table) : null">
+
             <span>{{ table.table_Number }}</span>
             <span class="tooltip-text" *ngIf="table.table_Status === 'ติดจอง'">ติดจอง</span>
             <span class="tooltip-text" *ngIf="table.table_Status === 'ไม่ว่าง'">กำลังให้บริการ</span>
@@ -20,15 +22,25 @@
           </div>
         </div>
       </div>
-      <div class="btn-confirm">
-        <button (click)="togglerecordModal(true)">บันทึก</button>
+
+      <div class="btn-confirm-container">
+
+        <div *ngIf="changeTablemode" class="change-table-actions">
+          <button class="btn-submit-change" (click)="confirmChangeTable()">เปลี่ยนโต๊ะ</button>
+          <button class="btn-cancel-change" (click)="cancelChangeTableMode()">✕</button>
+        </div>
+
+        <div *ngIf="!changeTablemode" class="btn-confirm">
+          <button (click)="togglerecordModal(true)">บันทึก</button>
+        </div>
+
       </div>
 
       <div class="modal-overlay" *ngIf="showrecordModal">
         <div class="modal-content add-table-modal">
-          <div class="modal-header">
+          <div class="modal-header" [ngStyle]="{'background-color': '#006000'}">
             <h3>บันทึกลูกค้าที่เข้าใหม่</h3>
-            <button class="close-icon-btn" (click)="togglerecordModal(false)">✕</button>
+            <button class="close-icon-btn" (click)="togglerecordModal(false)" (click)="clearForm()">✕</button>
           </div>
 
           <div class="modal-body">
@@ -58,9 +70,10 @@
               <label>ส่วนลด</label>
               <div class="input-wrapper">
                 <select [(ngModel)]="selectedDiscount">
-                  <option value="0">ไม่มีส่วนลด</option>
-                  <option value="10">ส่วนลด 10%</option>
-                  <option value="20">ส่วนลด 20%</option>
+                  <option [value]="0">ไม่มีส่วนลด</option>
+
+                  <option *ngFor="let d of discounts" [value]="d.discount_id">
+                    {{ d.discount_Name }} </option>
                 </select>
               </div>
             </div>
@@ -71,7 +84,142 @@
           </div>
         </div>
       </div>
+      <div class="modal-overlay" *ngIf="showeditModal">
+        <div class="modal-content add-table-modal">
+          <div class="modal-header" [ngStyle]="{'background-color': '#002D8F'}">
+            <h3>แก้ไขข้อมูลลูกค้า</h3>
+            <button class="close-icon-btn" (click)="showeditModal = false" (click)="clearForm()">✕</button>
+          </div>
+
+          <div class="modal-body">
+            <div class="form-group">
+              <label>เลขโต๊ะ</label>
+              <div class="input-inline-group">
+                <div class="input-wrapper">
+                  <input type="text" [value]="currentEditTableGroupString" readonly />
+                </div>
+                <button class="btn-change-table" (click)="openChangeTableModal()">เปลี่ยนโต๊ะ</button>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>จำนวนผู้ใหญ่</label>
+                <div class="input-wrapper">
+                  <input type="number" [(ngModel)]="adultCount" min="0" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label>จำนวนเด็ก</label>
+                <div class="input-wrapper">
+                  <input type="number" [(ngModel)]="childCount" min="0" />
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>ส่วนลด</label>
+              <div class="input-wrapper">
+                <select [(ngModel)]="selectedDiscount">
+                  <option [value]="0">ไม่มีส่วนลด</option>
+                  <option *ngFor="let d of discounts" [value]="d.discount_id">
+                    {{ d.discount_Name }}
+                  </option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>ค่าปรับ(Kg)</label>
+              <div class="input-wrapper">
+                <input type="number" [(ngModel)]="fine_kg" min="0.00" />
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button class="btn-save-confirm" [ngStyle]="{'background-color': '#002D8F'}"
+              (click)="saveEditedBill()">บันทึก</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+
+  <div class="customer-management-wrapper">
+    <div class="management-header">
+      <h3>จัดการลูกค้า</h3>
+      <div class="header-search-placeholder">
+        <input type="text" class="search-table-input" placeholder="ค้นหาเลขโต๊ะ..." [(ngModel)]="searchText" />
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="customer-table">
+        <thead>
+          <tr>
+            <th>เลขโต๊ะ</th>
+            <th>ผู้ใหญ่</th>
+            <th>เด็ก</th>
+            <th>โปรโมชั่น</th>
+            <th>ปรับ(Kg)</th>
+            <th>จัดการ</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let bill of filteredActiveBills">
+            <td>{{ bill.tableNumbers }}</td>
+            <td>{{ bill.numAdults }}</td>
+            <td>{{ bill.numChildren }}</td>
+            <td class="promo-text" [title]="getdiscountName(bill.discount_id)">
+              {{ getdiscountName(bill.discount_id) }}
+            </td>
+            <td>{{ bill.fine_kg }}</td>
+            <td>
+              <div class="action-buttons">
+                <button class="btn-edit" (click)="openEditModal(bill)" title="แก้ไขข้อมูล">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button class="btn-delete" (click)="deleteBill(bill)" title="ลบข้อมูล">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="filteredActiveBills.length === 0">
+            <td colspan="6" class="no-data">ไม่มีข้อมูลลูกค้าที่กำลังให้บริการ</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
   </div>
 </app-menu-server>
+
+<p-dialog
+  header="ยืนยันการลบ"
+  [(visible)]="displayconfirm"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  styleClass="custom-dark-dialog"
+  [breakpoints]="{ '960px': '75vw', '640px': '90vw' }"
+  [style]="{ width: '400px' }"
+  appendTo="body"
+  ><div class="container">
+    <div class="content">
+      <mat-icon class="warning-icon">report_problem</mat-icon>
+      <h3>คุณแน่ใจหรือไม่?</h3>
+      <p>
+        ต้องการลบบิล <strong>โต๊ะ {{ billNumbersToDelete }}</strong> ใช่หรือไม่?
+      </p>
+      <span>การดำเนินการนี้ไม่สามารถย้อนกลับได้</span>
+    </div>
+    <div class="dialog-footer">
+      <button class="btn-cancel" (click)="displayconfirm = false">ยกเลิก</button>
+      <button class="btn-save" (click)="confirm()">ยืนยัน</button>
+    </div>
+  </div>
+</p-dialog>

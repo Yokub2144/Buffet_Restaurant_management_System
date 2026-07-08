@@ -31,7 +31,7 @@ export class MenuServer {
     }
   }
   menuItems = [
-    { label: 'จัดการลูกค้า', icon: 'groups', route: '/Dashboard', active: true },
+    { label: 'สร้างบิล/จัดการลูกค้า', icon: 'groups', route: '/CreateBill', active: true },
     { label: 'เช็คอินโต๊ะที่ลูกค้าจอง', icon: 'fact_check', route: '/ManageEmployee', active: false },
     { label: 'นำเสิร์ฟอาหาร', icon: 'room_service', route: '/ManageTable', active: false }, // หรือ grid_view
     { label: 'ลงเวลาเข้างาน', icon: 'history', route: '/BillingList', active: false },
