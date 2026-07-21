@@ -87,20 +87,20 @@
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td><div class="promo-name">โปรวันเกิด (สำหรับคนที่เกิด เดือนสิงหาคม)</div></td>
-                  <td class="text-center highlight-text">10%</td>
-                  <td class="text-center"><button class="btn-outline">Show</button></td>
+                <tr *ngFor="let discount of discountData">
+                  <td>
+                    <div class="promo-name">{{ discount.discount_Name }}</div>
+                  </td>
+                  <td class="text-center highlight-text">
+                    {{ discount.discount_amount
+                    }}{{ discount.discount_Type === 'percent' ? '%' : ' บาท' }}
+                  </td>
+                  <td class="text-center">
+                    <button class="btn-outline" (click)="showDiscountDetail(discount)">Show</button>
+                  </td>
                 </tr>
-                <tr>
-                  <td><div class="promo-name">โปรเช็คอินร้าน (ใน facebook)</div></td>
-                  <td class="text-center highlight-text">30%</td>
-                  <td class="text-center"><button class="btn-outline">Show</button></td>
-                </tr>
-                <tr>
-                  <td><div class="promo-name">โปรรีวิวร้านใน tiktok ของวิงยอะที่สุด</div></td>
-                  <td class="text-center highlight-text">40%</td>
-                  <td class="text-center"><button class="btn-outline">Show</button></td>
+                <tr *ngIf="discountData.length === 0">
+                  <td colspan="3" class="text-center">ไม่มีส่วนลดในขณะนี้</td>
                 </tr>
               </tbody>
             </table>

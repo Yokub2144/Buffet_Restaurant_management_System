@@ -9,6 +9,8 @@ import { ConfigService } from '../service/api/config.service';
 import { SignalrService } from '../service/api/signalr.service';
 import { ImageService } from '../service/api/image.service';
 import { Subscription } from 'rxjs';
+import { DiscountService } from '../service/api/discount.service';
+import { Discount } from '../models/discount.model';
 
 @Component({
   selector: 'app-index',
@@ -23,6 +25,7 @@ export class Index implements OnInit, OnDestroy {
   slideTimer: any;
   isLoggedIn: boolean = false;
   resData: any;
+  discountData: Discount[] = [];
 
   banners: { image: string }[] = [];
   posterUrl: string | null = null;
@@ -32,6 +35,7 @@ export class Index implements OnInit, OnDestroy {
 
   constructor(
     private ConfigService: ConfigService,
+    private DiscountService: DiscountService,
     private signalRService: SignalrService,
     private imageService: ImageService,
   ) {}
@@ -50,6 +54,10 @@ export class Index implements OnInit, OnDestroy {
       this.resData = updatedConfig;
     });
 
+    this.DiscountService.getDiscount().subscribe((res) => {
+      this.discountData = res; // ต้องประกาศ property นี้ไว้ด้วย
+    });
+
     // realtime: รูปภาพเปลี่ยน — โหลดใหม่อัตโนมัติ
     this.resImageSub = this.signalRService.resImageUpdate$.subscribe(() => {
       this.loadImages();
@@ -57,7 +65,9 @@ export class Index implements OnInit, OnDestroy {
 
     this.loadImages();
   }
-
+  showDiscountDetail(discount: Discount) {
+    console.log(discount); // หรือเปิด modal / navigate ไปหน้ารายละเอียด
+  }
   loadImages(): void {
     this.imageService.getImages().subscribe({
       next: (images: any[]) => {
