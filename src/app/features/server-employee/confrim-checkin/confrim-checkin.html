@@ -1,0 +1,129 @@
+<app-menu-server>
+  <div class="checkin-container">
+    <div class="main-content">
+      
+      <!-- Header -->
+      <div class="page-title-bar">
+        <button class="btn-back" (click)="goBack()">
+          <mat-icon>arrow_back_ios_new</mat-icon>
+        </button>
+        <h2>เช็คอินโต๊ะที่ลูกค้าจอง</h2>
+      </div>
+
+      <!-- 1. ส่วนกล้องสแกน (แสดงเมื่อยังไม่มีข้อมูลการ์ด และไม่มีข้อความสำเร็จ) -->
+      <div class="scanner-wrapper" *ngIf="!checkinInfo && !successMessage">
+        <div class="scanner-box">
+          <!-- เส้นขอบสแกน 4 มุม -->
+          <div class="corner top-left"></div>
+          <div class="corner top-right"></div>
+          <div class="corner bottom-left"></div>
+          <div class="corner bottom-right"></div>
+          
+          <!-- เลเซอร์วิ่งเมื่อกล้องเปิด -->
+          <div class="scan-laser" *ngIf="isCameraActive"></div>
+
+          <!-- ตัวสแกน QR Code จริง -->
+          <zxing-scanner
+            *ngIf="isCameraActive"
+            [formats]="allowedFormats"
+            (scanSuccess)="onCodeResult($event)"
+            (permissionResponse)="onHasPermission($event)">
+          </zxing-scanner>
+
+          <!-- Placeholder แสดงตอนยังไม่เปิดกล้อง -->
+          <div class="camera-placeholder" *ngIf="!isCameraActive">
+            <mat-icon class="camera-icon">qr_code_scanner</mat-icon>
+            <p>กดปุ่มด้านล่างเพื่อเปิดกล้องสแกน</p>
+          </div>
+        </div>
+
+        <!-- Action Section ปุ่มกดเปิด/ปิดกล้อง -->
+        <div class="action-section">
+          <button class="btn-scan" (click)="toggleCamera()" [disabled]="loading">
+            <mat-icon>{{ isCameraActive ? 'no_photography' : 'qr_code_scanner' }}</mat-icon>
+            <span>{{ isCameraActive ? 'ปิดกล้อง' : 'เปิดกล้องสแกน QR Code' }}</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 2. สถานะ Loading / Error / Success -->
+      <div class="state-box loading-box" *ngIf="loading">
+        <mat-icon class="spin-icon">sync</mat-icon>
+        <p>กำลังโหลดข้อมูลการจอง...</p>
+      </div>
+
+      <div class="state-box error-box" *ngIf="errorMessage && !loading">
+        <mat-icon>error_outline</mat-icon>
+        <p>{{ errorMessage }}</p>
+        <button class="btn-retry" (click)="resetScanner()">สแกนใหม่อีกครั้ง</button>
+      </div>
+
+      <div class="state-box success-box" *ngIf="successMessage">
+        <mat-icon class="success-icon">check_circle_outline</mat-icon>
+        <h3>{{ successMessage }}</h3>
+        <p>ทำรายการสำเร็จเรียบร้อยแล้ว</p>
+        <button class="btn-scan-again" (click)="resetScanner()">สแกนโต๊ะถัดไป</button>
+      </div>
+
+      <!-- 3. การ์ดแสดงข้อมูลการจอง (แสดงเมื่อสแกนพบข้อมูล) -->
+      <div class="info-card" *ngIf="checkinInfo && !loading && !successMessage">
+        <div class="card-header">
+          <span class="badge">การจอง #{{ checkinInfo.booking_id }}</span>
+          <h2>📋 รายละเอียดการจอง</h2>
+        </div>
+
+        <div class="card-body">
+          <div class="info-row">
+            <span class="label"><mat-icon>person</mat-icon> ชื่อลูกค้า</span>
+            <span class="valueHighlight">{{ checkinInfo.member?.name || '-' }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label"><mat-icon>phone</mat-icon> เบอร์โทร</span>
+            <span class="value">{{ checkinInfo.member?.phone || '-' }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label"><mat-icon>event</mat-icon> วันที่จอง</span>
+            <span class="value">{{ formatDate(checkinInfo.booking_datetime) }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label"><mat-icon>schedule</mat-icon> เวลา</span>
+            <span class="value">{{ formatTime(checkinInfo.booking_datetime) }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label"><mat-icon>groups</mat-icon> จำนวนลูกค้า</span>
+            <span class="value">ผู้ใหญ่ {{ checkinInfo.adult_count }} คน / เด็ก {{ checkinInfo.child_count }} คน</span>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="info-row table-row">
+            <span class="label"><mat-icon>table_restaurant</mat-icon> โต๊ะที่จอง</span>
+            <span class="table-badge">
+              {{ (checkinInfo.all_tables && checkinInfo.all_tables.length > 0) 
+          ? checkinInfo.all_tables.join(', ') 
+          : (checkinInfo.table?.table_number || '-') }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Footer ปุ่มกดเช็คอิน -->
+        <div class="card-footer">
+          <button
+            *ngIf="isAuthorized"
+            class="btn-confirm"
+            (click)="confirmCheckin()"
+            [disabled]="loading">
+            ✅ ยืนยันเช็คอินเข้าโต๊ะ
+          </button>
+
+          <button class="btn-cancel" (click)="resetScanner()">ยกเลิก / สแกนใหม่</button>
+
+          <div class="no-access" *ngIf="!isAuthorized">
+            🚫 เฉพาะพนักงานเสิร์ฟเท่านั้นที่มีสิทธิ์เช็คอิน
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</app-menu-server>

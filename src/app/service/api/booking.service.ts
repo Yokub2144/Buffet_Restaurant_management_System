@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Constants } from '../../config/contants';
 
@@ -31,6 +31,20 @@ export class BookingService {
   updateBookingStatus(bookingId: number, status: string): Observable<any> {
     return this.http.patch(`${this.constants.API_ENDPOINT}/Booking/${bookingId}/status`, {
       booking_Status: status,
+    });
+  }
+  getCheckinInfo(bookingId: number, tableId: number): Observable<any> {
+    return this.http.get(`${this.constants.API_ENDPOINT}/Booking/checkin-info`, {
+      params: {
+        bookingId: bookingId.toString(),
+        tableId: tableId.toString(),
+      },
+    });
+  }
+  confirmCheckin(bookingId: number, tableId: number): Observable<any> {
+    return this.http.post(`${this.constants.API_ENDPOINT}/Booking/checkin`, {
+      bookingId,
+      tableId,
     });
   }
 }

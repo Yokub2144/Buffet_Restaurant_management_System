@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 import { Cart } from './cart/cart';
 import { CustomerOrder } from './customer-order/customer-order';
-import { CheckinScanner } from './features/checkin-scanner/checkin-scanner';
 import { LoginEmployee } from './features/login-employee/login-employee';
 import { LoginMember } from './features/login-member/login-member';
 import { Dashboard } from './features/manager/dashboard/dashboard';
@@ -9,6 +8,7 @@ import { DetailEmployee } from './features/manager/detail-employee/detail-employ
 import { ApproveEmployee } from './features/manager/manage-employee/approve-employee/approve-employee';
 import { ManageEmployee } from './features/manager/manage-employee/manage-employee';
 import { ManageMenu } from './features/manager/manage-menu/manage-menu';
+import { ManageDiscount } from './features/manager/manage-shop/manage-discount/manage-discount';
 import { ManageShop } from './features/manager/manage-shop/manage-shop';
 import { EditDeleteTables } from './features/manager/manage-tables/edit-delete-tables/edit-delete-tables';
 import { ManageTables } from './features/manager/manage-tables/manage-tables';
@@ -16,12 +16,12 @@ import { BookingStatus } from './features/member/booking-status/booking-status';
 import { Booking } from './features/member/booking/booking';
 import { RegisterEmployee } from './features/register-employee/register-employee';
 import { RegisterMember } from './features/register-member/register-member';
+import { ConfrimCheckin } from './features/server-employee/confrim-checkin/confrim-checkin';
 import { CreateBill } from './features/server-employee/create-bill/create-bill';
 import { employeeGuard } from './guards/employee-guard';
 import { memberGuard } from './guards/member-guard';
 import { Index } from './index';
 import { StatusCustomerOrder } from './status/status-customer-order/status-customer-order';
-import { ManageDiscount } from './features/manager/manage-shop/manage-discount/manage-discount';
 
 export const routes: Routes = [
   { path: '', component: Index },
@@ -91,11 +91,16 @@ export const routes: Routes = [
     canActivate: [employeeGuard],
     data: { roles: ['เจ้าของร้าน'] },
   },
-  { path: 'Checkin', component: CheckinScanner },
 
   {
     path: 'CreateBill',
     component: CreateBill,
+    canActivate: [employeeGuard],
+    data: { roles: ['พนักงานเสิร์ฟ'] },
+  },
+  {
+    path: 'ConfirmCheckin',
+    component: ConfrimCheckin,
     canActivate: [employeeGuard],
     data: { roles: ['พนักงานเสิร์ฟ'] },
   },
